@@ -1,0 +1,4 @@
+[auth]
+enabled = true
+providers = ["email", "google"]
+signup = "invite"
