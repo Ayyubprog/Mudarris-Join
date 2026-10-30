@@ -1,0 +1,8 @@
+name = "mudarris-join"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-10-28"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mudarris-join-db"
+database_id = "198dd80e-969e-4bb8-8a7f-4e400bf6567c"
