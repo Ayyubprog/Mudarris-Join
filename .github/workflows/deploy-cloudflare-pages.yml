@@ -26,8 +26,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Build Pages advanced-mode Worker
+        run: node scripts/build-pages-worker.mjs
+
       - name: Deploy Pages site and Functions
-        run: npx --yes wrangler pages deploy public --project-name mudarris-join --branch main
+        run: npx --yes wrangler pages deploy public --project-name mudarris-join --branch main --skip-caching
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 9e739c95393369e7dbe6bc2cac5899b1
