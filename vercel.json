@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://mudarris-join-api.mudarrisdevuz.workers.dev/api/:path*"
+    },
+    {
       "source": "/login",
       "destination": "/login.html"
     },
