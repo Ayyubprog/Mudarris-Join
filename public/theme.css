@@ -18,3 +18,45 @@
 .modal-backdrop{backdrop-filter:blur(5px)}
 .q-card{border-radius:16px!important;box-shadow:0 5px 20px #28113d08}
 @media(max-width:850px){.sidebar{gap:4px}.main-content{padding:18px}}
+
+
+/* Student join page: compact desktop layout + careful mobile Chrome sizing */
+.student-join{min-height:100svh;min-height:100dvh;overflow-x:hidden}
+.student-join .join-header{height:58px!important;padding:0 clamp(14px,4vw,46px)!important}
+.student-join .join-header .brand{font-size:17px!important}
+.student-join .join-header .brand-mark{width:31px;height:31px;font-size:17px;border-radius:10px}
+.student-join .join-header .btn{padding:9px 12px;font-size:12px}
+.student-join .join-main{min-height:calc(100svh - 58px)!important;min-height:calc(100dvh - 58px)!important;padding:12px 16px 28px!important}
+.student-join .join-panel{width:min(390px,100%)!important}
+.student-join .join-emoji{font-size:42px!important;margin-bottom:8px!important}
+.student-join .join-eyebrow{font-size:9px!important;margin-bottom:7px!important}
+.student-join .join-title{font-size:clamp(38px,5vw,52px)!important;line-height:.98!important;margin:0 0 9px!important}
+.student-join .join-subtitle{font-size:14px!important;margin:0 0 18px!important}
+.student-join .join-card{padding:18px!important;border-radius:16px!important}
+.student-join .join-card .field{font-size:17px!important;padding:12px!important;border-radius:10px!important}
+.student-join .join-card .btn{height:45px!important;font-size:14px!important;border-radius:10px!important;margin-top:10px!important}
+.student-join .join-hints{gap:13px!important;margin-top:17px!important;font-size:11px!important}
+@media(max-width:640px){
+  .student-join .join-header{height:54px!important;padding:0 13px!important}
+  .student-join .join-header .brand{font-size:14px!important;gap:7px}
+  .student-join .join-header .brand-mark{width:28px;height:28px;font-size:15px}
+  .student-join .join-header .btn{padding:8px 9px;font-size:11px}
+  .student-join .join-main{min-height:calc(100svh - 54px)!important;min-height:calc(100dvh - 54px)!important;padding:12px 14px calc(18px + env(safe-area-inset-bottom))!important}
+  .student-join .join-panel{width:min(370px,100%)!important}
+  .student-join .join-emoji{font-size:38px!important;margin-bottom:7px!important}
+  .student-join .join-title{font-size:clamp(35px,10vw,43px)!important}
+  .student-join .join-subtitle{font-size:13px!important;margin-bottom:15px!important}
+  .student-join .join-card{padding:15px!important}
+  .student-join .join-card label{font-size:10px!important}
+  .student-join .join-card .field{font-size:16px!important;padding:12px!important;min-height:45px}
+  .student-join .join-card .btn{min-height:44px;height:44px!important;font-size:13px!important}
+  .student-join .join-hints{flex-wrap:wrap;gap:8px 13px!important;margin-top:14px!important;font-size:10px!important}
+}
+@media(max-height:650px) and (min-width:641px){
+  .student-join .join-main{padding-top:4px!important;padding-bottom:10px!important}
+  .student-join .join-emoji{font-size:34px!important;margin-bottom:3px!important}
+  .student-join .join-title{font-size:39px!important;margin-bottom:6px!important}
+  .student-join .join-subtitle{margin-bottom:11px!important}
+  .student-join .join-card{padding:14px!important}
+  .student-join .join-hints{margin-top:10px!important}
+}
