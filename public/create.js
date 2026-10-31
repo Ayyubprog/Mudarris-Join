@@ -25,6 +25,8 @@ function events(){$("#question-prompt").addEventListener("input",()=>{q().prompt
 async function init(){
  const titleField=document.querySelector(".mj-title-field");
  if(titleField)$("#quiz-title-mount").appendChild(titleField);
+ const layout=document.querySelector(".mj-editor-layout");
+ if(layout)layout.classList.add("mj-fullpage-layout");
  const rail=document.querySelector(".mj-question-rail");
  if(rail)rail.hidden=true;
  const panel=document.querySelector(".mj-question-settings");
