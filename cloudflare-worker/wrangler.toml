@@ -1,0 +1,11 @@
+name = "mudarris-join-api"
+main = "worker.js"
+compatibility_date = "2026-10-31"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mudarris-join-db"
+database_id = "198dd80e-969e-4bb8-8a7f-4e400bf6567c"
+
+[vars]
+APP_ORIGIN = "https://mudarris-join.vercel.app"
