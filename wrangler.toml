@@ -6,3 +6,6 @@ compatibility_date = "2026-10-28"
 binding = "DB"
 database_name = "mudarris-join-db"
 database_id = "198dd80e-969e-4bb8-8a7f-4e400bf6567c"
+
+[vars]
+GOOGLE_CLIENT_ID = "18089902332-3c4pdrv76rlun72ikvhsl86um37sdcb8.apps.googleusercontent.com"
