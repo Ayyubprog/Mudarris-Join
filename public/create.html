@@ -10,6 +10,7 @@
 <a class="mj-topnav-link" href="/teacher.html#reports"><span>▥</span> Hisobotlar</a>
 <a class="mj-topnav-link" href="/teacher.html#classes"><span>♟</span> Guruhlar</a>
 </nav>
+<div id="quiz-title-mount"></div>
 <div class="mj-top-actions">
 <a class="mj-create-top mj-create-active" href="/create.html">Yaratish</a>
 <button class="mj-editor-settings-shortcut" id="settings-shortcut" type="button" aria-label="Sozlamalar">⚙</button>
@@ -44,9 +45,15 @@
 <div class="mj-editor-heading"><div class="mj-editor-heading-title"><div class="mj-eyebrow">YANGI SINF O‘YINI</div><h1 id="editor-heading">Viktorina yaratish</h1><p>Savol va javoblarni kiriting, keyin sinfingiz bilan o‘ynang.</p></div>
 <div class="mj-quiz-meta"><label class="mj-meta-field mj-title-field"><span>Viktorina nomi</span><input class="mj-title-input" id="quiz-title" placeholder="Masalan, Matematika 6-sinf" value="Yangi viktorina" maxlength="90" required></label><label class="mj-meta-field"><span>Fan</span><input class="mj-meta-input" id="quiz-subject" placeholder="Fan nomi" maxlength="60"></label><label class="mj-meta-field mj-grade-field"><span>Sinf</span><input class="mj-meta-input" id="quiz-grade" placeholder="6A" maxlength="30"></label></div></div>
 <div class="mj-question-navigator" id="question-nav" aria-label="Savollar ro‘yxati"></div>
-<section class="mj-question-card"><div class="mj-question-header"><div class="mj-question-heading-left"><span class="mj-question-count-icon">▣</span><strong id="question-number">1. Savol</strong><span class="mj-question-type-pill" id="question-type-pill">Viktorina</span></div><span class="mj-saving-state" id="save-state">O‘zgarishlar saqlanmagan</span><div id="quiz-title-mount"></div></div>
-<div class="mj-prompt-media-row"><div class="mj-prompt-column"><label class="mj-prompt-label" for="question-prompt">Savol matni <span id="prompt-counter">0 / 120</span></label><textarea id="question-prompt" maxlength="120" placeholder="Savolingizni shu yerga yozing..." rows="3"></textarea><div class="mj-question-time"><label for="question-time-center">Vaqt chegarasi</label><select id="question-time-center"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">1 daqiqa</option><option value="90">1 daqiqa 30 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select></div></div>
-<div class="mj-media-stage"><button class="mj-media-placeholder" id="media-placeholder" type="button"><span class="mj-media-plus">＋</span><strong>Media qo‘shish</strong><small>Rasm, video yoki audio havolasini kiriting</small><span class="mj-media-choose">Media tanlash</span></button><div id="question-media-preview" class="mj-media-preview" hidden></div></div></div>
+<section class="mj-question-card"><div class="mj-question-header"><div class="mj-question-heading-left"><span class="mj-question-count-icon">▣</span><strong id="question-number">1. Savol</strong><span class="mj-question-type-pill" id="question-type-pill">Viktorina</span></div><span class="mj-saving-state" id="save-state">O‘zgarishlar saqlanmagan</span></div>
+<div class="mj-question-prompt-block">
+<label class="mj-prompt-label" for="question-prompt">Savol matni <span id="prompt-counter">0 / 120</span></label>
+<textarea id="question-prompt" maxlength="120" placeholder="Savolingizni shu yerga yozing..." rows="3"></textarea>
+</div>
+<div class="mj-media-middle">
+<div class="mj-media-stage"><button class="mj-media-placeholder" id="media-placeholder" type="button"><span class="mj-media-plus">＋</span><strong>Media qo‘shish</strong><small>Rasm, GIF yoki videoni shu yerga joylang</small><span class="mj-media-choose">Havola orqali media qo‘shish</span></button><div id="question-media-preview" class="mj-media-preview" hidden></div></div>
+</div>
+<div hidden><select id="question-time-center"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">1 daqiqa</option><option value="90">1 daqiqa 30 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select></div>
 <div class="mj-answer-section-heading"><strong>Javob variantlari</strong><span id="answer-helper">To‘g‘ri javobni belgilang</span></div><div class="mj-answer-grid" id="answer-grid"></div><button class="mj-add-option" id="add-option" type="button">＋ Javob variantini qo‘shish</button>
 <div class="mj-question-footer"><button class="mj-add-question" id="add-question" type="button"><span>＋</span> Savol qo‘shish</button><div><button class="mj-footer-action" id="duplicate-question" type="button"><span>▢</span> Nusxalash</button><button class="mj-footer-action mj-delete-action" id="delete-question" type="button"><span>⌫</span> O‘chirish</button></div></div></section>
 <div class="mj-editor-bottom-note"><span>ⓘ</span> Bo‘sh javob variantlari o‘yin vaqtida ko‘rsatilmaydi. Har bir viktorinada kamida 2 ta javob bo‘lishi kerak.</div>
