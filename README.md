@@ -11,7 +11,8 @@ MUDARRIS JOIN is a classroom quiz and live game platform for Mudarris School.
 
 ## Teacher workflow
 
-1. Sign in with an invited school email and password, or Google once OAuth is configured.
+1. Create an account with any valid email and password, or use Google account creation once OAuth is configured.
+2. Sign in later with email/password or Google. Google sign-in and Google account creation use separate buttons.
 2. Create a Kahoot manually: title, subject, grade, questions and answers.
 3. Save it to My Kahoots.
 4. Choose Play on a saved Kahoot.
@@ -34,7 +35,7 @@ Google OAuth redirect URI:
 
 https://mudarris-join.pages.dev/api/auth/google/callback
 
-Teacher access is invite-only. Do not make public teacher registration available.
+Email/password account creation is open. The configured ADMIN_EMAIL receives school administrator access on sign-up or next successful sign-in. Google account creation and sign-in require GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.
 
 ## Database
 
