@@ -30,6 +30,13 @@ jobs:
       - name: Build Pages advanced-mode Worker
         run: node scripts/build-pages-worker.mjs
 
+      - name: Check JavaScript syntax
+        run: |
+          for file in public/*.js; do
+            node --check "$file"
+          done
+          node --input-type=module --check < public/_worker.js
+
       - name: Deploy Pages site and Functions
         run: npx --yes wrangler pages deploy public --project-name mudarris-join --branch main --skip-caching
         env:
