@@ -98,7 +98,7 @@
   object-position:50% 50%;
   flex:none;
 }
-@media(max-width:620px){
+@media(max-width:640px){
   .brand-mark{
     width:44px!important;
     height:44px!important;
