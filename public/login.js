@@ -11,6 +11,21 @@
   const error = $("#error");
   const note = $("#system-status");
 
+  function setGoogleEnabled(enabled) {
+    const entries = [
+      [loginGoogle, "/api/auth/google/start?flow=login", "Google bilan kirish"],
+      [signupGoogle, "/api/auth/google/start?flow=signup", "Google bilan account ochish"]
+    ];
+    for (const [link, href, label] of entries) {
+      if (!link) continue;
+      link.classList.toggle("google-disabled", !enabled);
+      link.setAttribute("aria-disabled", String(!enabled));
+      link.title = enabled ? label : "Google OAuth hali sozlanmagan";
+      if (enabled) link.setAttribute("href", href);
+      else link.removeAttribute("href");
+    }
+  }
+
   function setVisible(element, visible) {
     element.hidden = !visible;
     element.style.display = visible ? "" : "none";
@@ -29,9 +44,14 @@
     error.textContent = "";
   }
 
+  [loginGoogle, signupGoogle].forEach(link => link?.addEventListener("click", event => {
+    if (link.getAttribute("aria-disabled") === "true") event.preventDefault();
+  }));
+
   loginTab.addEventListener("click", () => setMode("login"));
   registerTab.addEventListener("click", () => setMode("register"));
   setMode("login");
+  setGoogleEnabled(false);
 
   async function submitAuth(form, path, payload, successText) {
     const button = form.querySelector('button[type="submit"]');
@@ -93,11 +113,14 @@
       if (!response.ok) throw new Error("Server holatini tekshirib bo‘lmadi.");
       const status = await response.json();
       const messages = [];
+      setGoogleEnabled(!!status.googleEnabled);
       if (!status.googleEnabled) messages.push("Google orqali kirish hozircha sozlanmagan. Elektron pochta va paroldan foydalaning.");
-      if (!status.hasTeacherAccounts) messages.push("Hali o‘qituvchi akkaunti yo‘q. Birinchi accountni “Account ochish” orqali yarating.");
+      if (!status.hasTeacherAccounts) messages.push("Hali o‘qituvchi akkaunti yo‘q. Birinchi account “Account ochish” orqali ochilgach, administrator huquqini oladi.");
+      else if (!status.adminConfigured) messages.push("Maktab administratori hali sozlanmagan. Yagona mavjud o‘qituvchi akkaunti muvaffaqiyatli kirgach, administrator huquqini oladi.");
       note.textContent = messages.join(" ");
       note.hidden = messages.length === 0;
     } catch {
+      setGoogleEnabled(false);
       note.textContent = "Serverga ulanib bo‘lmadi. Internet aloqasini tekshirib, sahifani yangilang.";
       note.hidden = false;
     }
