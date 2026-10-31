@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/teacher",
+      "destination": "/teacher.html"
+    },
+    {
+      "source": "/host",
+      "destination": "/host.html"
+    },
+    {
+      "source": "/modes",
+      "destination": "/modes.html"
+    },
+    {
+      "source": "/play",
+      "destination": "/play.html"
+    }
+  ]
+}
