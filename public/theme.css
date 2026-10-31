@@ -69,3 +69,6 @@
   .q-options{grid-template-columns:1fr!important}
   .modal-backdrop{padding:12px}
 }
+
+/* Official Mudarris open-book logo */
+.brand-mark img{display:block;width:34px;height:30px;object-fit:contain}
