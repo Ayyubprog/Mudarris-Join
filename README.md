@@ -13,7 +13,7 @@ MUDARRIS JOIN is a classroom quiz and live game platform for Mudarris School.
 
 1. Create an account with any valid email and password, or use Google account creation once OAuth is configured.
 2. Sign in later with email/password or Google. Google sign-in and Google account creation use separate buttons.
-2. Create a Kahoot manually: title, subject, grade, questions and answers.
+3. Create a Kahoot manually: title, subject, grade, questions and answers.
 3. Save it to My Kahoots.
 4. Choose Play on a saved Kahoot.
 5. Pick a live game mode on the separate mode-selection page.
@@ -25,9 +25,9 @@ Game modes currently presented in the picker: Classic, Team Mode, Accuracy, Conf
 
 The Pages project is mudarris-join and the D1 binding is DB.
 
-Configure these Pages environment variables before opening teacher access:
+Optional Pages environment variables:
 
-- ADMIN_EMAIL: first school administrator email. This email can activate its first admin account and invite teachers.
+- ADMIN_EMAIL: the school administrator email. When this address creates an account or signs in, it receives administrator permissions.
 - GOOGLE_CLIENT_ID: Google OAuth client ID.
 - GOOGLE_CLIENT_SECRET: Google OAuth client secret.
 
