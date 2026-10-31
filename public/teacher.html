@@ -1,7 +1,16 @@
 <!doctype html>
 <html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>O‘qituvchi boshqaruv paneli — MUDARRIS JOIN</title><link rel="icon" type="image/svg+xml" href="/mudarris-book-purple.svg"><link rel="stylesheet" href="/theme.css"><meta name="theme-color" content="#46178f"></head>
 <body><div class="app-shell">
-<header class="topbar"><a class="brand" href="/"><span class="brand-mark"><img src="/mudarris-book-purple.svg" alt="" aria-hidden="true"></span><span>MUDARRIS JOIN</span></a><div style="display:flex;align-items:center;gap:14px"><span id="teacher-email" style="font-size:13px;color:#e9ddf6"></span><button id="signout" class="btn" style="background:#ffffff20;color:white;padding:9px 13px">Chiqish</button></div></header>
+<header class="topbar teacher-topbar">
+<a class="brand" href="/" aria-label="MUDARRIS JOIN bosh sahifa"><span class="brand-mark"><img src="/mudarris-book-purple.svg" alt="MUDARRIS JOIN ochiq kitob logotipi"></span><span class="brand-wordmark"><span>MUDARRIS</span><strong>JOIN</strong></span></a>
+<nav class="top-nav" aria-label="Asosiy navigatsiya">
+<a class="top-nav-link active" href="#overview" data-view="overview">⌂ <span>Asosiy</span></a>
+<a class="top-nav-link" href="#games" data-view="games">▣ <span>Viktorinalar</span></a>
+<a class="top-nav-link" href="#reports" data-view="reports">▤ <span>Hisobotlar</span></a>
+<a class="top-nav-link" href="#classes" data-view="classes">♟ <span>Sinflar</span></a>
+</nav>
+<div class="topbar-actions"><button class="btn btn-top-create" data-action="create">＋ Yaratish</button><span id="teacher-email" class="teacher-email"></span><button id="signout" class="btn btn-signout">Chiqish</button></div>
+</header>
 <div class="side-layout">
 <aside class="sidebar">
 <div class="eyebrow" style="padding:9px 14px 12px">O‘QITUVCHI KABINETI</div>
@@ -18,7 +27,17 @@
 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap"><div><div class="eyebrow">SINFINGIZNI BOSHQARISH MARKAZI</div><h1 class="display" style="font-size:36px;margin:5px 0">Xush kelibsiz, <span id="welcome-name">O‘qituvchi</span>!</h1><p class="muted" style="margin:0">O‘yinlaringiz, sinflaringiz va dars faolligi — barchasi bir joyda.</p></div><button class="btn btn-primary" data-action="create">＋ Viktorina yaratish</button></div>
 <div class="stat-grid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:25px 0"><div class="stat-card"><div class="eyebrow">VIKTORINALARIM</div><div class="stat-number" id="stat-games">0</div><div class="muted" style="font-size:12px">Saqlangan viktorinalar</div></div><div class="stat-card"><div class="eyebrow">SINFLARIM</div><div class="stat-number" id="stat-classes">0</div><div class="muted" style="font-size:12px">Sinf guruhlari</div></div><div class="stat-card"><div class="eyebrow">JONLI O‘YINLAR</div><div class="stat-number" id="stat-live">0</div><div class="muted" style="font-size:12px">Hozir davom etmoqda</div></div><div class="stat-card"><div class="eyebrow">O‘YINCHILAR</div><div class="stat-number" id="stat-players">0</div><div class="muted" style="font-size:12px">So‘nggi o‘yinlardagi jami</div></div></div>
 <div class="card" style="padding:22px;margin-bottom:22px;background:linear-gradient(115deg,#46178f,#6330a9);color:white;border:0"><div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap"><div><div style="font-size:12px;letter-spacing:.12em;font-weight:900;color:#d8c4f0">KEYINGI DARSGA TAYYORMISIZ?</div><h2 class="display" style="font-size:27px;margin:7px 0">Darsingizni jonli o‘yinga aylantiring.</h2><p style="color:#e8dcf5;margin:0">Savollar tuzing, o‘yin rejimini tanlang va bellashuvni boshlang.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" data-view="games">O‘YINNI BOSHLASH →</button><button class="btn btn-primary" data-action="create">VIKTORINA YARATISH →</button></div></div></div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 class="display" style="font-size:23px;margin:0">Yaqinda saqlangan viktorinalar</h2><button class="btn btn-ghost" data-view="games">Barchasini ko‘rish</button></div><div id="recent-games" class="card" style="padding:6px 18px"><div class="muted" style="padding:18px">Viktorinalaringiz yuklanmoqda…</div></div>
+<section class="dashboard-section">
+<div class="section-heading"><div><div class="eyebrow">KUTUBXONA</div><h2 class="display">Yaqinda saqlangan viktorinalar</h2></div><button class="btn btn-ghost" data-view="games">Barchasini ko‘rish →</button></div>
+<div id="recent-games" class="recent-quiz-grid"><div class="card recent-loading">Viktorinalaringiz yuklanmoqda…</div></div>
+</section>
+<section class="dashboard-section create-section">
+<div class="section-heading"><div><div class="eyebrow">TEZKOR BOSHLASH</div><h2 class="display">Nima yaratamiz?</h2></div></div>
+<div class="quick-create-grid">
+<button type="button" class="quick-create-card" data-action="create"><span class="quick-create-icon">＋</span><span><strong>Yangi viktorina</strong><small>Savollar tuzing va sinfingiz bilan o‘ynang.</small></span><span class="quick-create-arrow">→</span></button>
+<button type="button" class="quick-create-card" data-view="games"><span class="quick-create-icon">▣</span><span><strong>Viktorinalarim</strong><small>Saqlangan o‘yinlarni ko‘ring va davom eting.</small></span><span class="quick-create-arrow">→</span></button>
+</div>
+</section>
 </section>
 <section id="view-games" class="view" hidden><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><div class="eyebrow">KUTUBXONANGIZ</div><h1 class="display" style="font-size:34px;margin:5px 0">Viktorinalarim</h1><p class="muted" style="margin:0">Sinf o‘yinlaringizni yarating, tahrirlang va boshlang.</p></div><button class="btn btn-primary" data-action="create">＋ Viktorina yaratish</button></div><div id="all-games" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:15px;margin-top:24px"></div></section>
 <section id="view-classes" class="view" hidden><div class="eyebrow">SINFLARNI BOSHQARISH</div><h1 class="display" style="font-size:34px;margin:5px 0">Sinflarim</h1><p class="muted">Sinf guruhlarini tartiblang va o‘quvchilar ro‘yxatini yuriting.</p><form id="class-form" class="card" style="padding:18px;display:flex;gap:10px;flex-wrap:wrap;margin:20px 0"><input class="field" id="class-name" placeholder="Sinf nomi (masalan, 6A)" required style="flex:2;min-width:180px"><input class="field" id="class-grade" placeholder="Sinf / fan" style="flex:1;min-width:130px"><button class="btn btn-primary">＋ Sinf qo‘shish</button></form><div id="classes-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px"></div></section>
