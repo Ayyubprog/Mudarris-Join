@@ -4,17 +4,21 @@
 <header class="mj-topbar mj-editor-topbar mj-fullpage-topbar">
 <a class="mj-back-button" href="/teacher.html" aria-label="Orqaga"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m7 7-7-7 7-7"/></svg></a>
 <a class="mj-brand" href="/teacher.html" aria-label="MUDARRIS JOIN"><span class="mj-logo"><img src="/mudarris-book-purple.svg" alt="Mudarris kitob logotipi"></span><span class="mj-wordmark">MUDARRIS <strong>JOIN</strong></span></a>
+<nav class="mj-topnav mj-editor-nav" aria-label="Asosiy navigatsiya">
+<a class="mj-topnav-link" href="/teacher.html">⌂ <span>Bosh sahifa</span></a><a class="mj-topnav-link" href="/teacher.html#discover">◉ <span>Kashf etish</span></a><a class="mj-topnav-link" href="/teacher.html#games">▣ <span>Kutubxona</span></a><a class="mj-topnav-link" href="/teacher.html#reports">▥ <span>Hisobotlar</span></a><a class="mj-topnav-link" href="/teacher.html#classes">♟ <span>Guruhlar</span></a>
+</nav>
 <div id="quiz-title-mount"></div>
 <div class="mj-top-actions">
-<span class="mj-editor-save-status" id="top-save-state"><i class="mj-status-dot"></i> Saqlanmagan</span>
-<button class="mj-top-preview" id="preview-quiz-top" type="button"><span>◉</span> Ko‘rib chiqish</button>
-<button class="mj-create-top mj-top-save" id="save-quiz-top" type="button"><span>✓</span> Saqlash</button>
+<span class="mj-editor-save-status mj-editor-hidden-actions" id="top-save-state"><i class="mj-status-dot"></i> Saqlanmagan</span>
+<button class="mj-top-preview mj-editor-hidden-actions" id="preview-quiz-top" type="button"><span>◉</span> Ko‘rib chiqish</button>
+<button class="mj-create-top mj-top-save mj-editor-hidden-actions" id="save-quiz-top" type="button"><span>✓</span> Saqlash</button>
+<a class="mj-create-top mj-create-active" href="/create.html">Yaratish</a>
 <button class="mj-editor-settings-shortcut" id="settings-shortcut" type="button" aria-label="Savol sozlamalari" title="Sozlamalar">⚙</button>
 <div class="mj-pop-wrap"><button class="mj-profile-button" id="editor-profile-button" type="button"><span id="teacher-initial">T</span><span class="mj-profile-label" id="editor-teacher-name">O‘qituvchi</span><span>⌄</span></button><div class="mj-popover" id="editor-profile-popover" hidden><button type="button" class="mj-logout-button" id="editor-signout">Tizimdan chiqish</button></div></div>
 </div>
 </header>
 <div class="mj-editor-layout">
-<aside class="mj-question-rail" hidden>
+<aside class="mj-question-rail">
 <div class="mj-rail-title"><a href="/teacher.html">‹</a><div><strong>Viktorina yaratish</strong><small>SAVOL TURINI TANLANG</small></div></div>
 <div class="mj-rail-section-label">BILIMNI TEKSHIRISH</div>
 <div class="mj-question-types">
@@ -42,14 +46,13 @@
 <div class="mj-question-navigator" id="question-nav" aria-label="Savollar ro‘yxati"></div>
 <div class="mj-editor-controls-inline" id="editor-controls-inline" aria-label="Savol sozlamalari"></div>
 <section class="mj-question-card"><div class="mj-question-header"><div class="mj-question-heading-left"><span class="mj-question-count-icon">▣</span><strong id="question-number">1. Savol</strong><span class="mj-question-type-pill" id="question-type-pill">Viktorina</span></div><span class="mj-saving-state" id="save-state">O‘zgarishlar saqlanmagan</span></div>
-<div class="mj-question-prompt-block">
-<label class="mj-prompt-label" for="question-prompt">Savol matni <span id="prompt-counter">0 / 120</span></label>
-<textarea id="question-prompt" maxlength="120" placeholder="Savolingizni shu yerga yozing..." rows="3"></textarea>
+<div class="mj-prompt-media-row">
+<div class="mj-prompt-column">
+<div class="mj-question-prompt-block"><label class="mj-prompt-label" for="question-prompt">Savol matni <span id="prompt-counter">0 / 120</span></label><textarea id="question-prompt" maxlength="120" placeholder="Savolingizni shu yerga yozing..." rows="3"></textarea></div>
+<div class="mj-question-time"><label for="question-time-center">Vaqt chegarasi</label><select id="question-time-center"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">1 daqiqa</option><option value="90">1 daqiqa 30 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select></div>
 </div>
-<div class="mj-media-middle">
-<div class="mj-media-stage"><button class="mj-media-placeholder" id="media-placeholder" type="button"><span class="mj-media-plus">＋</span><strong>Media qo‘shish</strong><small>Rasm, GIF yoki videoni shu yerga joylang</small><span class="mj-media-choose">Havola orqali media qo‘shish</span></button><div id="question-media-preview" class="mj-media-preview" hidden></div><div class="mj-media-tools-inline" id="media-tools-inline"></div></div>
+<div class="mj-media-middle"><div class="mj-media-stage"><button class="mj-media-placeholder" id="media-placeholder" type="button"><span class="mj-media-plus">＋</span><strong>Media qo‘shish</strong><small>Rasm, GIF yoki videoni shu yerga joylang</small><span class="mj-media-choose">Havola orqali media qo‘shish</span></button><div id="question-media-preview" class="mj-media-preview" hidden></div><div class="mj-media-tools-inline" id="media-tools-inline"></div></div></div>
 </div>
-<div hidden><select id="question-time-center"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">1 daqiqa</option><option value="90">1 daqiqa 30 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select></div>
 <div class="mj-answer-section-heading"><strong>Javob variantlari</strong><span id="answer-helper">To‘g‘ri javobni belgilang</span></div><div class="mj-answer-grid" id="answer-grid"></div><button class="mj-add-option" id="add-option" type="button">＋ Javob variantini qo‘shish</button>
 <div class="mj-question-footer"><button class="mj-add-question" id="add-question" type="button"><span>＋</span> Savol qo‘shish</button><div><button class="mj-footer-action" id="duplicate-question" type="button"><span>▢</span> Nusxalash</button><button class="mj-footer-action mj-delete-action" id="delete-question" type="button"><span>⌫</span> O‘chirish</button></div></div></section>
 <div class="mj-editor-bottom-note"><span>ⓘ</span> Bo‘sh javob variantlari o‘yin vaqtida ko‘rsatilmaydi. Har bir viktorinada kamida 2 ta javob bo‘lishi kerak.</div>
@@ -64,4 +67,4 @@
 <div class="mj-editor-bottom-actions"><button class="mj-save-button" id="save-quiz" type="button">✓ Saqlash</button><button class="mj-preview-button" id="preview-quiz" type="button">◉ Ko‘rib chiqish</button></div></aside>
 </div>
 <div id="preview-modal" class="mj-preview-modal" hidden><div class="mj-preview-box"><button id="close-preview" class="mj-preview-close">×</button><div class="mj-eyebrow">O‘QUVCHI KO‘RINISHI</div><h2 id="preview-prompt">Savol matni</h2><div id="preview-media" class="mj-preview-media"></div><div id="preview-answers" class="mj-preview-answers"></div></div></div>
-<div id="toast-root"></div><script src="/create.js?v=kahoot-style-20261031-3" defer></script></body></html>
+<div id="toast-root"></div><script src="/create.js?v=mudarris-reference-layout-20261031-4" defer></script></body></html>
