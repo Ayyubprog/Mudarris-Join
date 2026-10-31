@@ -23,6 +23,7 @@ async function main(req,env){
  const url=new URL(req.url),appOrigin=(env.APP_ORIGIN||url.origin).replace(/\/$/,""),path=url.pathname.replace(/^\/api\/?/,"").replace(/\/$/,""),method=req.method;
  if(!url.pathname.startsWith("/api/"))return env.ASSETS?env.ASSETS.fetch(req):new Response("Not found",{status:404});
  try{
+ if(path==="health"&&method==="GET")return json({ok:true,service:"MUDARRIS JOIN API",database:!!env.DB});
  if(path==="auth/status"&&method==="GET"){const [teacherCount,adminRecord,inviteCount]=await Promise.all([env.DB.prepare("SELECT COUNT(*) AS count FROM teachers").first(),env.DB.prepare("SELECT email FROM school_admins LIMIT 1").first(),env.DB.prepare("SELECT COUNT(*) AS count FROM invited_users").first()]);return json({adminConfigured:!!canonicalEmail(env.ADMIN_EMAIL)||!!adminRecord,googleEnabled:!!(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET),hasTeacherAccounts:Number(teacherCount?.count||0)>0,hasInvitations:Number(inviteCount?.count||0)>0})}
  if(path==="auth/me"&&method==="GET"){const user=await auth(req,env);return user?json({teacher:user}):json({error:"Tizimga kirish talab etiladi."},401)}
  if(path==="auth/logout"&&method==="POST"){const token=readCookie(req,"mj_session");if(token)await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(await hash(token)).run();return json({ok:true},200,{"set-cookie":cookie("mj_session","",0)})}
