@@ -60,3 +60,12 @@
   .student-join .join-card{padding:14px!important}
   .student-join .join-hints{margin-top:10px!important}
 }
+
+
+/* Telefon ekranlarida viktorina muharririni qulay joylashtirish */
+@media(max-width:620px){
+  .modal{width:100%;max-height:calc(100dvh - 24px);padding:17px;border-radius:16px}
+  #game-form>div:first-of-type{grid-template-columns:1fr!important}
+  .q-options{grid-template-columns:1fr!important}
+  .modal-backdrop{padding:12px}
+}
