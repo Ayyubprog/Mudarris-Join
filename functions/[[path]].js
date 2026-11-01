@@ -197,9 +197,11 @@ const gm=path.match(/^games\/(\d+)$/);
       const submitted=parseArrayValue(answer)||[];
       const left=expected.map(normalize).sort(),right=submitted.map(normalize).sort();
       correct=left.length===right.length&&left.every((value,index)=>value===right[index]);
-    }else const normalizeTyped=value=>normalize(value).replace(/[^\p{L}\p{N}\s]/gu,"").replace(/\s+/g," ");const accepted=parseArrayValue(q.correct)||[q.correct];correct=accepted.some(value=>normalizeTyped(answer)===normalizeTyped(value));
+    }else correct=normalize(answer)===normalize(q.correct);
    }else if(q.type==="true_false"||q.type==="type_answer"){
-    correct=normalize(answer)===normalize(q.correct);
+    const normalizeTyped=value=>normalize(value).replace(/[^\p{L}\p{N}\s]/gu,"").replace(/\s+/g," ");
+    const accepted=parseArrayValue(q.correct)||[q.correct];
+    correct=accepted.some(value=>normalizeTyped(answer)===normalizeTyped(value));
    }else if(q.type==="puzzle"){
     const expected=parseArrayValue(q.correct)||[],submitted=parseArrayValue(answer)||[];
     correct=expected.length===submitted.length&&expected.every((value,index)=>normalize(value)===normalize(submitted[index]));
