@@ -1165,3 +1165,8 @@ body.student-home{
 
 .mj-student-rank{animation:mjRankEntrance .35s ease both}
 .mj-student-rank:nth-child(2){animation-delay:.05s}.mj-student-rank:nth-child(3){animation-delay:.1s}.mj-student-rank:nth-child(4){animation-delay:.15s}.mj-student-rank:nth-child(5){animation-delay:.2s}
+
+.mj-waiting-loadout{width:150px;height:150px;display:grid;place-items:center;border:1px solid #e3dcfa;border-radius:50%;background:radial-gradient(circle,#fff 25%,#ece7ff 100%);box-shadow:0 12px 40px #6955bf30;animation:mjMascotFloat 3s ease-in-out infinite}
+.mj-waiting-loadout .mj-hero-svg{width:115px;height:128px}
+.mj-waiting-loadout .mj-car-svg{width:138px;height:82px}
+.mj-waiting-loadout-label{cursor:default}
