@@ -6,12 +6,12 @@ const MAX_QUESTIONS=200,MAX_ANSWERS=6;
 const noPoints=new Set(["poll","word_cloud","open_ended","brainstorm"]);
 const textTypes=new Set(["type_answer","open_ended","word_cloud","brainstorm"]);
 const labels={
-  quiz:"Viktorina",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Javob yozish",
+  quiz:"4 ta javob",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Matn yozish",
   puzzle:"Boshqotirma",slider:"Siljitgich",poll:"So‘rovnoma",
   word_cloud:"So‘zlar buluti",open_ended:"Ochiq savol",brainstorm:"G‘oyalar jamlanmasi"
 };
 const descriptions={
-  quiz:"Bir nechta variantdan to‘g‘ri javobni tanlang",
+  quiz:"4 ta variantdan to‘g‘ri javobni tanlang",
   true_false:"Fikr to‘g‘ri yoki noto‘g‘ri ekanini belgilang",
   type_answer:"O‘quvchi javobni o‘zi yozadi",
   puzzle:"Javoblarni to‘g‘ri ketma-ketlikka keltiring",
@@ -21,10 +21,7 @@ const descriptions={
   open_ended:"O‘quvchilar erkin fikr bildirsin",
   brainstorm:"Bir nechta g‘oyani bitta joyga jamlang"
 };
-const typeGroups=[
-  {title:"Bilimni tekshirish",items:["quiz","true_false","type_answer","puzzle","slider"]},
-  {title:"Fikr va g‘oyalar",items:["poll","word_cloud","open_ended","brainstorm"]}
-];
+const typeGroups=[{title:"SAVOL TURLARI",items:["quiz","true_false","type_answer"]}];
 const typeIcons={
   quiz:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7.5 12.5 3 3 6-7"/></svg>',
   true_false:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="5"/><circle cx="17" cy="12" r="5"/><path d="m6 12 1.5 1.5L10 10m5-1 1 1 2-2"/></svg>',
