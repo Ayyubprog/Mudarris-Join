@@ -13,7 +13,61 @@ async function createSession(teacher,env){const token=uid()+uid();await env.DB.p
 async function teacherRequired(req,env){return await auth(req,env)}
 const canonicalEmail=value=>String(value??"").trim().toLowerCase();
 const parseBody=async req=>{try{return await req.json()}catch{return {}}};
-const publicQuestion=q=>({id:q.id,type:q.question_type,prompt:q.prompt,options:JSON.parse(q.options||"[]"),correct:q.correct_answer,time:q.time_limit,points:q.points,media:q.media_url||""});
+const parseArrayValue=value=>{try{const parsed=JSON.parse(String(value||""));return Array.isArray(parsed)?parsed:null}catch{return null}};
+const publicQuestion=q=>{const options=JSON.parse(q.options||"[]"),multiple=parseArrayValue(q.correct_answer);return {id:q.id,type:q.question_type,prompt:q.prompt,options,correct:q.correct_answer,time:q.time_limit,points:q.points,media:q.media_url||"",multi_select:q.question_type==="quiz"&&Array.isArray(multiple)&&multiple.length>1}};
+const normalizeQuestionSet=input=>{
+ if(!Array.isArray(input)||input.length<1||input.length>200)return {error:"Viktorinada 1–200 ta savol bo‘lishi kerak."};
+ const allowed=new Set(["quiz","true_false","type_answer","puzzle","slider","poll","word_cloud","open_ended","brainstorm"]);
+ const questions=[];
+ for(let index=0;index<input.length;index++){
+  const raw=input[index]||{},type=String(raw.type||"quiz"),prompt=safe(raw.prompt).slice(0,120),time=Math.round(Number(raw.time)||20);
+  if(!allowed.has(type))return {error:(index+1)+"-savol turi qo‘llab-quvvatlanmaydi."};
+  if(!prompt)return {error:(index+1)+"-savol matnini kiriting."};
+  if(prompt.length>120)return {error:(index+1)+"-savol matni 120 belgidan oshmasin."};
+  if(!Number.isFinite(time)||time<5||time>240)return {error:(index+1)+"-savol vaqti 5–240 soniya orasida bo‘lishi kerak."};
+  if(type==="word_cloud"&&time<20)return {error:"So‘zlar buluti uchun kamida 20 soniya kerak."};
+  if(type==="open_ended"&&time<20)return {error:"Ochiq savol uchun kamida 20 soniya kerak."};
+  if(type==="brainstorm"&&time<30)return {error:"G‘oyalar jamlanmasi uchun kamida 30 soniya kerak."};
+  let options=(Array.isArray(raw.options)?raw.options:[]).map(option=>safe(typeof option==="string"?option:option?.text).slice(0,75)).filter(Boolean);
+  if(options.length>6)return {error:(index+1)+"-savolda 6 tadan ko‘p javob bo‘lishi mumkin emas."};
+   if(["quiz","poll","puzzle"].includes(type)&&new Set(options.map(value=>value.toLocaleLowerCase("uz"))).size!==options.length)return {error:(index+1)+"-savoldagi javob variantlari takrorlanmasligi kerak."};
+  const rawCorrect=String(raw.correct??"").trim();
+  let correct="",points=[0,1000,2000].includes(Number(raw.points))?Number(raw.points):1000;
+  if(["quiz","true_false"].includes(type)){
+   if(type==="true_false")options=["To‘g‘ri","Noto‘g‘ri"];
+   if(options.length<2)return {error:(index+1)+"-savolda kamida 2 ta javob varianti kerak."};
+   const selected=parseArrayValue(rawCorrect);
+   if(type==="quiz"&&selected){
+    const answers=selected.map(value=>safe(value).slice(0,75)).filter(Boolean);
+    if(answers.length<2||answers.some(value=>!options.includes(value))||new Set(answers).size!==answers.length)return {error:(index+1)+"-savolda bir nechta to‘g‘ri javoblarni tekshiring."};
+    correct=JSON.stringify(answers);
+   }else{
+    correct=safe(rawCorrect).slice(0,75);
+    if(!options.includes(correct))return {error:(index+1)+"-savolda to‘g‘ri javob variantini belgilang."};
+   }
+  }else if(type==="poll"){
+   if(options.length<2)return {error:(index+1)+"-so‘rovnomada kamida 2 ta javob varianti kerak."};
+   points=0;correct="";
+  }else if(type==="type_answer"){
+   correct=safe(rawCorrect).slice(0,75);
+   if(!correct)return {error:(index+1)+"-savol uchun qabul qilinadigan javobni kiriting."};
+  }else if(type==="puzzle"){
+   const ordered=parseArrayValue(rawCorrect);
+   if(options.length<2||!ordered||ordered.length!==options.length||ordered.some((value,i)=>safe(value)!==options[i]))return {error:(index+1)+"-boshqotirmada javoblar ketma-ketligini tekshiring."};
+   correct=JSON.stringify(ordered.map(value=>safe(value).slice(0,75)));
+  }else if(type==="slider"){
+   const min=Number(raw.options?.[0]),max=Number(raw.options?.[1]),step=Number(raw.options?.[2]),tolerance=Number(raw.options?.[3]||0),target=Number(rawCorrect);
+   if(![min,max,step,tolerance,target].every(Number.isFinite)||max<=min||step<=0||tolerance<0||target<min||target>max)return {error:(index+1)+"-siljitgich chegaralari yoki to‘g‘ri qiymati noto‘g‘ri."};
+   options=[String(min),String(max),String(step),String(tolerance)];correct=String(target);
+  }else{
+   options=[];correct="";points=0;
+  }
+  let media=safe(raw.media).slice(0,1500);
+  if(media){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}}
+  questions.push({type,prompt,options,correct,time,points,media});
+ }
+ return {questions};
+};
 async function loadGame(env,id,teacherId){const game=await env.DB.prepare("SELECT * FROM games WHERE id=? AND teacher_id=?").bind(id,teacherId).first();if(!game)return null;const {results}=await env.DB.prepare("SELECT * FROM questions WHERE game_id=? ORDER BY position").bind(id).all();return {...game,questions:results.map(publicQuestion)}}
 async function loadSession(env,pin){return await env.DB.prepare("SELECT s.*,g.title,g.subject,g.grade FROM live_sessions s JOIN games g ON g.id=s.game_id WHERE s.pin=?").bind(pin).first()}
 async function playerList(env,sessionId){const {results}=await env.DB.prepare("SELECT id,nickname,avatar,score,streak,joined_at FROM players WHERE session_id=? ORDER BY score DESC,joined_at ASC").bind(sessionId).all();return results}
@@ -32,17 +86,92 @@ async function main(req,env){
  if(path==="auth/google/callback"&&method==="GET"){if(!env.GOOGLE_CLIENT_ID||!env.GOOGLE_CLIENT_SECRET)return Response.redirect("/login.html?error=google_setup",302);const code=url.searchParams.get("code"),state=url.searchParams.get("state"),savedState=readCookie(req,"mj_google_state"),flow=readCookie(req,"mj_google_flow")==="signup"?"signup":"login";if(!code)return Response.redirect("/login.html?error=google",302);if(!state||state!==savedState)return Response.redirect("/login.html?error=google_state",302);const tokenRes=await fetch("https://oauth2.googleapis.com/token",{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded"},body:new URLSearchParams({code,client_id:env.GOOGLE_CLIENT_ID,client_secret:env.GOOGLE_CLIENT_SECRET,redirect_uri:url.origin+"/api/auth/google/callback",grant_type:"authorization_code"})});const td=await tokenRes.json();if(!td.access_token)return Response.redirect("/login.html?error=google",302);const ur=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{authorization:"Bearer "+td.access_token}});const profile=await ur.json(),email=canonicalEmail(profile.email);if(!profile.email_verified||!email)return Response.redirect("/login.html?error=unverified",302);let teacher=await env.DB.prepare("SELECT id,email,display_name FROM teachers WHERE lower(trim(email))=?").bind(email).first();if(!teacher&&flow!=="signup")return Response.redirect("/login.html?error=no_account",302);if(!teacher){const id=uid(),name=safe(profile.name||email.split("@")[0]).slice(0,80);await env.DB.prepare("INSERT INTO teachers(id,email,display_name,google_sub) VALUES(?,?,?,?)").bind(id,email,name,profile.sub).run();teacher={id,email,display_name:name}}const token=await createSession(teacher,env);const headers=new Headers({Location:"/teacher.html"});headers.append("Set-Cookie",cookie("mj_session",token));headers.append("Set-Cookie",cookie("mj_google_state","",0));headers.append("Set-Cookie",cookie("mj_google_flow","",0));return new Response(null,{status:302,headers})}
  if(path==="teacher/me"&&method==="GET"){const user=await teacherRequired(req,env);return user?json({teacher:user}):json({error:"Tizimga kirish talab etiladi."},401)}
  if(path==="games"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT g.id,g.title,g.subject,g.grade,g.description,g.created_at,COUNT(q.id) AS question_count FROM games g LEFT JOIN questions q ON q.game_id=g.id WHERE g.teacher_id=? GROUP BY g.id ORDER BY g.updated_at DESC").bind(user.id).all();return json({games:results})}
- if(path==="games"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),title=safe(b.title).slice(0,90),qs=Array.isArray(b.questions)?b.questions.slice(0,200):[];if(title.length<3||!qs.length)return json({error:"Viktorinaga nom bering va kamida bitta savol qo‘shing."},400);const r=await env.DB.prepare("INSERT INTO games(teacher_id,title,subject,grade,description) VALUES(?,?,?,?,?)").bind(user.id,title,safe(b.subject).slice(0,60),safe(b.grade).slice(0,30),safe(b.description).slice(0,240)).run();const id=r.meta.last_row_id;for(let i=0;i<qs.length;i++){const q=qs[i];if(!safe(q.prompt))continue;const options=(Array.isArray(q.options)?q.options:[]).slice(0,6).map((o,j)=>({id:String(j),text:safe(typeof o==="string"?o:o?.text).slice(0,75)}));const qPoints=Number.isFinite(Number(q.points))?Number(q.points):1000;await env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,i,safe(q.type||"quiz"),safe(q.prompt).slice(0,120),JSON.stringify(options),safe(q.correct).slice(0,75),Math.min(240,Math.max(5,Number(q.time)||20)),Math.min(2000,Math.max(0,qPoints)),safe(q.media).slice(0,1000)).run()}return json({game:{id,title,subject:b.subject||"",grade:b.grade||""}},201)}
- const gm=path.match(/^games\/(\d+)$/);if(gm){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const id=Number(gm[1]);if(method==="GET"){const game=await loadGame(env,id,user.id);return game?json({game}):json({error:"O‘yin topilmadi."},404)}if(method==="DELETE"){await env.DB.prepare("DELETE FROM questions WHERE game_id=? AND game_id IN(SELECT id FROM games WHERE teacher_id=?)").bind(id,user.id).run();const r=await env.DB.prepare("DELETE FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).run();return json({ok:true})}if(method==="PUT"){const b=await parseBody(req),title=safe(b.title).slice(0,90),qs=Array.isArray(b.questions)?b.questions.slice(0,200):[];const owned=await env.DB.prepare("SELECT id FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).first();if(!owned)return json({error:"O‘yin topilmadi."},404);if(title.length<3||!qs.length)return json({error:"Viktorinaga nom bering va savollar qo‘shing."},400);await env.DB.prepare("UPDATE games SET title=?,subject=?,grade=?,description=?,updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(title,safe(b.subject),safe(b.grade),safe(b.description),id).run();await env.DB.prepare("DELETE FROM questions WHERE game_id=?").bind(id).run();for(let i=0;i<qs.length;i++){const q=qs[i],options=(Array.isArray(q.options)?q.options:[]).slice(0,6).map((o,j)=>({id:String(j),text:safe(typeof o==="string"?o:o?.text).slice(0,75)})),qPoints=Number.isFinite(Number(q.points))?Number(q.points):1000;await env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,i,safe(q.type||"quiz"),safe(q.prompt).slice(0,120),JSON.stringify(options),safe(q.correct).slice(0,75),Math.min(240,Math.max(5,Number(q.time)||20)),Math.min(2000,Math.max(0,qPoints)),safe(q.media).slice(0,1000)).run()}return json({ok:true,game:await loadGame(env,id,user.id)})}}
+  if(path==="games"&&method==="POST"){
+   const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);
+   const b=await parseBody(req),title=safe(b.title).slice(0,90),normalized=normalizeQuestionSet(b.questions);
+   if(title.length<3)return json({error:"Viktorina nomini kiriting (kamida 3 belgi)."},400);
+   if(normalized.error)return json({error:normalized.error},400);
+   const result=await env.DB.prepare("INSERT INTO games(teacher_id,title,subject,grade,description) VALUES(?,?,?,?,?)").bind(user.id,title,safe(b.subject).slice(0,60),safe(b.grade).slice(0,30),safe(b.description).slice(0,240)).run();
+   const id=result.meta.last_row_id;
+   try{
+    const statements=normalized.questions.map((q,index)=>env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,index,q.type, q.prompt,JSON.stringify(q.options.map((text,j)=>({id:String(j),text}))),q.correct,q.time,q.points,q.media));
+    await env.DB.batch(statements);
+   }catch(error){await env.DB.prepare("DELETE FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).run();throw error}
+   return json({game:{id,title,subject:safe(b.subject).slice(0,60),grade:safe(b.grade).slice(0,30),question_count:normalized.questions.length}},201);
+  }
+const gm=path.match(/^games\/(\d+)$/);
+ if(gm){
+  const user=await teacherRequired(req,env);
+  if(!user)return json({error:"Tizimga kirish talab etiladi."},401);
+  const id=Number(gm[1]);
+  if(method==="GET"){
+   const game=await loadGame(env,id,user.id);
+   return game?json({game}):json({error:"O‘yin topilmadi."},404);
+  }
+  if(method==="DELETE"){
+   await env.DB.prepare("DELETE FROM questions WHERE game_id=? AND game_id IN(SELECT id FROM games WHERE teacher_id=?)").bind(id,user.id).run();
+   const result=await env.DB.prepare("DELETE FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).run();
+   if(!result.meta.changes)return json({error:"O‘yin topilmadi."},404);
+   return json({ok:true});
+  }
+  if(method==="PUT"){
+   const b=await parseBody(req),title=safe(b.title).slice(0,90),normalized=normalizeQuestionSet(b.questions);
+   const owned=await env.DB.prepare("SELECT id FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).first();
+   if(!owned)return json({error:"O‘yin topilmadi."},404);
+   if(title.length<3)return json({error:"Viktorina nomini kiriting (kamida 3 belgi)."},400);
+   if(normalized.error)return json({error:normalized.error},400);
+   const statements=[
+    env.DB.prepare("UPDATE games SET title=?,subject=?,grade=?,description=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND teacher_id=?").bind(title,safe(b.subject).slice(0,60),safe(b.grade).slice(0,30),safe(b.description).slice(0,240),id,user.id),
+    env.DB.prepare("DELETE FROM questions WHERE game_id=?").bind(id),
+    ...normalized.questions.map((q,index)=>env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,index,q.type,q.prompt,JSON.stringify(q.options.map((text,j)=>({id:String(j),text}))),q.correct,q.time,q.points,q.media))
+   ];
+   await env.DB.batch(statements);
+   return json({ok:true,game:await loadGame(env,id,user.id)});
+  }
+ }
  if(path==="classes"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT c.*,COUNT(s.id) AS student_count FROM classes c LEFT JOIN class_students s ON s.class_id=c.id WHERE c.teacher_id=? GROUP BY c.id ORDER BY c.created_at DESC").bind(user.id).all();return json({classes:results})}
  if(path==="classes"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),name=safe(b.name).slice(0,70);if(!name)return json({error:"Sinf nomini kiriting."},400);const code=Math.random().toString(36).slice(2,8).toUpperCase();const r=await env.DB.prepare("INSERT INTO classes(teacher_id,name,grade,join_code) VALUES(?,?,?,?)").bind(user.id,name,safe(b.grade).slice(0,50),code).run();return json({class:{id:r.meta.last_row_id,name,grade:b.grade||"",join_code:code,student_count:0}},201)}
  const cl=path.match(/^classes\/(\d+)$/);if(cl){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const id=Number(cl[1]),c=await env.DB.prepare("SELECT * FROM classes WHERE id=? AND teacher_id=?").bind(id,user.id).first();if(!c)return json({error:"Sinf topilmadi."},404);if(method==="POST"){const b=await parseBody(req),names=Array.isArray(b.students)?b.students.slice(0,80):[];for(const name of names){const clean=safe(name).slice(0,80);if(clean)await env.DB.prepare("INSERT INTO class_students(class_id,name) VALUES(?,?)").bind(id,clean).run()}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({ok:true,students:results})}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({class:c,students:results})}
- if(path==="reports"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT s.id,s.pin,s.status,s.created_at,g.title,s.mode,COUNT(DISTINCT p.id) players,COUNT(a.id) answers,SUM(a.correct) correct_answers FROM live_sessions s JOIN games g ON g.id=s.game_id LEFT JOIN players p ON p.session_id=s.id LEFT JOIN answers a ON a.session_id=s.id WHERE s.teacher_id=? GROUP BY s.id ORDER BY s.created_at DESC LIMIT 60").bind(user.id).all();return json({reports:results.map(x=>({...x,correct_answers:x.correct_answers||0}))})}
+  if(path==="reports"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT s.id,s.pin,s.status,s.created_at,g.title,s.mode,COUNT(DISTINCT p.id) players,COUNT(a.id) answers,SUM(CASE WHEN q.question_type NOT IN ('poll','word_cloud','open_ended','brainstorm') THEN 1 ELSE 0 END) graded_answers,SUM(CASE WHEN q.question_type NOT IN ('poll','word_cloud','open_ended','brainstorm') THEN a.correct ELSE 0 END) correct_answers FROM live_sessions s JOIN games g ON g.id=s.game_id LEFT JOIN players p ON p.session_id=s.id LEFT JOIN answers a ON a.session_id=s.id LEFT JOIN questions q ON q.game_id=g.id AND q.position=a.question_position WHERE s.teacher_id=? GROUP BY s.id ORDER BY s.created_at DESC LIMIT 60").bind(user.id).all();return json({reports:results.map(x=>({...x,graded_answers:x.graded_answers||0,correct_answers:x.correct_answers||0}))})}
  if(path==="join"&&method==="POST"){const b=await parseBody(req),pin=safe(b.pin),nickname=safe(b.nickname).slice(0,24),avatar=safe(b.avatar||"tiger");const session=await loadSession(env,pin);if(!session||session.status!=="waiting"||session.join_locked)return json({error:"Bu o‘yinga hozir yangi o‘yinchilar qo‘shila olmaydi."},404);if(nickname.length<2)return json({error:"Taxallus kamida 2 ta belgidan iborat bo‘lishi kerak."},400);const count=await env.DB.prepare("SELECT COUNT(*) n FROM players WHERE session_id=?").bind(session.id).first();if(count.n>=100)return json({error:"Bu o‘yinda bo‘sh joy qolmagan."},409);try{const r=await env.DB.prepare("INSERT INTO players(session_id,nickname,avatar) VALUES(?,?,?)").bind(session.id,nickname,avatar).run();return json({player:{id:r.meta.last_row_id,nickname,avatar,score:0}} ,201)}catch{return json({error:"Bu taxallus band. Boshqasini tanlang."},409)}}
- const sm=path.match(/^session\/(\d{6})$/);if(sm&&method==="GET"){const s=await loadSession(env,sm[1]);if(!s)return json({error:"O‘yin PIN-kodi topilmadi."},404);const q=await currentQuestion(env,s.game_id,s.current_question),players=await playerList(env,s.id),studentQuestion=q?{...q,correct:""}:null;return json({session:s,current_question:studentQuestion,leaderboard:players.slice(0,10),players})}
- if(path==="answer"&&method==="POST"){const b=await parseBody(req),s=await loadSession(env,safe(b.pin));if(!s||s.status!=="playing")return json({error:"O‘yin hozir javoblarni qabul qilmayapti."},409);const player=await env.DB.prepare("SELECT * FROM players WHERE id=? AND session_id=?").bind(Number(b.player_id),s.id).first();const q=await currentQuestion(env,s.game_id,s.current_question);if(!player||!q)return json({error:"O‘yinchi yoki savol topilmadi."},404);if(player.last_answered_question===s.current_question)return json({error:"Javob avval yuborilgan."},409);const expected=String(q.correct||"").trim().toLowerCase(),answer=safe(b.answer),correct=!!expected&&answer.trim().toLowerCase()===expected;const elapsed=Math.max(0,Date.now()-(s.question_started_at||Date.now())),limit=q.time||20,earned=points(correct,elapsed,limit,q.points||1000,player.streak||0);await env.DB.prepare("INSERT INTO answers(session_id,player_id,question_position,answer,correct,points,response_ms) VALUES(?,?,?,?,?,?,?)").bind(s.id,player.id,s.current_question,answer,correct?1:0,earned,elapsed).run();await env.DB.prepare("UPDATE players SET score=score+?,streak=?,last_answered_question=? WHERE id=?").bind(earned,correct?player.streak+1:0,s.current_question,player.id).run();const updated=await env.DB.prepare("SELECT score FROM players WHERE id=?").bind(player.id).first();return json({correct,points:earned,total:updated.score})}
+  const sm=path.match(/^session\/(\d{6})$/);if(sm&&method==="GET"){const s=await loadSession(env,sm[1]);if(!s)return json({error:"O‘yin PIN-kodi topilmadi."},404);const q=await currentQuestion(env,s.game_id,s.current_question),players=await playerList(env,s.id),studentQuestion=q?{...q,correct:""}:null;return json({session:s,current_question:studentQuestion,leaderboard:players.slice(0,10),players})}
+  if(path==="answer"&&method==="POST"){
+   const b=await parseBody(req),s=await loadSession(env,safe(b.pin));
+   if(!s||s.status!=="playing")return json({error:"O‘yin hozir javoblarni qabul qilmayapti."},409);
+   const player=await env.DB.prepare("SELECT * FROM players WHERE id=? AND session_id=?").bind(Number(b.player_id),s.id).first();
+   const q=await currentQuestion(env,s.game_id,s.current_question);
+   if(!player||!q)return json({error:"O‘yinchi yoki savol topilmadi."},404);
+   if(player.last_answered_question===s.current_question)return json({error:"Javob avval yuborilgan."},409);
+   const answer=typeof b.answer==="string"?safe(b.answer).slice(0,1000):JSON.stringify(b.answer??"").slice(0,1000);
+   const normalize=value=>String(value??"").trim().replace(/\s+/g," ").toLocaleLowerCase("uz");
+   let correct=false;
+   const ungraded=["poll","word_cloud","open_ended","brainstorm"].includes(q.type);
+   if(ungraded)correct=null;
+   else if(q.type==="quiz"){
+    const expected=parseArrayValue(q.correct);
+    if(expected){
+      const submitted=parseArrayValue(answer)||[];
+      const left=expected.map(normalize).sort(),right=submitted.map(normalize).sort();
+      correct=left.length===right.length&&left.every((value,index)=>value===right[index]);
+    }else correct=normalize(answer)===normalize(q.correct);
+   }else if(q.type==="true_false"||q.type==="type_answer"){
+    correct=normalize(answer)===normalize(q.correct);
+   }else if(q.type==="puzzle"){
+    const expected=parseArrayValue(q.correct)||[],submitted=parseArrayValue(answer)||[];
+    correct=expected.length===submitted.length&&expected.every((value,index)=>normalize(value)===normalize(submitted[index]));
+   }else if(q.type==="slider"){
+    const value=Number(answer),target=Number(q.correct),step=Number(q.options?.[2]?.text||1),tolerance=Number(q.options?.[3]?.text||0);
+    correct=Number.isFinite(value)&&Number.isFinite(target)&&Math.abs(value-target)<=Math.max(tolerance,step/2);
+   }
+   const elapsed=Math.max(0,Date.now()-(s.question_started_at||Date.now())),limit=q.time||20,earned=correct===true?points(true,elapsed,limit,q.points||1000,player.streak||0):0;
+   const nextStreak=correct===null?Number(player.streak||0):correct?Number(player.streak||0)+1:0;
+   await env.DB.prepare("INSERT INTO answers(session_id,player_id,question_position,answer,correct,points,response_ms) VALUES(?,?,?,?,?,?,?)").bind(s.id,player.id,s.current_question,answer,correct===true?1:0,earned,elapsed).run();
+   await env.DB.prepare("UPDATE players SET score=score+?,streak=?,last_answered_question=? WHERE id=?").bind(earned,nextStreak,s.current_question,player.id).run();
+   const updated=await env.DB.prepare("SELECT score FROM players WHERE id=?").bind(player.id).first();
+   return json({correct,points:earned,total:updated.score,recorded:true});
+  }
  if(path==="host"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),game=await loadGame(env,Number(b.game_id),user.id);if(!game)return json({error:"Viktorina topilmadi."},404);if(!game.questions.length)return json({error:"Bu viktorinada savollar yo‘q."},400);let pin;for(let i=0;i<8;i++){pin=String(Math.floor(100000+Math.random()*900000));if(!await env.DB.prepare("SELECT id FROM live_sessions WHERE pin=? AND status!='finished'").bind(pin).first())break}const mode=safe(b.mode||"classic");const r=await env.DB.prepare("INSERT INTO live_sessions(pin,game_id,teacher_id,mode) VALUES(?,?,?,?)").bind(pin,game.id,user.id,mode).run();return json({session:{id:r.meta.last_row_id,pin}} ,201)}
- const hm=path.match(/^host\/(\d{6})$/);if(hm){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const s=await loadSession(env,hm[1]);if(!s||s.teacher_id!==user.id)return json({error:"O‘yin sessiyasi topilmadi."},404);if(method==="GET"){const game=await loadGame(env,s.game_id,user.id),players=await playerList(env,s.id),q=game.questions[s.current_question]||null,stats=await env.DB.prepare("SELECT COUNT(*) total,COALESCE(SUM(correct),0) correct FROM answers WHERE session_id=? AND question_position=?").bind(s.id,s.current_question).first();return json({session:s,players,questions:game.questions,current_question:q,answer_stats:stats})}if(method==="POST"){const b=await parseBody(req),action=safe(b.action);if(action==="start"){await env.DB.prepare("UPDATE live_sessions SET status='playing',current_question=0,started_at=CURRENT_TIMESTAMP,question_started_at=? WHERE id=? AND status='waiting'").bind(Date.now(),s.id).run()}else if(action==="pause"){await env.DB.prepare("UPDATE live_sessions SET status='paused',paused_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="resume"){await env.DB.prepare("UPDATE live_sessions SET status='playing',question_started_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="next"){if(s.current_question+1>=Number((await env.DB.prepare("SELECT COUNT(*) n FROM questions WHERE game_id=?").bind(s.game_id).first()).n)){await env.DB.prepare("UPDATE live_sessions SET status='finished',finished_at=CURRENT_TIMESTAMP WHERE id=?").bind(s.id).run()}else await env.DB.prepare("UPDATE live_sessions SET current_question=current_question+1,question_started_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="finish"){await env.DB.prepare("UPDATE live_sessions SET status='finished',finished_at=CURRENT_TIMESTAMP WHERE id=?").bind(s.id).run()}else if(action==="lock"||action==="unlock"){await env.DB.prepare("UPDATE live_sessions SET join_locked=? WHERE id=?").bind(action==="lock"?1:0,s.id).run()}else if(action==="remove_player"){await env.DB.prepare("DELETE FROM players WHERE id=? AND session_id=?").bind(Number(b.player_id),s.id).run()}return json({ok:true})}}
+ const hm=path.match(/^host\/(\d{6})$/);if(hm){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const s=await loadSession(env,hm[1]);if(!s||s.teacher_id!==user.id)return json({error:"O‘yin sessiyasi topilmadi."},404);if(method==="GET"){const game=await loadGame(env,s.game_id,user.id),players=await playerList(env,s.id),q=game.questions[s.current_question]||null,stats=await env.DB.prepare("SELECT COUNT(*) total,COALESCE(SUM(correct),0) correct FROM answers WHERE session_id=? AND question_position=?").bind(s.id,s.current_question).first();const {results:responses}=await env.DB.prepare("SELECT a.answer,p.nickname,a.created_at FROM answers a JOIN players p ON p.id=a.player_id WHERE a.session_id=? AND a.question_position=? ORDER BY a.created_at DESC LIMIT 60").bind(s.id,s.current_question).all();return json({session:s,players,questions:game.questions,current_question:q,answer_stats:stats,responses})}if(method==="POST"){const b=await parseBody(req),action=safe(b.action);if(action==="start"){await env.DB.prepare("UPDATE live_sessions SET status='playing',current_question=0,started_at=CURRENT_TIMESTAMP,question_started_at=? WHERE id=? AND status='waiting'").bind(Date.now(),s.id).run()}else if(action==="pause"){await env.DB.prepare("UPDATE live_sessions SET status='paused',paused_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="resume"){await env.DB.prepare("UPDATE live_sessions SET status='playing',question_started_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="next"){if(s.current_question+1>=Number((await env.DB.prepare("SELECT COUNT(*) n FROM questions WHERE game_id=?").bind(s.game_id).first()).n)){await env.DB.prepare("UPDATE live_sessions SET status='finished',finished_at=CURRENT_TIMESTAMP WHERE id=?").bind(s.id).run()}else await env.DB.prepare("UPDATE live_sessions SET current_question=current_question+1,question_started_at=? WHERE id=?").bind(Date.now(),s.id).run()}else if(action==="finish"){await env.DB.prepare("UPDATE live_sessions SET status='finished',finished_at=CURRENT_TIMESTAMP WHERE id=?").bind(s.id).run()}else if(action==="lock"||action==="unlock"){await env.DB.prepare("UPDATE live_sessions SET join_locked=? WHERE id=?").bind(action==="lock"?1:0,s.id).run()}else if(action==="remove_player"){await env.DB.prepare("DELETE FROM players WHERE id=? AND session_id=?").bind(Number(b.player_id),s.id).run()}return json({ok:true})}}
  return json({error:"API yo‘li topilmadi."},404);
  }catch(e){return json({error: "Server xatoligi: "+String(e?.message||e)},500)}
 }

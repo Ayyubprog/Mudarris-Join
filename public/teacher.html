@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900;1000&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/theme.css?v=teacher-dashboard-premium-20261101">
+  <link rel="stylesheet" href="/theme.css?v=teacher-dashboard-icons-20261101">
 </head>
 <body class="mj-dashboard">
   <header class="mj-topbar">
@@ -18,12 +18,12 @@
       <span class="mj-wordmark">MUDARRIS <strong>JOIN</strong></span>
     </a>
     <div class="mj-top-search">
-      <span aria-hidden="true">⌕</span>
+      <span class="mj-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></span>
       <input id="global-search" type="search" placeholder="Viktorina qidirish..." aria-label="Viktorina qidirish">
       <kbd>Ctrl K</kbd>
     </div>
     <div class="mj-top-actions">
-      <button class="mj-top-refresh" data-action="refresh" title="Ma’lumotlarni yangilash" aria-label="Ma’lumotlarni yangilash">↻</button>
+      <button class="mj-top-refresh" data-action="refresh" title="Ma’lumotlarni yangilash" aria-label="Ma’lumotlarni yangilash"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.7 9A7 7 0 0 1 18 6.5L20 12M4 12l2 5.5A7 7 0 0 0 18.3 15"/></svg></button>
       <button class="mj-create-top" data-action="create"><span>＋</span> Yaratish</button>
       <div class="mj-pop-wrap">
         <button class="mj-profile-button" id="profile-button" aria-expanded="false">
@@ -42,14 +42,14 @@
   <div class="mj-dashboard-layout">
     <aside class="mj-sidebar">
       <div class="mj-sidebar-label">ISH MAYDONI</div>
-      <button class="mj-side-link active" data-view="overview"><span>⌂</span><span>Bosh sahifa</span></button>
-      <button class="mj-side-link" data-view="games"><span>▣</span><span>Viktorinalarim</span><span class="mj-nav-count" id="nav-game-count">0</span></button>
-      <button class="mj-side-link" data-view="classes"><span>♟</span><span>Sinflarim</span></button>
-      <button class="mj-side-link" data-view="reports"><span>▥</span><span>Hisobotlar</span></button>
-      <button class="mj-side-link" data-view="discover"><span>✦</span><span>O‘yin rejimlari</span></button>
+      <button class="mj-side-link active" data-view="overview"><span><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z"/></svg></span><span>Bosh sahifa</span></button>
+      <button class="mj-side-link" data-view="games"><span><svg viewBox="0 0 24 24"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H21v17H7.5A2.5 2.5 0 0 0 5 21V4.5Z"/><path d="M5 18.5A2.5 2.5 0 0 1 7.5 16H21M9 7h8m-8 4h6"/></svg></span><span>Viktorinalarim</span><span class="mj-nav-count" id="nav-game-count">0</span></button>
+      <button class="mj-side-link" data-view="classes"><span><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.4-3.2 2.4-5 6-5s5.6 1.8 6 5"/><path d="M16 5.2a3.2 3.2 0 0 1 0 6.1m2 3c1.8.7 2.8 2.5 3 5.7"/></svg></span><span>Sinflarim</span></button>
+      <button class="mj-side-link" data-view="reports"><span><svg viewBox="0 0 24 24"><path d="M4 20V5m0 15h17"/><rect x="7" y="12" width="3" height="5" rx="1"/><rect x="13" y="8" width="3" height="9" rx="1"/><rect x="19" y="3" width="2" height="14" rx="1"/></svg></span><span>Hisobotlar</span></button>
+      <button class="mj-side-link" data-view="discover"><span><svg viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span><span>O‘yin rejimlari</span></button>
       <div class="mj-sidebar-spacer"></div>
       <section class="mj-sidebar-promo">
-        <div class="mj-promo-mark">✦</div>
+        <div class="mj-promo-mark"><svg viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></div>
         <strong>Darsni jonlantiring</strong>
         <p>Yangi viktorina yarating va o‘quvchilaringiz bilan jonli bellashing.</p>
         <button data-action="create">Viktorina yaratish <span>→</span></button>
@@ -61,7 +61,7 @@
       <section id="view-overview" class="mj-view">
         <div class="mj-dashboard-welcome-row">
           <div><div class="mj-eyebrow">O‘QITUVCHI MARKAZI</div><h1>Umumiy ko‘rinish</h1><p>Bugungi darslaringizni rejalashtiring va sinfingiz faolligini kuzating.</p></div>
-          <div class="mj-current-date"><span>◷</span><span id="dashboard-date">Bugun</span></div>
+          <div class="mj-current-date"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span id="dashboard-date">Bugun</span></div>
         </div>
         <section class="mj-welcome-banner">
           <div class="mj-welcome-copy">
@@ -82,10 +82,10 @@
         </section>
 
         <section class="mj-stats-grid" aria-label="Faoliyat ko‘rsatkichlari">
-          <article class="mj-stat-card"><span class="mj-stat-icon stat-purple">▣</span><div><small>Viktorinalar</small><strong id="stat-games">0</strong><span class="mj-stat-hint">Saqlangan viktorinalar</span></div><span class="mj-stat-arrow">↗</span></article>
-          <article class="mj-stat-card"><span class="mj-stat-icon stat-blue">♟</span><div><small>Sinflar</small><strong id="stat-classes">0</strong><span class="mj-stat-hint">Siz yaratgan guruhlar</span></div><span class="mj-stat-arrow">↗</span></article>
-          <article class="mj-stat-card"><span class="mj-stat-icon stat-orange">◎</span><div><small>O‘yin ishtiroklari</small><strong id="stat-players">0</strong><span class="mj-stat-hint">Jami qatnashuvlar</span></div><span class="mj-stat-arrow">↗</span></article>
-          <article class="mj-stat-card"><span class="mj-stat-icon stat-green">✓</span><div><small>To‘g‘ri javoblar</small><strong id="stat-accuracy">—</strong><span class="mj-stat-hint">O‘rtacha aniqlik</span></div><span class="mj-stat-arrow">↗</span></article>
+          <article class="mj-stat-card"><span class="mj-stat-icon stat-purple"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8m-8 4h8m-8 4h5"/></svg></span><div><small>Viktorinalar</small><strong id="stat-games">0</strong><span class="mj-stat-hint">Saqlangan viktorinalar</span></div><span class="mj-stat-arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></span></article>
+          <article class="mj-stat-card"><span class="mj-stat-icon stat-blue"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.4-3.2 2.4-5 6-5s5.6 1.8 6 5"/><path d="M16 5.2a3.2 3.2 0 0 1 0 6.1"/></svg></span><div><small>Sinflar</small><strong id="stat-classes">0</strong><span class="mj-stat-hint">Siz yaratgan guruhlar</span></div><span class="mj-stat-arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></span></article>
+          <article class="mj-stat-card"><span class="mj-stat-icon stat-orange"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="18" cy="9" r="2.4"/><path d="M2.8 20c.4-3.2 2.5-5 6.2-5s5.8 1.8 6.2 5M15 15c3.5-.5 5.6 1.2 6 4"/></svg></span><div><small>O‘yin ishtiroklari</small><strong id="stat-players">0</strong><span class="mj-stat-hint">Jami qatnashuvlar</span></div><span class="mj-stat-arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></span></article>
+          <article class="mj-stat-card"><span class="mj-stat-icon stat-green"><svg viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></svg></span><div><small>To‘g‘ri javoblar</small><strong id="stat-accuracy">—</strong><span class="mj-stat-hint">O‘rtacha aniqlik</span></div><span class="mj-stat-arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></span></article>
         </section>
 
         <div class="mj-overview-grid">
@@ -115,9 +115,9 @@
 
         <section class="mj-quick-actions">
           <div><span class="mj-panel-kicker">TEZKOR AMALLAR</span><h2>Keyingi qadamingiz</h2></div>
-          <button class="mj-quick-action" data-action="create"><span class="mj-quick-icon">＋</span><span><strong>Viktorina yaratish</strong><small>Savol va javoblarni tayyorlang</small></span><b>→</b></button>
-          <button class="mj-quick-action" data-view="classes"><span class="mj-quick-icon blue">♟</span><span><strong>Sinf qo‘shish</strong><small>Guruh va o‘quvchilarni boshqaring</small></span><b>→</b></button>
-          <button class="mj-quick-action" data-view="discover"><span class="mj-quick-icon orange">✦</span><span><strong>Rejim tanlash</strong><small>O‘yinga mos bellashuvni tanlang</small></span><b>→</b></button>
+          <button class="mj-quick-action" data-action="create"><span class="mj-quick-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span><strong>Viktorina yaratish</strong><small>Savol va javoblarni tayyorlang</small></span><b>→</b></button>
+          <button class="mj-quick-action" data-view="classes"><span class="mj-quick-icon blue"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.4-3.2 2.4-5 6-5s5.6 1.8 6 5M18 8v6m-3-3h6"/></svg></span><span><strong>Sinf qo‘shish</strong><small>Guruh va o‘quvchilarni boshqaring</small></span><b>→</b></button>
+          <button class="mj-quick-action" data-view="discover"><span class="mj-quick-icon orange"><svg viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg></span><span><strong>Rejim tanlash</strong><small>O‘yinga mos bellashuvni tanlang</small></span><b>→</b></button>
         </section>
       </section>
 
@@ -157,6 +157,6 @@
 
   <div id="modal-root"></div>
   <div id="toast-root" aria-live="polite"></div>
-  <script src="/teacher.js?v=mj-teacher-command-center-20261101" defer></script>
+  <script src="/teacher.js?v=teacher-dashboard-icons-20261101" defer></script>
 </body>
 </html>

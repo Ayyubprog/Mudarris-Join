@@ -1,1 +1,103 @@
-(()=>{const $=s=>document.querySelector(s),root=$('#host-root'),pin=new URLSearchParams(location.search).get('pin')||'';let state=null,loading=false;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));async function api(path,opts={}){const r=await fetch('/api/'+path,{credentials:'same-origin',headers:{'content-type':'application/json'},...opts});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'So‘rov bajarilmadi');return d}const av=k=>({tiger:'🐯',earth:'🌍',skull:'💀',alien:'👽',cat:'🐱',fox:'🦊',robot:'🤖',ghost:'👻',lion:'🦁',panda:'🐼',rocket:'🚀',crown:'👑'})[k]||'🙂';function render(){if(!state)return;const s=state.session,q=state.current_question,waiting=s.status==='waiting',finished=s.status==='finished',paused=s.status==='paused';const players=state.players||[],media=q?.media||"";let mediaHtml="";if(media){try{const u=new URL(media);if(["http:","https:"].includes(u.protocol)){const safe=esc(u.href);mediaHtml=/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(u.pathname)?'<div class="host-question-media"><img src="'+safe+'" alt="Savol uchun media"></div>':'<div class="host-question-media"><a href="'+safe+'" target="_blank" rel="noopener">Biriktirilgan media ↗</a></div>'}}catch{mediaHtml=""}}const modes={classic:'KLASSIK',team:'JAMOAVIY',marble:'SHARLAR POYGASI',racing:'AVTOMOBIL POYGASI',accuracy:'ANIQLIK',confidence:'ISHONCH',kingdoms:'RANGLAR QIROLLIGI',tower:'ENG BALAND MINORA',treasure:'XAZINA IZLOVCHILAR',submarine:'SUVOSTI JAMOASI',robot:'ROBOTLAR POYGASI',cosmic:'KOINOT SARI'};root.innerHTML='<div class="host-heading"><div><div class="eyebrow">JONLI SINF O‘YINI</div><h1 class="display" style="font-size:34px;margin:5px 0">'+esc(s.title)+'</h1><span class="pill">'+(modes[s.mode]||'KLASSIK')+'</span> <span class="pill">'+esc(({waiting:'Kutilmoqda',playing:'Davom etmoqda',paused:'To‘xtatilgan',finished:'Yakunlangan'})[s.status]||s.status)+'</span></div><div class="pin-box"><div class="eyebrow">O‘YIN PIN-KODI</div><div class="display pin-number">'+esc(pin)+'</div><div class="muted" style="font-size:11px">O‘quvchilar MUDARRIS JOIN orqali kiradi</div></div></div><div class="host-grid"><section class="card host-panel"><div class="eyebrow">O‘YIN BOSHQARUVI</div>'+(waiting?'<div class="host-wait"><div class="host-symbol">✦</div><h2 class="display">O‘yinchilar ulanmoqda</h2><p class="muted">PIN-kodni sinfingizga yuboring. Kutish xonasi avtomatik yangilanadi.</p></div>':finished?'<div class="host-wait"><div class="host-symbol">🏆</div><h2 class="display">O‘yin yakunlandi</h2><p class="muted">Sinf reytingi tayyor.</p></div>':paused?'<div class="host-wait"><div class="host-symbol">Ⅱ</div><h2 class="display">O‘yin vaqtincha to‘xtatildi</h2><p class="muted">Sinf tayyor bo‘lganda davom ettiring.</p></div>':'<div class="pill" style="margin-top:16px">SAVOL '+(s.current_question+1)+' / '+state.questions.length+'</div><h2 class="display question-title">'+esc(q?.prompt||'Savol')+'</h2>'+mediaHtml+'<div class="host-options">'+(q?.options||[]).map((o,i)=>'<div class="answer-tile '+['red','blue','yellow','green'][i%4]+'"><span class="answer-symbol">'+['▲','◆','●','■'][i%4]+'</span>'+esc(o.text||o)+'</div>').join('')+'</div><div class="host-meta"><span class="pill">⏱ '+(q?.time||20)+' soniya</span><span class="pill">★ '+(q?.points??1000)+' ball</span><span class="pill">'+(state.answer_stats?.total||0)+' ta javob</span></div><div class="correct-line">To‘g‘ri javob: <strong>'+esc(q?.correct||'Baholanmaydi')+'</strong></div>')+'<div class="host-actions">'+(waiting?'<button class="btn btn-primary" data-action="start" '+(!players.length?'disabled':'')+'>▶ O‘YINNI BOSHLASH</button>':'')+(s.status==='playing'?'<button class="btn btn-ghost" data-action="pause">Ⅱ Pauza</button><button class="btn btn-primary" data-action="next">'+(s.current_question+1>=state.questions.length?'O‘yinni yakunlash':'Keyingi savol →')+'</button>':'')+(paused?'<button class="btn btn-primary" data-action="resume">▶ Davom ettirish</button>':'')+(!finished?'<button class="btn btn-ghost" data-action="'+(s.join_locked?'unlock':'lock')+'">'+(s.join_locked?'Kutish xonasini ochish':'Kutish xonasini yopish')+'</button><button class="btn btn-ghost" data-action="finish">Hozir yakunlash</button>':'')+'</div></section><aside class="card host-panel"><div class="players-head"><h2 class="display">O‘yinchilar</h2><span class="pill">'+players.length+' / 100</span></div><div class="players-list">'+(players.map(p=>'<div class="player-row"><span class="player-avatar">'+av(p.avatar)+'</span><div class="player-name"><strong>'+esc(p.nickname)+'</strong><small>'+p.streak+' ketma-ket javob</small></div><strong>'+p.score+'</strong><button class="btn btn-ghost remove-player" data-remove="'+p.id+'">×</button></div>').join('')||'<p class="muted">O‘quvchilar kirishi kutilmoqda…</p>')+'</div></aside></div><section class="card host-panel leaderboard"><div class="players-head"><h2 class="display">Jonli reyting</h2><span class="muted">Ballar avtomatik yangilanadi</span></div><div class="leader-grid">'+players.slice().sort((a,b)=>b.score-a.score).slice(0,10).map((p,i)=>'<div class="leader-item"><small>#'+(i+1)+'</small><strong>'+av(p.avatar)+' '+esc(p.nickname)+'</strong><b>'+p.score.toLocaleString()+'</b></div>').join('')+'</div></section>'}async function load(){if(loading)return;loading=true;try{state=await api('host/'+pin);render()}catch(e){root.innerHTML='<div class="card" style="padding:25px">'+esc(e.message)+' <a href="/teacher.html">Boshqaruv paneliga qaytish</a></div>'}finally{loading=false}}async function action(a,id){try{await api('host/'+pin,{method:'POST',body:JSON.stringify({action:a,player_id:id})});await load()}catch(e){alert(e.message)}}document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)action(b.dataset.action);const rm=e.target.closest('[data-remove]');if(rm)action('remove_player',Number(rm.dataset.remove))});(async()=>{if(!/^\d{6}$/.test(pin)){root.textContent='O‘yin PIN-kodi noto‘g‘ri.';return}try{await api('auth/me');await load();setInterval(load,1600)}catch{location.href='/login.html'}})()})();
+(()=>{
+"use strict";
+const $=selector=>document.querySelector(selector);
+const root=$("#host-root");
+const pin=new URLSearchParams(location.search).get("pin")||"";
+const state={data:null,loading:false,timer:null};
+const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+const avatars={tiger:"🐯",earth:"🌍",skull:"💀",alien:"👽",cat:"🐱",fox:"🦊",robot:"🤖",ghost:"👻",lion:"🦁",panda:"🐼",rocket:"🚀",crown:"👑"};
+const modeNames={classic:"Klassik",team:"Jamoaviy",marble:"Sharlar poygasi",racing:"Avtomobil poygasi",accuracy:"Aniqlik",confidence:"Ishonch",kingdoms:"Ranglar qirolligi",tower:"Eng baland minora",treasure:"Xazina izlovchilar",submarine:"Suvosti jamoasi",robot:"Robotlar poygasi",cosmic:"Koinot sari"};
+const statusNames={waiting:"Kutilmoqda",playing:"Davom etmoqda",paused:"Pauzada",finished:"Yakunlangan"};
+async function api(path,options={}){
+ const response=await fetch("/api/"+path,{credentials:"same-origin",headers:{"content-type":"application/json"},...options});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.error||"So‘rov bajarilmadi.");
+ return data;
+}
+function arrayValue(value){try{const parsed=JSON.parse(String(value||""));return Array.isArray(parsed)?parsed:null}catch{return null}}
+function mediaHtml(value){
+ if(!value)return "";
+ try{
+  const url=new URL(value);if(!["http:","https:"].includes(url.protocol))return "";
+  const safe=esc(url.href),host=url.hostname.toLowerCase(),videoId=(host==="youtu.be"?url.pathname.slice(1):url.searchParams.get("v"))||"";
+  if((host==="youtube.com"||host.endsWith(".youtube.com")||host==="youtu.be")&&/^[A-Za-z0-9_-]{6,15}$/.test(videoId))return '<div class="host-question-media"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(videoId)+'" title="Savol videosi" loading="lazy" allowfullscreen></iframe></div>';
+  if(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(url.pathname))return '<div class="host-question-media"><img src="'+safe+'" alt="Savol uchun media"></div>';
+  if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(url.pathname))return '<div class="host-question-media"><video src="'+safe+'" controls playsinline></video></div>';
+  return '<div class="host-question-media"><a href="'+safe+'" target="_blank" rel="noopener">Biriktirilgan media ↗</a></div>';
+ }catch{return ""}
+}
+function correctText(question){
+ if(!question)return "—";
+ if(["poll","word_cloud","open_ended","brainstorm"].includes(question.type))return "Avtomatik baholanmaydi";
+ if(question.type==="slider")return String(question.correct||"—");
+ if(question.type==="puzzle")return (arrayValue(question.correct)||[]).join(" → ")||"—";
+ const values=arrayValue(question.correct);
+ if(values)return values.join(" · ")||"—";
+ return String(question.correct||"—");
+}
+function renderQuestion(question,data){
+ if(!question)return '<div class="host-wait"><div class="host-symbol">✦</div><h2 class="display">Savol tayyorlanmoqda</h2></div>';
+ const total=data.questions.length,index=data.session.current_question;
+ const ungraded=["poll","word_cloud","open_ended","brainstorm"].includes(question.type);
+ let answerHtml="";
+ if(question.type==="slider"){
+  answerHtml='<div class="host-answer-info"><strong>Siljitgich</strong><span>'+esc(question.options?.[0]?.text||"0")+' — '+esc(question.options?.[1]?.text||"100")+'</span></div>';
+ }else if(question.type==="puzzle"){
+  answerHtml='<div class="host-puzzle-order">'+(question.options||[]).map((option,i)=>'<div><b>'+(i+1)+'</b>'+esc(option.text||option)+'</div>').join("")+'</div>';
+ }else if(ungraded){
+  answerHtml='<div class="host-response-empty">O‘quvchilarning javoblari shu yerda ko‘rinadi.</div>';
+ }else{
+  const correct=arrayValue(question.correct)||[String(question.correct||"")];
+  answerHtml='<div class="host-options">'+(question.options||[]).map((option,i)=>{
+   const text=String(option.text||option),isCorrect=correct.some(value=>String(value)===text);
+   return '<div class="answer-tile '+["red","blue","yellow","green"][i%4]+' '+(isCorrect?"host-correct-answer":"")+'"><span class="answer-symbol">'+["▲","◆","●","■"][i%4]+'</span><span>'+esc(text)+'</span>'+(isCorrect?'<b class="host-correct-mark">✓</b>':'')+'</div>';
+  }).join("")+'</div>';
+ }
+ return '<div class="host-question-heading"><div><span class="eyebrow">SAVOL '+(index+1)+' / '+total+'</span><h2 class="display question-title">'+esc(question.prompt)+'</h2></div><span class="host-question-type">'+esc(question.type==="true_false"?"To‘g‘ri yoki noto‘g‘ri":question.type==="quiz"?"Viktorina":question.type==="poll"?"So‘rovnoma":question.type==="type_answer"?"Javob yozish":question.type==="puzzle"?"Boshqotirma":question.type==="slider"?"Siljitgich":question.type==="word_cloud"?"So‘zlar buluti":question.type==="open_ended"?"Ochiq savol":"G‘oyalar jamlanmasi")+'</span></div>'+mediaHtml(question.media)+'<div class="host-question-answer-preview">'+answerHtml+'</div><div class="host-meta"><span class="pill">◷ '+Number(question.time||20)+' soniya</span><span class="pill">★ '+Number(question.points||0).toLocaleString()+' ball</span><span class="pill">↗ '+Number(data.answer_stats?.total||0)+' ta javob</span></div><div class="correct-line">'+(ungraded?"Baholash: ":"To‘g‘ri javob: ")+'<strong>'+esc(correctText(question))+'</strong></div>';
+}
+function renderResponses(data,question){
+ const responses=data.responses||[];
+ if(!question||!["poll","word_cloud","open_ended","brainstorm"].includes(question.type))return "";
+ return '<section class="card host-panel host-responses"><div class="players-head"><div><span class="eyebrow">O‘QUVCHILAR FIKRI</span><h2 class="display">Kelgan javoblar</h2></div><span class="pill">'+responses.length+' ta</span></div><div class="host-response-list">'+(responses.map(item=>'<article class="host-response-item"><strong>'+esc(item.nickname)+'</strong><p>'+esc(item.answer)+'</p></article>').join("")||'<div class="host-response-empty">Hozircha javob kelmadi. O‘quvchilar yuborganda shu yerda paydo bo‘ladi.</div>')+'</div></section>';
+}
+function render(data){
+ state.data=data;
+ const session=data.session,players=data.players||[],question=data.current_question;
+ const waiting=session.status==="waiting",finished=session.status==="finished",paused=session.status==="paused";
+ const pinUrl=location.origin+"/?pin="+encodeURIComponent(pin);
+ root.innerHTML=
+ '<div class="host-heading"><div class="host-heading-copy"><div class="eyebrow">MUDARRIS JOIN · O‘QITUVCHI MARKAZI</div><h1 class="display">'+esc(session.title)+'</h1><div class="host-heading-badges"><span class="pill">'+esc(modeNames[session.mode]||"Klassik")+'</span><span class="pill host-status-'+esc(session.status)+'">'+esc(statusNames[session.status]||session.status)+'</span></div></div><div class="pin-box"><div class="eyebrow">O‘YINGA QO‘SHILISH KODI</div><div class="display pin-number">'+esc(pin)+'</div><div class="host-pin-actions"><button type="button" data-copy-pin>Nusxalash</button><a href="/" target="_blank" rel="noopener">O‘quvchi sahifasi ↗</a></div><div class="muted host-pin-hint">O‘quvchilar PIN-kod va taxallus bilan kiradi</div></div></div>'+
+ '<div class="host-stats"><article><span>♟</span><div><small>O‘yinchilar</small><strong>'+players.length+'</strong></div></article><article><span>▣</span><div><small>Savollar</small><strong>'+data.questions.length+'</strong></div></article><article><span>◷</span><div><small>Javoblar</small><strong>'+Number(data.answer_stats?.total||0)+'</strong></div></article><article><span>✓</span><div><small>To‘g‘ri javoblar</small><strong>'+Number(data.answer_stats?.correct||0)+'</strong></div></article></div>'+
+ '<div class="host-grid"><section class="card host-panel host-main-panel"><div class="eyebrow">JONLI O‘YIN BOSHQARUVI</div>'+(waiting?'<div class="host-wait"><div class="host-symbol">✦</div><h2 class="display">O‘yinchilar ulanmoqda</h2><p class="muted">PIN-kodni doskaga chiqaring. O‘quvchilar qo‘shilishi bilan ro‘yxat yangilanadi.</p></div>':finished?'<div class="host-wait"><div class="host-symbol">🏆</div><h2 class="display">O‘yin yakunlandi</h2><p class="muted">Bellashuv muvaffaqiyatli yakunlandi. Natijalarni ko‘rib chiqing.</p></div>':paused?'<div class="host-wait"><div class="host-symbol">Ⅱ</div><h2 class="display">O‘yin vaqtincha to‘xtatildi</h2><p class="muted">Tayyor bo‘lganda o‘yinni davom ettiring.</p></div>':renderQuestion(question,data))+
+ '<div class="host-actions">'+(waiting?'<button class="btn btn-primary" data-action="start" '+(!players.length?"disabled":"")+'>▶ O‘yinni boshlash</button>':'')+(session.status==="playing"?'<button class="btn btn-ghost" data-action="pause">Ⅱ Pauza</button><button class="btn btn-primary" data-action="next">'+(session.current_question+1>=data.questions.length?"O‘yinni yakunlash":"Keyingi savol →")+'</button>':'')+(paused?'<button class="btn btn-primary" data-action="resume">▶ Davom ettirish</button>':'')+(!finished?'<button class="btn btn-ghost" data-action="'+(session.join_locked?"unlock":"lock")+'">'+(session.join_locked?"Kutish xonasini ochish":"Kutish xonasini yopish")+'</button><button class="btn btn-danger" data-action="finish">Yakunlash</button>':'')+'</div></section>'+
+ '<aside class="card host-panel host-player-panel"><div class="players-head"><div><span class="eyebrow">SINF FAOLLIGI</span><h2 class="display">O‘yinchilar</h2></div><span class="pill">'+players.length+' / 100</span></div><div class="players-list">'+(players.map(p=>'<div class="player-row"><span class="player-avatar">'+(avatars[p.avatar]||"🙂")+'</span><div class="player-name"><strong>'+esc(p.nickname)+'</strong><small>'+Number(p.streak||0)+' ketma-ket to‘g‘ri javob</small></div><strong>'+Number(p.score||0).toLocaleString()+'</strong><button class="btn btn-ghost remove-player" data-remove="'+Number(p.id)+'" aria-label="O‘yinchini olib tashlash">×</button></div>').join("")||'<div class="host-response-empty">O‘quvchilar kirishi kutilmoqda…</div>')+'</div></aside></div>'+
+ renderResponses(data,question)+
+ '<section class="card host-panel leaderboard"><div class="players-head"><div><span class="eyebrow">NATIJALAR</span><h2 class="display">Jonli reyting</h2></div><span class="muted">Ballar avtomatik yangilanadi</span></div><div class="leader-grid">'+players.slice().sort((a,b)=>b.score-a.score).slice(0,10).map((p,i)=>'<div class="leader-item"><small>#'+(i+1)+'</small><strong>'+(avatars[p.avatar]||"🙂")+' '+esc(p.nickname)+'</strong><b>'+Number(p.score||0).toLocaleString()+'</b></div>').join("")+'</div></section>';
+}
+async function load(){
+ if(state.loading)return;
+ state.loading=true;
+ try{const data=await api("host/"+pin);render(data)}
+ catch(error){root.innerHTML='<div class="card host-error" style="padding:25px">'+esc(error.message)+' <a href="/teacher.html">Kabinetga qaytish</a></div>'}
+ finally{state.loading=false}
+}
+async function action(name,playerId){
+ const button=document.querySelector('[data-action="'+name+'"]');
+ if(button)button.disabled=true;
+ try{await api("host/"+pin,{method:"POST",body:JSON.stringify({action:name,player_id:playerId})});await load()}
+ catch(error){alert(error.message);if(button)button.disabled=false}
+}
+document.addEventListener("click",event=>{
+ const button=event.target.closest("[data-action]");
+ if(button){action(button.dataset.action);return}
+ const remove=event.target.closest("[data-remove]");
+ if(remove){if(confirm("Bu o‘yinchini o‘yindan olib tashlaysizmi?"))action("remove_player",Number(remove.dataset.remove));return}
+ const copy=event.target.closest("[data-copy-pin]");
+ if(copy){if(navigator.clipboard?.writeText){navigator.clipboard.writeText(pin).then(()=>{copy.textContent="Nusxalandi ✓"}).catch(()=>{copy.textContent="PIN: "+pin})}else{const textArea=document.createElement("textarea");textArea.value=pin;textArea.style.position="fixed";textArea.style.opacity="0";document.body.appendChild(textArea);textArea.select();try{if(!document.execCommand("copy"))throw Error();copy.textContent="Nusxalandi ✓"}catch{alert("PIN-kod: "+pin)}finally{textArea.remove()}}}
+});
+(async()=>{
+ if(!/^\d{6}$/.test(pin)){root.textContent="O‘yin PIN-kodi noto‘g‘ri.";return}
+ try{await api("auth/me");await load();state.timer=setInterval(load,1800)}
+ catch{location.href="/login.html"}
+})();
+})();

@@ -771,3 +771,40 @@ body.student-home{
   font-weight:700;
   line-height:1;
 }
+
+
+/* MUDARRIS JOIN — quiz question type student controls */
+.student-video-frame{width:min(100%,620px);aspect-ratio:16/9;border:0;border-radius:14px;background:#120b24}
+.student-media video{width:min(100%,620px);max-height:360px;border-radius:14px;background:#120b24}
+.student-multi-hint{grid-column:1/-1;margin:0 0 4px;color:#dcd2ee;font-size:clamp(12px,1.8vw,15px);font-weight:800;text-align:center}
+.student-multi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.student-multi-option{min-height:82px;display:flex;align-items:center;gap:14px;padding:15px 18px;border:2px solid #ffffff35;border-radius:14px;color:white;font-size:clamp(14px,2vw,19px);font-weight:900;text-align:left;box-shadow:0 5px 0 #0002;transition:transform .15s,filter .15s,box-shadow .15s}
+.student-multi-option:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.student-multi-option.red{background:#df3154}.student-multi-option.blue{background:#176bc9}.student-multi-option.yellow{background:#e5ac18;color:#291b3e}.student-multi-option.green{background:#258d5b}
+.student-multi-check{width:24px;height:24px;display:grid;place-items:center;flex:none;border:2px solid currentColor;border-radius:7px;background:#ffffff1f}
+.student-multi-option.selected{outline:3px solid white;outline-offset:2px;transform:translateY(-2px);box-shadow:0 7px 0 #0003}
+.student-multi-option.selected .student-multi-check:after{content:"✓";font-size:17px;font-weight:1000}
+.student-multi-grid+.student-primary-button{grid-column:1/-1;justify-self:center;min-width:min(320px,100%);margin-top:10px}
+.student-multi-grid+.student-primary-button:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.3)}
+.student-slider-answer{grid-column:1/-1;display:grid;gap:14px;width:min(590px,100%);margin:0 auto;padding:22px;border:1px solid #ffffff25;border-radius:17px;background:#ffffff0c}
+.student-slider-value{color:white;font:1000 clamp(35px,7vw,58px)/1 'Nunito',system-ui,sans-serif;text-align:center;text-shadow:0 6px 22px #0003}
+.student-slider-answer input[type=range]{width:100%;accent-color:#f2cf70;cursor:pointer}
+.student-slider-limits{display:flex;justify-content:space-between;color:#d3c4e7;font-size:11px;font-weight:800}
+.student-slider-answer .student-primary-button{justify-self:center;min-width:min(320px,100%);margin-top:5px}
+.student-puzzle-answer{grid-column:1/-1;width:min(620px,100%);display:grid;gap:10px;margin:0 auto}
+.student-puzzle-answer>p{margin:0 0 4px;color:#e7dcf4;font-size:13px;font-weight:800;text-align:center}
+.student-puzzle-row{min-height:55px;display:flex;align-items:center;gap:12px;padding:8px 11px;border:1px solid #ffffff32;border-radius:12px;background:#ffffff13;color:white}
+.student-puzzle-row>span{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:8px;background:#ffffff22;font-weight:1000}
+.student-puzzle-row>strong{flex:1;font-size:14px}
+.student-puzzle-row>div{display:flex;gap:5px}
+.student-puzzle-row button{width:31px;height:31px;border:1px solid #ffffff38;border-radius:8px;background:#ffffff14;color:white;font-size:17px;font-weight:900}
+.student-puzzle-row button:disabled{opacity:.25}
+.student-puzzle-answer>.student-primary-button{justify-self:center;min-width:min(320px,100%);margin-top:7px}
+.student-answer-status.is-recorded{color:#c9f4df;background:#1d95672a;border:1px solid #6be1ad42;border-radius:10px;padding:10px 13px}
+@media(max-width:620px){
+ .student-multi-grid{grid-template-columns:1fr}
+ .student-multi-option{min-height:63px;padding:11px 13px}
+ .student-slider-answer{padding:16px}
+ .student-puzzle-row{min-height:50px}
+ .student-puzzle-row>strong{font-size:12px}
+}
