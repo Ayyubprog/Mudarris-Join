@@ -1761,3 +1761,6 @@ body.mj-dashboard .mj-quiz-meta svg{width:12px;height:12px;fill:none;stroke:curr
 body.mj-dashboard .mj-mode-symbol{display:grid;place-items:center}
 body.mj-dashboard .mj-recent-report .mj-report-symbol{display:grid;place-items:center}
 body.mj-dashboard .mj-report-symbol svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.mj-status-pill.status-revealed{background:#f1eafa;color:#68409b}
+.mj-live-status.status-revealed{background:#8f6bc7;box-shadow:0 0 0 4px #8f6bc71a}
