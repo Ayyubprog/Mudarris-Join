@@ -32,21 +32,30 @@ const hats=[
 {id:"leaf",name:"Tabiat yaprog‘i",art:'<path d="M21 50Q5 24 34 13q9 22-13 37Zm24-10Q37 7 66 6q8 22-21 34Zm18 10Q61 22 88 25q5 22-25 25Z" fill="#66c77d" stroke="#327f59" stroke-width="3"/><path d="M29 43 20 28m28 6L61 15m7 26 12-10" stroke="#e8fff0" stroke-width="2"/>'},
 {id:"spark",name:"Yulduzli bezak",art:'<path d="m51 5 6 18 18 6-18 6-6 18-6-18-18-6 18-6Z" fill="#ffe16a" stroke="#bd862c" stroke-width="3"/><circle cx="80" cy="24" r="5" fill="#ff7daa"/>'}
 ];
+
+const specials=[
+{id:"phoenix",key:"special_phoenix",name:"Oltin Feniks",rarity:"AFSONAVIY",chance:15,tone:"#ffe49b",art:'<path d="M50 12q-9 18-25 20 11 7 11 19-16-10-27-8 16 12 17 28 9-9 19-11-9 20 5 31 14-11 5-31 10 2 19 11 28-16 4-27 17-8-11-4-27 15 0-8-10-8-12 3-26 11 5-6 7-15-17-2-25-12 13 1 28-8-4-12-14-18 18 4 30-20Z" fill="#f7aa32"/><path d="M50 23q-13 17-5 31-18-5-26-1 17 8 21 25 7-8 10-14 3 6 10 14 4-17 21-25-8-4-26 1 8-14-5-31Z" fill="#fff0a5"/><path d="M43 39q-8 10-4 21l11-7 11 7q4-11-4-21l-7-7Z" fill="#e45b42"/><circle cx="50" cy="55" r="5" fill="#fff8d5"/><path d="m43 66 7 10 7-10-7 3Z" fill="#d94b37"/><path d="M19 48q-9 5-13 16 12-4 17 5m58-21q9 5 13 16-12-4-17 5" fill="none" stroke="#d77b22" stroke-width="4" stroke-linecap="round"/>'},
+{id:"shadowdragon",key:"special_shadowdragon",name:"Soya Ajdari",rarity:"AFSONAVIY",chance:15,tone:"#c9b8ff",art:'<path d="M18 45 8 12l31 17q11-8 22 0l31-17-10 35q13 40-32 52Q5 85 18 45Z" fill="#3b285e" stroke="#24183f" stroke-width="3"/><path d="m19 32-5-13 22 18m45-5 5-13-22 18" fill="#8b69d7"/><path d="M25 60q6-21 25-21t25 21q-3 25-25 31-22-6-25-31Z" fill="#6545a0"/><path d="M29 51q9-13 19 0-10 9-19 0Zm23 0q10-13 19 0-10 9-19 0Z" fill="#8ff1ed"/><ellipse cx="39" cy="52" rx="3" ry="5" fill="#18233d"/><ellipse cx="61" cy="52" rx="3" ry="5" fill="#18233d"/><path d="m42 70 8-5 8 5-8 7Z" fill="#ffb45c"/><path d="M42 79q8 7 16 0" fill="none" stroke="#261a40" stroke-width="3" stroke-linecap="round"/><path d="M17 44 5 32 9 55m74-11 12-12-4 23" fill="none" stroke="#af9aff" stroke-width="5" stroke-linecap="round"/>'}
+];
+
 const legacy={earth:"alien",skull:"owl",ghost:"alien",lion:"tiger",rocket:"robot"};
 const headMap=new Map(heads.map(item=>[item.id,item]));
 const hatMap=new Map(hats.map(item=>[item.id,item]));
 function parts(value){
  const raw=String(value||"");
+ const special=specials.find(item=>item.key===raw);
+ if(special)return {head:special,accessory:{id:"exclusive",name:"Maxsus · 1/1"},key:raw,special:true};
  let [head,hat]=raw.includes(":")?raw.split(":"): [raw,"none"];
  head=legacy[head]||head;
  if(!headMap.has(head))head="fox";
  if(!hatMap.has(hat))hat="none";
- return {head:headMap.get(head),accessory:hatMap.get(hat),key:head+":"+hat};
+ return {head:headMap.get(head),accessory:hatMap.get(hat),key:head+":"+hat,special:false};
 }
-function randomKey(){return heads[Math.floor(Math.random()*heads.length)].id+":"+hats.filter(x=>x.id!=="none")[Math.floor(Math.random()*(hats.length-1))].id}
 function render(value,className="mj-avatar-art"){
  const selected=parts(value),safeClass=/^[a-zA-Z0-9 _-]*$/.test(className)?className:"mj-avatar-art";
- return '<svg class="'+safeClass+'" viewBox="0 0 100 110" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="55" r="49" fill="'+selected.head.tone+'"/><circle cx="13" cy="82" r="5" fill="#ffffff66"/><circle cx="83" cy="18" r="4" fill="#ffffff88"/><path d="M13 96q37 18 74 0" fill="none" stroke="#ffffff66" stroke-width="3" stroke-linecap="round"/>'+selected.head.art+selected.accessory.art+'</svg>';
+ const aura=selected.special?'<circle cx="50" cy="55" r="47" fill="none" stroke="#f7c84b" stroke-width="3" stroke-dasharray="4 5"/><circle cx="50" cy="55" r="43" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="1.5"/>':'';
+ const sparks=selected.special?'<path d="m10 18 3 7 7 3-7 3-3 7-3-7-7-3 7-3Zm78 53 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#fff2a6"/>':'';
+ return '<svg class="'+safeClass+'" viewBox="0 0 100 110" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mj-glow-'+(selected.special?selected.head.id:"regular")+'" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="'+selected.head.tone+'" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="55" r="49" fill="'+selected.head.tone+'"/>'+aura+'<circle cx="50" cy="55" r="49" fill="url(#mj-glow-'+(selected.special?selected.head.id:"regular")+')"/><circle cx="13" cy="82" r="5" fill="#ffffff66"/><circle cx="83" cy="18" r="4" fill="#ffffff88"/>'+sparks+'<path d="M13 96q37 18 74 0" fill="none" stroke="#ffffff66" stroke-width="3" stroke-linecap="round"/>'+selected.head.art+(selected.special?'<path d="M20 100q30 10 60 0" fill="none" stroke="#f7c84b" stroke-width="3" stroke-linecap="round"/>':selected.accessory.art)+'</svg>';
 }
-window.MJAvatars={heads,hats,parts,randomKey,render,key:(head,accessory)=>head+":"+accessory};
+window.MJAvatars={heads,hats,specials,parts,randomKey,render,key:(head,accessory)=>head+":"+accessory};
 })();
