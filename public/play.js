@@ -1,30 +1,100 @@
 (()=>{
 const $=s=>document.querySelector(s),root=$("#play-root"),pin=new URLSearchParams(location.search).get("pin")||"";
 let player=null,data=null,lastQuestion=-2,answered=-1,timer=null,lastScreen="";
-const avatars=["🐯","🌍","💀","👽","🐱","🦊","🤖","👻","🦁","🐼","🚀","👑"];
-const avatarKeys=["tiger","earth","skull","alien","cat","fox","robot","ghost","lion","panda","rocket","crown"];
-const avatarIcons={tiger:"🐯",earth:"🌍",skull:"💀",alien:"👽",cat:"🐱",fox:"🦊",robot:"🤖",ghost:"👻",lion:"🦁",panda:"🐼",rocket:"🚀",crown:"👑"};
-function avatarIcon(key){return avatarIcons[key]||"🙂"}
+function avatarIcon(key){return window.MJAvatars?MJAvatars.render(key,"mj-avatar-art"):"🙂"}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function api(path,opts){const r=await fetch("/api/"+path,opts||{}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||"So‘rov bajarilmadi");return d}
 function showJoin(){
  if(lastScreen==="join")return;
  lastScreen="join";
- const suggested=["Zukko Sher","Chaqqon Tulki","Jasur Burgut","Topqir Panda","Bilimdon Robot","Tezkor Yo‘lbars","Aqlli Arslon","Quvnoq Mushuk","Kuchli Ajdar","Zehnli Boyo‘g‘li"];
- root.innerHTML='<section class="student-card student-onboard-card"><div class="student-card-heading"><span class="student-step-chip">01</span><span class="student-card-eyebrow">O‘ZINGNI TANIT</span><span class="student-heading-spark">✦</span></div><div class="student-avatar-stage"><span class="student-avatar-halo"></span><span class="student-avatar-stage-icon">🎯</span></div><h1 class="student-card-title">Taxallusingni tanla!</h1><p class="student-card-copy">Sinfdagilar seni shu ism va avatar bilan ko‘radi. O‘zingga yoqqanini tanla.</p><form id="join-player" class="student-player-form"><label for="nickname">TAXALLUSING</label><div class="student-nickname-tools"><input class="field student-nickname-input" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingni yoz..." autocomplete="nickname"><button type="button" id="random-name" class="student-random-button">🎲 Tasodifiy</button></div><div class="student-avatar-heading"><span>AVATARINGNI TANLA</span><button type="button" id="random-avatar" class="student-random-link">🎲 Tasodifiy avatar</button></div><div class="avatar-grid student-avatar-grid">'+avatars.map((a,i)=>'<button type="button" class="avatar student-avatar '+(i===0?"selected":"")+'" data-avatar="'+i+'" aria-label="Avatar '+(i+1)+'" aria-pressed="'+(i===0?"true":"false")+'">'+a+'</button>').join("")+'</div><button class="student-primary-button student-enter-button" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button><div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div></form><div class="student-privacy-note"><span>✓</span> Akkaunt ochish shart emas · Ismingni o‘zing tanlaysan</div></section>';
- let chosen=0;
- const pickAvatar=index=>{chosen=index;root.querySelectorAll("[data-avatar]").forEach(button=>{const selected=Number(button.dataset.avatar)===chosen;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected))})};
- root.querySelectorAll("[data-avatar]").forEach(button=>button.addEventListener("click",()=>pickAvatar(Number(button.dataset.avatar))));
- $("#random-avatar").addEventListener("click",()=>pickAvatar(Math.floor(Math.random()*avatars.length)));
- $("#random-name").addEventListener("click",()=>{$("#nickname").value=suggested[Math.floor(Math.random()*suggested.length)];$("#join-error").textContent="";$("#nickname").focus()});
+ let selected=window.MJAvatars?MJAvatars.parts(MJAvatars.randomKey()):{head:{id:"fox"},accessory:{id:"none"},key:"fox:none"};
+ let selectedHead=selected.head.id,selectedAccessory=selected.accessory.id,activeTab="heads";
+ root.innerHTML=`<section class="student-card student-onboard-card mj-join-card">
+  <div class="mj-join-kicker"><span class="mj-join-kicker-dot"></span> MUDARRIS JOIN · O‘YINCHI PROFILI</div>
+  <h1 class="student-card-title mj-join-title">O‘yinga qo‘shil!</h1>
+  <p class="student-card-copy mj-join-copy">Taxallusingni yoz. Senga tasodifiy qahramon tanladik — uni o‘zingga moslab olishing mumkin.</p>
+  <button type="button" id="avatar-preview" class="mj-avatar-preview" aria-label="Qahramonni o‘zgartirish">
+   <span id="avatar-preview-art">${MJAvatars.render(selected.key,"mj-avatar-large")}</span>
+   <span class="mj-avatar-edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></span>
+  </button>
+  <button type="button" id="open-avatar-picker" class="mj-avatar-customize-link">Qahramonni o‘zgartirish <span>✦</span></button>
+  <form id="join-player" class="student-player-form mj-join-form">
+   <label for="nickname">TAXALLUSING</label>
+   <input class="field student-nickname-input mj-join-nickname" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingni yoz..." autocomplete="nickname">
+   <button class="student-primary-button student-enter-button mj-join-submit" type="submit"><span>BELLASHUVGA QO‘SHILISH</span><b>→</b></button>
+   <div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div>
+  </form>
+  <div class="student-privacy-note mj-join-privacy"><span>✓</span> Akkaunt kerak emas · Faqat taxallus bilan kir</div>
+  <div class="mj-avatar-backdrop" id="avatar-studio" hidden>
+   <section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title">
+    <header class="mj-avatar-modal-head">
+     <div><span class="mj-avatar-modal-kicker">SENING QIYOFANG</span><h2 id="avatar-studio-title">Qahramoningni yarat</h2></div>
+     <button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button>
+    </header>
+    <div class="mj-avatar-selected-preview"><span id="avatar-modal-art">${MJAvatars.render(selected.key,"mj-avatar-modal-art")}</span><div><strong id="avatar-character-name">${selected.head.name}</strong><small id="avatar-accessory-name">${selected.accessory.name}</small></div><span class="mj-avatar-live-dot"></span></div>
+    <div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari">
+     <button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>${MJAvatars.heads.length}</span></button>
+     <button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>${MJAvatars.hats.length}</span></button>
+    </div>
+    <div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div>
+    <footer class="mj-avatar-modal-footer"><span>O‘zingga yoqqanini tanla ✨</span><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></footer>
+   </section>
+  </div>
+ </section>`;
+ const getKey=()=>MJAvatars.key(selectedHead,selectedAccessory);
+ const refreshPreview=()=>{
+  const key=getKey(),parts=MJAvatars.parts(key);
+  $("#avatar-preview-art").innerHTML=MJAvatars.render(key,"mj-avatar-large");
+  $("#avatar-modal-art").innerHTML=MJAvatars.render(key,"mj-avatar-modal-art");
+  $("#avatar-character-name").textContent=parts.head.name;
+  $("#avatar-accessory-name").textContent=parts.accessory.name;
+ };
+ const renderGallery=()=>{
+  const isHeads=activeTab==="heads",items=isHeads?MJAvatars.heads:MJAvatars.hats;
+  document.querySelectorAll("[data-avatar-tab]").forEach(button=>{
+   const active=button.dataset.avatarTab===activeTab;
+   button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));
+  });
+  $("#avatar-gallery").innerHTML=items.map(item=>{
+   const head=isHeads?item.id:selectedHead,accessory=isHeads?selectedAccessory:item.id;
+   const key=MJAvatars.key(head,accessory),chosen=isHeads?item.id===selectedHead:item.id===selectedAccessory;
+   return `<button type="button" class="mj-avatar-choice ${chosen?"selected":""}" data-avatar-choice="${item.id}" aria-pressed="${chosen}">
+    <span class="mj-avatar-choice-art">${MJAvatars.render(key,"mj-avatar-choice-svg")}</span>
+    <span class="mj-avatar-choice-name">${item.name}</span>
+    ${chosen?'<span class="mj-avatar-choice-check">✓</span>':""}
+   </button>`;
+  }).join("");
+ };
+ const openPicker=()=>{
+  $("#avatar-studio").hidden=false;activeTab="heads";refreshPreview();renderGallery();
+  document.body.classList.add("mj-avatar-picker-open");
+ };
+ const closePicker=()=>{
+  $("#avatar-studio").hidden=true;document.body.classList.remove("mj-avatar-picker-open");
+ };
+ $("#avatar-preview").addEventListener("click",openPicker);
+ $("#open-avatar-picker").addEventListener("click",openPicker);
+ $("#close-avatar-picker").addEventListener("click",closePicker);
+ $("#done-avatar-picker").addEventListener("click",closePicker);
+ $("#avatar-studio").addEventListener("click",event=>{if(event.target===$("#avatar-studio"))closePicker()});
+ document.querySelectorAll("[data-avatar-tab]").forEach(button=>button.addEventListener("click",()=>{activeTab=button.dataset.avatarTab;renderGallery()}));
+ $("#avatar-gallery").addEventListener("click",event=>{
+  const choice=event.target.closest("[data-avatar-choice]");if(!choice)return;
+  if(activeTab==="heads")selectedHead=choice.dataset.avatarChoice;
+  else selectedAccessory=choice.dataset.avatarChoice;
+  refreshPreview();renderGallery();
+ });
+ document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!$("#avatar-studio").hidden)closePicker()},{once:true});
  $("#nickname").focus({preventScroll:true});
  $("#join-player").onsubmit=async event=>{
   event.preventDefault();
   const nickname=$("#nickname").value.trim().replace(/\s+/g," "),button=root.querySelector("button[type=submit]"),error=$("#join-error");
   if(nickname.length<2){error.textContent="Taxallus kamida 2 ta belgidan iborat bo‘lsin.";return}
   button.disabled=true;button.querySelector("span").textContent="O‘YINGA QO‘SHILMOQDA...";
-  try{const response=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname,avatar:avatarKeys[chosen]})});player=response.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load()}
-  catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="O‘YINGA KIRISH"}
+  try{
+   const response=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname,avatar:getKey()})});
+   player=response.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load();
+  }catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="BELLASHUVGA QO‘SHILISH"}
  };
 }
 function waiting(){
