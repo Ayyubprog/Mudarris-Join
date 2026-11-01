@@ -152,7 +152,7 @@ function validationError(question){
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
   }
   if(question.type==="true_false"&&question.correct.length!==1)return "To‘g‘ri yoki noto‘g‘ri javobni belgilang.";
-  if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";
+  if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";if(question.type==="type_answer"&&question.correctText.trim().length>20)return "Qisqa javob 20 belgidan oshmasligi kerak.";
   if(question.type==="puzzle"){
     if(question.answers.length<2||question.answers.length>6||question.answers.some(answer=>!answer.trim()))return "Boshqotirma uchun 2–6 ta to‘liq javob kiriting.";
     if(question.answers.some(answer=>answer.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
@@ -288,7 +288,7 @@ function renderAnswerEditor(question){
   }else if(question.type==="type_answer"){
     editor.hidden=true;
     special.hidden=false;
-    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="75" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflar va tinish belgilarini hisobga olmasdan tekshiriladi. Masalan, Student, STUDENT va student — bir xil javob.</p>';
+    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="20" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflar va tinish belgilarini hisobga olmasdan tekshiriladi. Masalan, Student, STUDENT va student — bir xil javob.</p>';
   }else if(question.type==="puzzle"){
     editor.hidden=true;
     special.hidden=false;
