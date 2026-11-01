@@ -13,7 +13,60 @@ async function createSession(teacher,env){const token=uid()+uid();await env.DB.p
 async function teacherRequired(req,env){return await auth(req,env)}
 const canonicalEmail=value=>String(value??"").trim().toLowerCase();
 const parseBody=async req=>{try{return await req.json()}catch{return {}}};
-const publicQuestion=q=>({id:q.id,type:q.question_type,prompt:q.prompt,options:JSON.parse(q.options||"[]"),correct:q.correct_answer,time:q.time_limit,points:q.points,media:q.media_url||""});
+const parseArrayValue=value=>{try{const parsed=JSON.parse(String(value||""));return Array.isArray(parsed)?parsed:null}catch{return null}};
+const publicQuestion=q=>{const options=JSON.parse(q.options||"[]"),multiple=parseArrayValue(q.correct_answer);return {id:q.id,type:q.question_type,prompt:q.prompt,options,correct:q.correct_answer,time:q.time_limit,points:q.points,media:q.media_url||"",multi_select:q.question_type==="quiz"&&Array.isArray(multiple)&&multiple.length>1}};
+const normalizeQuestionSet=input=>{
+ if(!Array.isArray(input)||input.length<1||input.length>200)return {error:"Viktorinada 1–200 ta savol bo‘lishi kerak."};
+ const allowed=new Set(["quiz","true_false","type_answer","puzzle","slider","poll","word_cloud","open_ended","brainstorm"]);
+ const questions=[];
+ for(let index=0;index<input.length;index++){
+  const raw=input[index]||{},type=String(raw.type||"quiz"),prompt=safe(raw.prompt).slice(0,120),time=Math.round(Number(raw.time)||20);
+  if(!allowed.has(type))return {error:(index+1)+"-savol turi qo‘llab-quvvatlanmaydi."};
+  if(!prompt)return {error:(index+1)+"-savol matnini kiriting."};
+  if(prompt.length>120)return {error:(index+1)+"-savol matni 120 belgidan oshmasin."};
+  if(!Number.isFinite(time)||time<5||time>240)return {error:(index+1)+"-savol vaqti 5–240 soniya orasida bo‘lishi kerak."};
+  if(type==="word_cloud"&&time<20)return {error:"So‘zlar buluti uchun kamida 20 soniya kerak."};
+  if(type==="open_ended"&&time<20)return {error:"Ochiq savol uchun kamida 20 soniya kerak."};
+  if(type==="brainstorm"&&time<30)return {error:"G‘oyalar jamlanmasi uchun kamida 30 soniya kerak."};
+  let options=(Array.isArray(raw.options)?raw.options:[]).map(option=>safe(typeof option==="string"?option:option?.text).slice(0,75)).filter(Boolean);
+  if(options.length>6)return {error:(index+1)+"-savolda 6 tadan ko‘p javob bo‘lishi mumkin emas."};
+  const rawCorrect=String(raw.correct??"").trim();
+  let correct="",points=[0,1000,2000].includes(Number(raw.points))?Number(raw.points):1000;
+  if(["quiz","true_false"].includes(type)){
+   if(type==="true_false")options=["To‘g‘ri","Noto‘g‘ri"];
+   if(options.length<2)return {error:(index+1)+"-savolda kamida 2 ta javob varianti kerak."};
+   const selected=parseArrayValue(rawCorrect);
+   if(type==="quiz"&&selected){
+    const answers=selected.map(value=>safe(value).slice(0,75)).filter(Boolean);
+    if(answers.length<2||answers.some(value=>!options.includes(value))||new Set(answers).size!==answers.length)return {error:(index+1)+"-savolda bir nechta to‘g‘ri javoblarni tekshiring."};
+    correct=JSON.stringify(answers);
+   }else{
+    correct=safe(rawCorrect).slice(0,75);
+    if(!options.includes(correct))return {error:(index+1)+"-savolda to‘g‘ri javob variantini belgilang."};
+   }
+  }else if(type==="poll"){
+   if(options.length<2)return {error:(index+1)+"-so‘rovnomada kamida 2 ta javob varianti kerak."};
+   points=0;correct="";
+  }else if(type==="type_answer"){
+   correct=safe(rawCorrect).slice(0,75);
+   if(!correct)return {error:(index+1)+"-savol uchun qabul qilinadigan javobni kiriting."};
+  }else if(type==="puzzle"){
+   const ordered=parseArrayValue(rawCorrect);
+   if(options.length<2||!ordered||ordered.length!==options.length||ordered.some((value,i)=>safe(value)!==options[i]))return {error:(index+1)+"-boshqotirmada javoblar ketma-ketligini tekshiring."};
+   correct=JSON.stringify(ordered.map(value=>safe(value).slice(0,75)));
+  }else if(type==="slider"){
+   const min=Number(raw.options?.[0]),max=Number(raw.options?.[1]),step=Number(raw.options?.[2]),tolerance=Number(raw.options?.[3]||0),target=Number(rawCorrect);
+   if(![min,max,step,tolerance,target].every(Number.isFinite)||max<=min||step<=0||tolerance<0||target<min||target>max)return {error:(index+1)+"-siljitgich chegaralari yoki to‘g‘ri qiymati noto‘g‘ri."};
+   options=[String(min),String(max),String(step),String(tolerance)];correct=String(target);
+  }else{
+   options=[];correct="";points=0;
+  }
+  let media=safe(raw.media).slice(0,1500);
+  if(media){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}
+  questions.push({type,prompt,options,correct,time,points,media});
+ }
+ return {questions};
+};
 async function loadGame(env,id,teacherId){const game=await env.DB.prepare("SELECT * FROM games WHERE id=? AND teacher_id=?").bind(id,teacherId).first();if(!game)return null;const {results}=await env.DB.prepare("SELECT * FROM questions WHERE game_id=? ORDER BY position").bind(id).all();return {...game,questions:results.map(publicQuestion)}}
 async function loadSession(env,pin){return await env.DB.prepare("SELECT s.*,g.title,g.subject,g.grade FROM live_sessions s JOIN games g ON g.id=s.game_id WHERE s.pin=?").bind(pin).first()}
 async function playerList(env,sessionId){const {results}=await env.DB.prepare("SELECT id,nickname,avatar,score,streak,joined_at FROM players WHERE session_id=? ORDER BY score DESC,joined_at ASC").bind(sessionId).all();return results}
