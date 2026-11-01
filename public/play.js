@@ -69,7 +69,16 @@ async function load(){
   }
   const me=(data.players||[]).find(p=>p.id===player.id);if(me)player={...player,...me};render();
  }catch(e){
-  if(lastScreen!=="load-error"){lastScreen="load-error";root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">⚠️</div><div class="student-card-eyebrow">ULANISHDA XATOLIK</div><h1 class="student-card-title">O‘yinga ulanib bo‘lmadi</h1><p class="student-card-copy">'+esc(e.message)+'</p><a href="/" class="student-primary-button student-home-button"><span>QAYTA URINISH</span><b>→</b></a></section>'}
+  const invalidPin=e.message==="O‘yin PIN-kodi topilmadi.";
+  const screen=invalidPin?"invalid-pin":"load-error";
+  if(lastScreen!==screen){
+   lastScreen=screen;
+   if(invalidPin){
+    root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">⌕</div><div class="student-card-eyebrow">PIN-KOD TOPILMADI</div><h1 class="student-card-title">Kod xato</h1><p class="student-card-copy">Bu 6 xonali PIN-kod topilmadi. Kodni tekshirib, qayta kiriting.</p><a href="/" class="student-primary-button student-home-button"><span>BOSHQA KOD KIRITISH</span><b>→</b></a></section>';
+   }else{
+    root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">⚠️</div><div class="student-card-eyebrow">ULANISHDA XATOLIK</div><h1 class="student-card-title">O‘yinga ulanib bo‘lmadi</h1><p class="student-card-copy">'+esc(e.message)+'</p><a href="/" class="student-primary-button student-home-button"><span>QAYTA URINISH</span><b>→</b></a></section>';
+   }
+  }
  }
 }
 
