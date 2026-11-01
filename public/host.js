@@ -5,7 +5,7 @@ const root=$("#host-root");
 const pin=new URLSearchParams(location.search).get("pin")||"";
 const state={data:null,loading:false,timer:null,clock:null,lastHtml:"",autoRevealKey:""};
 const avatarIcon=key=>window.MJAvatars?MJAvatars.render(key,"live-player-avatar-svg"):"🙂";
-const modes={classic:"KLASSIK",team:"JAMOAVIY",accuracy:"ANIQLIK",confidence:"ISHONCH",marble:"SHARLAR POYGASI",racing:"AVTOMOBIL POYGASI",kingdoms:"RANGLAR QIROLLIGI",tower:"ENG BALAND MINORA",treasure:"XAZINA IZLOVCHILAR",submarine:"SUVOSTI JAMOASI",robot:"ROBOTLAR POYGASI",cosmic:"KOINOT SARI"};
+const modes={classic:"KLASSIK",team:"JAMOAVIY",accuracy:"ANIQLIK",confidence:"ISHONCH",marble:"SHARLAR POYGASI",racing:"RACE CAR",shooter:"SHOOTER",kingdoms:"RANGLAR QIROLLIGI",tower:"ENG BALAND MINORA",treasure:"XAZINA IZLOVCHILAR",submarine:"SUVOSTI JAMOASI",robot:"ROBOTLAR POYGASI",cosmic:"KOINOT SARI"};
 const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const safeArray=value=>{try{const parsed=JSON.parse(String(value??""));return Array.isArray(parsed)?parsed:null}catch{return null}};
 const colors=["red","blue","yellow","green"],shapes=["▲","◆","●","■"];
