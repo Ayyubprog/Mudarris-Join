@@ -59,8 +59,8 @@ async function start(){
     const crown=new THREE.Mesh(new THREE.ConeGeometry(.9,2.4,7),new THREE.MeshStandardMaterial({color:i%2?0x2e7954:0x3c875c}));crown.position.y=2.2;tree.add(crown);tree.position.set(side*(8.7+t*1.8),0,z-t*5);world.add(tree);
    }
   }
-  const playerCar=addCar(world,root.dataset.loadout,0,7,true),rivalIds=(root.dataset.rivals||"vortex,comet").split(",").filter(Boolean);
-  const rivalCars=[addCar(world,rivalIds[0]||"vortex",-3.4,-1),addCar(world,rivalIds[1]||"comet",3.4,-12),addCar(world,rivalIds[2]||"titan",0,-22)];
+  const playerCar=addCar(world,root.dataset.loadout,0,7,true),rivalData=(root.dataset.rivals||"vortex:0,comet:0").split(",").filter(Boolean).map(value=>{const [id,score]=value.split(":");return {id,score:Number(score)||0}}),lanePositions=[-4.3,-1.5,1.5,4.3];
+  const rivalCars=rivalData.map((item,i)=>addCar(world,item.id,lanePositions[i%lanePositions.length],-2-i*5));
   const finish=new THREE.Group();
   for(let i=0;i<11;i++){const block=new THREE.Mesh(new THREE.BoxGeometry(1.2,.2,.2),new THREE.MeshStandardMaterial({color:i%2?0x20283a:0xffffff}));block.position.set(-6+i*1.2,.08,-48);finish.add(block)}
   world.add(finish);
@@ -74,7 +74,8 @@ async function start(){
    playerCar.position.z=7-(target*.12)+(boost?2:0)-(slow?1:0);
    playerCar.position.x=Math.sin(now*.45)*.12;
    playerCar.rotation.y=Math.sin(now*.7)*.025;
-   rivalCars.forEach((car,i)=>{car.position.z=-1-i*10+Math.sin(now*1.2+i)*.6;car.position.x=(i===0?-3.4:i===1?3.4:0)+Math.sin(now*.5+i)*.18});
+   const leaderScore=Math.max(1,Number(root.dataset.leaderScore)||1);
+   rivalCars.forEach((car,i)=>{const ratio=Math.max(0,Math.min(1,rivalData[i].score/leaderScore));car.position.z=-2-ratio*11-i*1.3+Math.sin(now*1.2+i)*.45;car.position.x=lanePositions[i%lanePositions.length]+Math.sin(now*.5+i)*.12});
    renderer.render(world,camera);state.frame=requestAnimationFrame(animate);
   };
   animate();
