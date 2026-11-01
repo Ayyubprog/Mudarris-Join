@@ -279,7 +279,7 @@ function renderAnswerEditor(question){
     editor.hidden=false;
     editor.innerHTML=question.answers.map((answer,index)=>{
       const selected=question.correct.includes(index);
-      const locked=false;
+      const locked=question.type==="true_false";
       return '<div class="qb-answer-row answer-'+index%4+' '+(selected?"is-correct":"")+'" data-answer-index="'+index+'">'+
         '<button type="button" class="qb-answer-mark" data-mark-answer="'+index+'" '+(question.type==="poll"?"disabled":"")+' aria-label="'+(selected?"To‘g‘ri javob":"To‘g‘ri deb belgilash")+'" title="'+(question.type==="poll"?"So‘rovnoma javoblari baholanmaydi":"To‘g‘ri javobni belgilash")+'">'+
           (question.type==="poll"?'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>':selected?'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>':'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>')+
