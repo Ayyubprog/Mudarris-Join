@@ -10,27 +10,42 @@ async function api(path,opts){const r=await fetch("/api/"+path,opts||{}),d=await
 function showJoin(){
  if(lastScreen==="join")return;
  lastScreen="join";
- root.innerHTML='<section class="student-card student-onboard-card"><div class="student-card-heading"><span class="student-step-chip">01</span><span class="student-card-eyebrow">O‘YINGA TAYYORLAN</span><span class="student-heading-spark">✦</span></div><div class="student-avatar-stage"><span class="student-avatar-halo"></span><span class="student-avatar-stage-icon">🎯</span></div><h1 class="student-card-title">Ismingni tanla!</h1><p class="student-card-copy">Do‘stlaring seni qanday nom bilan ko‘rishini xohlaysan?</p><form id="join-player" class="student-player-form"><label for="nickname">TAXALLUSING</label><input class="field student-nickname-input" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingni yoz..." autocomplete="nickname"><div class="student-avatar-heading"><span>AVATARINGNI TANLA</span><small>O‘zingga yoqqanini tanla</small></div><div class="avatar-grid student-avatar-grid">'+avatars.map((a,i)=>'<button type="button" class="avatar student-avatar '+(i===0?"selected":"")+'" data-avatar="'+i+'" aria-label="Avatar '+(i+1)+'" aria-pressed="'+(i===0?"true":"false")+'">'+a+'</button>').join("")+'</div><button class="student-primary-button student-enter-button" type="submit"><span>KUTISH XONASIGA KIRISH</span><b>→</b></button><div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div></form><div class="student-privacy-note"><span>✓</span> Ro‘yxatdan o‘tish shart emas</div></section>';
+ const suggested=["Zukko Sher","Chaqqon Tulki","Jasur Burgut","Topqir Panda","Bilimdon Robot","Tezkor Yo‘lbars","Aqlli Arslon","Quvnoq Mushuk","Kuchli Ajdar","Zehnli Boyo‘g‘li"];
+ root.innerHTML='<section class="student-card student-onboard-card"><div class="student-card-heading"><span class="student-step-chip">01</span><span class="student-card-eyebrow">O‘ZINGNI TANIT</span><span class="student-heading-spark">✦</span></div><div class="student-avatar-stage"><span class="student-avatar-halo"></span><span class="student-avatar-stage-icon">🎯</span></div><h1 class="student-card-title">Taxallusingni tanla!</h1><p class="student-card-copy">Sinfdagilar seni shu ism va avatar bilan ko‘radi. O‘zingga yoqqanini tanla.</p><form id="join-player" class="student-player-form"><label for="nickname">TAXALLUSING</label><div class="student-nickname-tools"><input class="field student-nickname-input" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingni yoz..." autocomplete="nickname"><button type="button" id="random-name" class="student-random-button">🎲 Tasodifiy</button></div><div class="student-avatar-heading"><span>AVATARINGNI TANLA</span><button type="button" id="random-avatar" class="student-random-link">🎲 Tasodifiy avatar</button></div><div class="avatar-grid student-avatar-grid">'+avatars.map((a,i)=>'<button type="button" class="avatar student-avatar '+(i===0?"selected":"")+'" data-avatar="'+i+'" aria-label="Avatar '+(i+1)+'" aria-pressed="'+(i===0?"true":"false")+'">'+a+'</button>').join("")+'</div><button class="student-primary-button student-enter-button" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button><div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div></form><div class="student-privacy-note"><span>✓</span> Akkaunt ochish shart emas · Ismingni o‘zing tanlaysan</div></section>';
  let chosen=0;
- root.querySelectorAll("[data-avatar]").forEach(b=>b.onclick=()=>{chosen=Number(b.dataset.avatar);root.querySelectorAll(".student-avatar").forEach(x=>{const selected=x===b;x.classList.toggle("selected",selected);x.setAttribute("aria-pressed",String(selected))})});
+ const pickAvatar=index=>{chosen=index;root.querySelectorAll("[data-avatar]").forEach(button=>{const selected=Number(button.dataset.avatar)===chosen;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected))})};
+ root.querySelectorAll("[data-avatar]").forEach(button=>button.addEventListener("click",()=>pickAvatar(Number(button.dataset.avatar))));
+ $("#random-avatar").addEventListener("click",()=>pickAvatar(Math.floor(Math.random()*avatars.length)));
+ $("#random-name").addEventListener("click",()=>{$("#nickname").value=suggested[Math.floor(Math.random()*suggested.length)];$("#join-error").textContent="";$("#nickname").focus()});
  $("#nickname").focus({preventScroll:true});
- $("#join-player").onsubmit=async e=>{
-  e.preventDefault();
-  const button=root.querySelector("button[type=submit]"),error=$("#join-error");
-  if($("#nickname").value.trim().length<2){error.textContent="Taxallus kamida 2 ta belgidan iborat bo‘lsin.";return}
-  button.disabled=true;button.querySelector("span").textContent="QO‘SHILMOQDA...";
-  try{const d=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname:$("#nickname").value,avatar:avatarKeys[chosen]})});player=d.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load()}
-  catch(x){error.textContent=x.message;button.disabled=false;button.querySelector("span").textContent="KUTISH XONASIGA KIRISH"}
+ $("#join-player").onsubmit=async event=>{
+  event.preventDefault();
+  const nickname=$("#nickname").value.trim().replace(/\s+/g," "),button=root.querySelector("button[type=submit]"),error=$("#join-error");
+  if(nickname.length<2){error.textContent="Taxallus kamida 2 ta belgidan iborat bo‘lsin.";return}
+  button.disabled=true;button.querySelector("span").textContent="O‘YINGA QO‘SHILMOQDA...";
+  try{const response=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname,avatar:avatarKeys[chosen]})});player=response.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load()}
+  catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="O‘YINGA KIRISH"}
  };
 }
 function waiting(){
- lastScreen="waiting";
- root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span><div class="player-big student-player-avatar">'+avatarIcon(player.avatar)+'</div></div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">Hamma tayyormi?</h1><p class="student-card-copy">O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!</p><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘YIN KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">★ '+Number(player.score||0).toLocaleString()+' ball</span></div></section>';
+ lastScreen="waiting";clearInterval(timer);
+ const count=(data?.players||[]).length;
+ root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span><div class="player-big student-player-avatar">'+avatarIcon(player.avatar)+'</div></div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">Hamma tayyormi?</h1><p class="student-card-copy">O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!</p><div class="student-waiting-player-count" id="lobby-player-count">'+count+' nafar o‘quvchi o‘yinga qo‘shildi</div><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘YIN KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">★ '+Number(player.score||0).toLocaleString()+' ball</span></div></section>';
 }
-function paused(){
- lastScreen="paused";clearInterval(timer);
- root.innerHTML='<section class="student-card student-state-card student-paused-card"><div class="student-state-icon paused-icon">Ⅱ</div><div class="student-card-eyebrow">BIR OZ TANAFFUS</div><h1 class="student-card-title">O‘yin pauzada</h1><p class="student-card-copy">Xavotir olma! O‘qituvchingiz o‘yinni davom ettirishi bilan yana boshlaymiz.</p><div class="student-waiting-animation"><span></span><span></span><span></span><b>DAVOM ETISH KUTILMOQDA</b></div></section>';
+function revealed(){
+ lastScreen="revealed";clearInterval(timer);
+ const q=data.current_question||{},mine=data.player_answer,free=["poll","word_cloud","open_ended","brainstorm"].includes(q.type);
+ const values=value=>{try{const parsed=JSON.parse(String(value??""));return Array.isArray(parsed)?parsed:[String(value??"")]}catch{return [String(value??"")]}};
+ const answerText=value=>{if(value===null||value===undefined||value==="")return "Javob yuborilmadi";try{const parsed=JSON.parse(String(value));return Array.isArray(parsed)?parsed.join(" · "):String(value)}catch{return String(value)}};
+ const correct=values(q.correct).filter(Boolean),correctText=q.type==="puzzle"?correct.join(" → "):q.type==="slider"?String(q.correct??"—"):correct.join(" · ");
+ const myAnswer=mine?answerText(mine.answer):"Javob yuborilmadi";
+ const isCorrect=mine&&mine.correct!==null&&mine.correct!==undefined?Number(mine.correct)===1:null;
+ const me=(data.players||[]).find(item=>Number(item.id)===Number(player.id));if(me)player={...player,...me};
+ const resultLabel=!mine?"Bu savolga javob yubormadingiz":free?"Javobingiz qabul qilindi":isCorrect?"To‘g‘ri javob!":"Bu safar noto‘g‘ri";
+ const resultClass=!mine?"neutral":free?"recorded":isCorrect?"correct":"wrong";
+ root.innerHTML='<section class="student-card student-reveal-card"><div class="student-reveal-icon">'+(isCorrect?"🎉":free?"💬":mine?"💡":"⏱")+'</div><div class="student-card-eyebrow">SAVOL '+(Number(data.session.current_question)+1)+' NATIJASI</div><h1 class="student-card-title">'+(isCorrect?"Ajoyib!":free?"Fikringiz yuborildi":mine?"Keyingi safar uddalaysiz!":"Vaqt tugadi")+'</h1><div class="student-result-status '+resultClass+'">'+resultLabel+'</div><div class="student-result-question">'+esc(q.prompt||"")+'</div><div class="student-result-answer"><small>SENING JAVOBING</small><strong>'+esc(myAnswer)+'</strong></div>'+(free?'<div class="student-result-correct"><small>BAHOLASH</small><strong>Bu savol avtomatik baholanmaydi</strong></div>':'<div class="student-result-correct"><small>TO‘G‘RI JAVOB</small><strong>'+esc(correctText||"—")+'</strong></div>')+'<div class="student-result-score"><span>BU SAVOLDAGI BALL</span><strong>+'+Number(mine?.points||0).toLocaleString()+'</strong><small>JAMI: '+Number(player.score||0).toLocaleString()+' ball</small></div><div class="student-waiting-animation"><span></span><span></span><span></span><b>KEYINGI SAVOL KUTILMOQDA</b></div></section>';
 }
+
 function finish(){
  lastScreen="finished";clearInterval(timer);
  const list=data.leaderboard||[],me=list.findIndex(p=>p.id===player.id),place=me>=0?me+1:null;
@@ -64,8 +79,13 @@ async function submit(answer){
 }
 function render(){
  if(!data)return;
- if(data.session.status==="waiting"){if(lastScreen!=="waiting")waiting();return}
+ if(data.session.status==="waiting"){
+  if(lastScreen!=="waiting")waiting();
+  else{const count=$("#lobby-player-count");if(count)count.textContent=(data.players||[]).length+" nafar o‘quvchi o‘yinga qo‘shildi"}
+  return;
+ }
  if(data.session.status==="paused"){if(lastScreen!=="paused")paused();return}
+ if(data.session.status==="revealed"){if(lastScreen!=="revealed")revealed();return}
  if(data.session.status==="finished"){if(lastScreen!=="finished")finish();return}
  const q=data.current_question;
  if(!q){if(lastScreen!=="waiting")waiting();return}
@@ -73,24 +93,21 @@ function render(){
 }
 async function load(){
  try{
-  data=await api("session/"+pin);
-  if(!player){const saved=sessionStorage.getItem("mj-player-"+pin);if(saved)player=JSON.parse(saved)}
+  if(!player){try{const saved=sessionStorage.getItem("mj-player-"+pin);if(saved)player=JSON.parse(saved)}catch{sessionStorage.removeItem("mj-player-"+pin)}}
+  data=await api("session/"+pin+(player?"?player_id="+encodeURIComponent(player.id):""));
   if(!player){
    if(data.session.status==="waiting"){if(lastScreen!=="join")showJoin()}
    else if(lastScreen!=="started"){lastScreen="started";root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">🚦</div><div class="student-card-eyebrow">O‘YIN BOSHLANIB BO‘LDI</div><h1 class="student-card-title">Kech qoldingmi?</h1><p class="student-card-copy">Bu o‘yin allaqachon boshlangan. O‘qituvchingizdan yangi PIN-kod so‘rang.</p><a href="/" class="student-primary-button student-home-button"><span>BOSHQA PIN KIRITISH</span><b>→</b></a></section>'}
    return;
   }
-  const me=(data.players||[]).find(p=>p.id===player.id);if(me)player={...player,...me};render();
- }catch(e){
-  const invalidPin=e.message==="O‘yin PIN-kodi topilmadi.";
-  const screen=invalidPin?"invalid-pin":"load-error";
+  const me=(data.players||[]).find(item=>Number(item.id)===Number(player.id));if(me)player={...player,...me};
+  render();
+ }catch(error){
+  const invalidPin=error.message==="O‘yin PIN-kodi topilmadi.",screen=invalidPin?"invalid-pin":"load-error";
   if(lastScreen!==screen){
    lastScreen=screen;
-   if(invalidPin){
-    root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon student-invalid-pin-icon" aria-hidden="true">✕</div><div class="student-card-eyebrow">PIN-KOD TOPILMADI</div><h1 class="student-card-title">Kod xato</h1><p class="student-card-copy">Bu 6 xonali PIN-kod topilmadi. Kodni tekshirib, qayta kiriting.</p><a href="/" class="student-primary-button student-home-button"><span>BOSHQA KOD KIRITISH</span><b>→</b></a></section>';
-   }else{
-    root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">⚠️</div><div class="student-card-eyebrow">ULANISHDA XATOLIK</div><h1 class="student-card-title">O‘yinga ulanib bo‘lmadi</h1><p class="student-card-copy">'+esc(e.message)+'</p><a href="/" class="student-primary-button student-home-button"><span>QAYTA URINISH</span><b>→</b></a></section>';
-   }
+   if(invalidPin)root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon student-invalid-pin-icon" aria-hidden="true">✕</div><div class="student-card-eyebrow">PIN-KOD TOPILMADI</div><h1 class="student-card-title">Kod xato</h1><p class="student-card-copy">Bu 6 xonali PIN-kod topilmadi. Kodni tekshirib, qayta kiriting.</p><a href="/" class="student-primary-button student-home-button"><span>BOSHQA KOD KIRITISH</span><b>→</b></a></section>';
+   else root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">⚠️</div><div class="student-card-eyebrow">ULANISHDA XATOLIK</div><h1 class="student-card-title">O‘yinga ulanib bo‘lmadi</h1><p class="student-card-copy">'+esc(error.message)+'</p><a href="/" class="student-primary-button student-home-button"><span>QAYTA URINISH</span><b>→</b></a></section>';
   }
  }
 }
