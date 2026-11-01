@@ -30,6 +30,7 @@ const normalizeQuestionSet=input=>{
   if(type==="brainstorm"&&time<30)return {error:"G‘oyalar jamlanmasi uchun kamida 30 soniya kerak."};
   let options=(Array.isArray(raw.options)?raw.options:[]).map(option=>safe(typeof option==="string"?option:option?.text).slice(0,75)).filter(Boolean);
   if(options.length>6)return {error:(index+1)+"-savolda 6 tadan ko‘p javob bo‘lishi mumkin emas."};
+   if(["quiz","poll","puzzle"].includes(type)&&new Set(options.map(value=>value.toLocaleLowerCase("uz"))).size!==options.length)return {error:(index+1)+"-savoldagi javob variantlari takrorlanmasligi kerak."};
   const rawCorrect=String(raw.correct??"").trim();
   let correct="",points=[0,1000,2000].includes(Number(raw.points))?Number(raw.points):1000;
   if(["quiz","true_false"].includes(type)){
