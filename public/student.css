@@ -1161,3 +1161,7 @@ body.student-home{
 .mj-race-webgl{position:absolute;inset:0;z-index:0;width:100%;height:100%;display:block}
 .mj-racing-scene.has-webgl .mj-race-sky,.mj-racing-scene.has-webgl .mj-race-track{display:none}
 .mj-racing-scene.has-webgl .mj-race-hud{z-index:3}
+
+
+.mj-student-rank{animation:mjRankEntrance .35s ease both}
+.mj-student-rank:nth-child(2){animation-delay:.05s}.mj-student-rank:nth-child(3){animation-delay:.1s}.mj-student-rank:nth-child(4){animation-delay:.15s}.mj-student-rank:nth-child(5){animation-delay:.2s}
