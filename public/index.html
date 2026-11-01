@@ -3,88 +3,130 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>MUDARRIS JOIN — O‘yin boshlansin!</title>
+  <title>MUDARRIS JOIN — Bir kod. Bir jamoa.</title>
   <link rel="icon" type="image/svg+xml" href="/mudarris-book-purple.svg">
   <link rel="stylesheet" href="/theme.css">
-  <link rel="stylesheet" href="/student.css?v=clean-pin-screen-20261101">
-  <meta name="theme-color" content="#170d2b">
+  <link rel="stylesheet" href="/student.css?v=visual-remake-20261101">
+  <meta name="theme-color" content="#151126">
   <meta name="description" content="O‘yin PIN-kodini kiriting va sinfdoshlaringiz bilan jonli viktorinaga qo‘shiling.">
 </head>
 <body class="student-site student-home">
-  <div class="student-atmosphere" aria-hidden="true">
-    <span class="student-glow student-glow-one"></span>
-    <span class="student-glow student-glow-two"></span>
-    <span class="student-star student-star-one">✦</span>
-    <span class="student-star student-star-two">✧</span>
-    <span class="student-star student-star-three">✦</span>
-    <span class="student-grid-glow"></span>
+  <div class="join-home-background" aria-hidden="true">
+    <span class="join-home-orb join-home-orb-one"></span>
+    <span class="join-home-orb join-home-orb-two"></span>
+    <span class="join-home-orb join-home-orb-three"></span>
+    <span class="join-home-grid"></span>
   </div>
-  <header class="student-nav">
-    <a class="student-brand" href="/" aria-label="MUDARRIS JOIN bosh sahifa">
-      <span class="student-brand-mark"><img src="/mudarris-book-purple.svg" alt=""></span>
-      <span class="student-brand-name">MUDARRIS <b>JOIN</b></span>
+
+  <header class="join-home-nav">
+    <a class="join-home-brand" href="/" aria-label="MUDARRIS JOIN bosh sahifa">
+      <span class="join-home-brand-mark"><img src="/mudarris-book-purple.svg" alt=""></span>
+      <span class="join-home-wordmark">MUDARRIS <b>JOIN</b></span>
     </a>
-    <div class="student-nav-right">
-      <span class="student-live-label"><i></i> JONLI SINF O‘YINLARI</span>
-      <a href="/login" class="student-teacher-link">O‘qituvchi uchun <span>↗</span></a>
+    <div class="join-home-nav-actions">
+      <span class="join-home-status"><i></i> SINF UCHUN JONLI O‘YINLAR</span>
+      <a href="/login" class="join-home-teacher">
+        <span>O‘qituvchi</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M6 5h9v9" /></svg>
+      </a>
     </div>
   </header>
-  <main class="student-landing">
-    <section class="student-hero">
-      <div class="student-hero-kicker"><span>✦</span> BILIM • TEZLIK • JAMOA</div>
-      <h1>O‘YIN<br><span>BOSHLANSIN!</span></h1>
-      <p class="student-hero-copy">Sinfdoshlaring bilan bellash. Savollarga javob ber. Va g‘alaba sari olg‘a!</p>
-      <div class="student-benefits">
-        <div class="student-benefit"><span class="student-benefit-icon">⚡</span><div><strong>Bir zumda qo‘shil</strong><small>PIN-kodni kiritish kifoya</small></div></div>
-        <div class="student-benefit"><span class="student-benefit-icon">🎮</span><div><strong>Birga o‘yna</strong><small>Do‘stlaring bilan bellash</small></div></div>
-        <div class="student-benefit"><span class="student-benefit-icon">🏆</span><div><strong>Eng zo‘ri bo‘l</strong><small>Ball to‘pla va g‘olib bo‘l</small></div></div>
-      </div>
-      <div class="student-preview" aria-hidden="true">
-        <div class="student-preview-top"><span class="student-preview-live"><i></i> LIVE</span><span>BUGUNGI BELLASHUV</span><b>✦</b></div>
-        <div class="student-preview-question">Qaysi javobni tanlaysan?</div>
-        <div class="student-preview-answers"><span class="preview-answer preview-red">▲</span><span class="preview-answer preview-blue">◆</span><span class="preview-answer preview-yellow">●</span><span class="preview-answer preview-green">■</span></div>
-        <div class="student-preview-bottom"><span>Javob berishga tayyormisan?</span><b>100%</b></div>
-        <div class="student-preview-progress"><i></i></div>
-      </div>
-    </section>
-    <section class="student-join-column">
-      <div class="student-join-card">
-        <div class="student-card-decoration" aria-hidden="true"><span>✦</span><span>✧</span></div>
-        <div class="student-card-icon">🚀</div>
-        <div class="student-card-eyebrow">SENING NAVBATING!</div>
-        <h2>O‘yinga qo‘shil</h2>
-        <p class="student-card-copy">O‘qituvching bergan 6 xonali PIN-kodni kiriting.</p>
-        <form id="join-form" class="student-pin-form">
-          <label for="pin">O‘YIN PIN-KODI</label>
-          <div class="student-pin-input-wrap">
-            <span class="student-pin-symbol" aria-hidden="true">#</span>
-            <input id="pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000 000" aria-describedby="pin-hint join-error" required>
-            <span class="student-pin-count" id="pin-count">0/6</span>
+
+  <main class="join-home-main">
+    <div class="join-home-content">
+      <div class="join-home-kicker"><span class="join-home-kicker-line"></span> BILIM • JAMOA • BELLASHUV <span class="join-home-kicker-line"></span></div>
+      <h1 class="join-home-title">Bir kod. Bir jamoa.<br><span>Katta bellashuv.</span></h1>
+      <p class="join-home-subtitle">O‘qituvchingiz bergan PIN-kodni kiriting va sinfdoshlaringiz bilan bellashuvga qo‘shiling.</p>
+
+      <section class="join-home-card" aria-labelledby="join-card-title">
+        <div class="join-home-card-top">
+          <span class="join-home-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4.5 8.25A2.25 2.25 0 0 0 6.75 6h10.5a2.25 2.25 0 0 0 2.25 2.25v7.5A2.25 2.25 0 0 0 17.25 18H6.75A2.25 2.25 0 0 0 4.5 15.75v-7.5Z"/><path d="M9 9.25h6M9 12h6M9 14.75h3"/></svg>
+          </span>
+          <div class="join-home-card-heading">
+            <span>O‘QUVCHILAR UCHUN</span>
+            <h2 id="join-card-title">O‘yinga qo‘shilish</h2>
           </div>
-          <div class="student-pin-hint" id="pin-hint"><span>⌁</span> PIN-kod 6 ta raqamdan iborat</div>
-          <button class="student-primary-button" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button>
-          <p id="join-error" class="student-form-error" role="alert" aria-live="polite"></p>
+          <span class="join-home-card-chip">PIN <b>•</b> 6 RAQAM</span>
+        </div>
+
+        <form id="join-form" class="join-home-form" novalidate>
+          <label for="pin">O‘YIN PIN-KODI</label>
+          <div class="join-home-pin-wrap">
+            <span class="join-home-pin-prefix" aria-hidden="true">PIN</span>
+            <input id="pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000000" aria-describedby="pin-hint join-error" required>
+            <span class="join-home-pin-count" id="pin-count">0/6</span>
+          </div>
+          <div class="join-home-pin-meta">
+            <span id="pin-hint"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 3.5 5v4.4c0 4.1 2.8 6.7 6.5 8.1 3.7-1.4 6.5-4 6.5-8.1V5L10 2.5Z"/><path d="m7.2 9.8 1.8 1.8 3.8-3.9"/></svg> 6 ta raqamdan iborat kodni kiriting</span>
+            <span class="join-home-progress" role="progressbar" aria-label="PIN-kod to‘ldirilishi" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><i id="pin-progress"></i></span>
+          </div>
+          <button class="join-home-submit" type="submit">
+            <span>Bellashuvga qo‘shilish</span>
+            <b aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></b>
+          </button>
+          <p id="join-error" class="join-home-error" role="alert" aria-live="polite"></p>
         </form>
-        <div class="student-no-account"><span>✓</span> O‘quvchi akkaunti kerak emas</div>
+
+        <div class="join-home-card-bottom">
+          <span><i>✓</i> Akkaunt ochish shart emas</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 8V6.5a4.5 4.5 0 0 1 9 0V8M4 8h12v9H4z"/></svg> Xavfsiz ulanish</span>
+        </div>
+      </section>
+
+      <div class="join-home-steps" aria-label="O‘yinga qo‘shilish bosqichlari">
+        <div class="join-home-step">
+          <span class="join-home-step-number">01</span>
+          <span><strong>Kodni ol</strong><small>O‘qituvchingizdan</small></span>
+        </div>
+        <span class="join-home-step-divider" aria-hidden="true"></span>
+        <div class="join-home-step">
+          <span class="join-home-step-number">02</span>
+          <span><strong>Ismingni tanla</strong><small>O‘zingni tanit</small></span>
+        </div>
+        <span class="join-home-step-divider" aria-hidden="true"></span>
+        <div class="join-home-step">
+          <span class="join-home-step-number">03</span>
+          <span><strong>Bellashuvni boshla</strong><small>Va g‘alaba qozon</small></span>
+        </div>
       </div>
-      <div class="student-join-foot"><span>🔒</span> Xavfsiz va tezkor qo‘shilish</div>
-    </section>
+    </div>
   </main>
-  <footer class="student-footer"><span>© MUDARRIS JOIN</span><span>Bilim bilan porla <b>✦</b></span></footer>
+
+  <footer class="join-home-footer">
+    <span>© 2026 MUDARRIS JOIN</span>
+    <span class="join-home-footer-mark">BILIMING BILAN PORLA <b>✦</b></span>
+  </footer>
+
   <script>
-    const joinForm=document.getElementById("join-form"),pinInput=document.getElementById("pin"),pinCount=document.getElementById("pin-count"),joinError=document.getElementById("join-error");
+    const joinForm=document.getElementById("join-form");
+    const pinInput=document.getElementById("pin");
+    const pinCount=document.getElementById("pin-count");
+    const pinProgress=document.getElementById("pin-progress");
+    const pinProgressBar=pinProgress.parentElement;
+    const joinError=document.getElementById("join-error");
+
     pinInput.addEventListener("input",()=>{
       pinInput.value=pinInput.value.replace(/\D/g,"").slice(0,6);
-      pinCount.textContent=pinInput.value.length+"/6";
+      const length=pinInput.value.length;
+      pinCount.textContent=length+"/6";
+      pinProgress.style.width=(length/6*100)+"%";
+      pinProgressBar.setAttribute("aria-valuenow",String(length));
       joinError.textContent="";
-      pinInput.closest(".student-pin-input-wrap").classList.toggle("is-complete",pinInput.value.length===6);
+      pinInput.closest(".join-home-pin-wrap").classList.toggle("is-complete",length===6);
     });
+
     joinForm.addEventListener("submit",event=>{
       event.preventDefault();
       const pin=pinInput.value.trim();
-      if(!/^\d{6}$/.test(pin)){joinError.textContent="Iltimos, 6 xonali o‘yin PIN-kodini kiriting.";pinInput.focus();return}
+      if(!/^\d{6}$/.test(pin)){
+        joinError.textContent="Iltimos, 6 xonali o‘yin PIN-kodini kiriting.";
+        pinInput.focus();
+        return;
+      }
       const button=joinForm.querySelector("button[type=submit]");
-      button.disabled=true;button.querySelector("span").textContent="O‘YIN QIDIRILMOQDA...";
+      button.disabled=true;
+      button.querySelector("span").textContent="O‘YIN QIDIRILMOQDA...";
       location.href="/play.html?pin="+encodeURIComponent(pin);
     });
   </script>
