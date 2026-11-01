@@ -93,7 +93,7 @@ document.addEventListener("click",event=>{
  const remove=event.target.closest("[data-remove]");
  if(remove){if(confirm("Bu o‘yinchini o‘yindan olib tashlaysizmi?"))action("remove_player",Number(remove.dataset.remove));return}
  const copy=event.target.closest("[data-copy-pin]");
- if(copy){const textArea=document.createElement("textarea");textArea.value=pin;textArea.style.position="fixed";textArea.style.opacity="0";document.body.appendChild(textArea);textArea.select();try{if(navigator.clipboard?.writeText){navigator.clipboard.writeText(pin).then(()=>{copy.textContent="Nusxalandi ✓"}).catch(()=>{document.execCommand("copy");copy.textContent="Nusxalandi ✓"})}else{document.execCommand("copy");copy.textContent="Nusxalandi ✓"}}catch{alert("PIN-kod: "+pin)}finally{textArea.remove()}}
+ if(copy){if(navigator.clipboard?.writeText){navigator.clipboard.writeText(pin).then(()=>{copy.textContent="Nusxalandi ✓"}).catch(()=>{copy.textContent="PIN: "+pin})}else{const textArea=document.createElement("textarea");textArea.value=pin;textArea.style.position="fixed";textArea.style.opacity="0";document.body.appendChild(textArea);textArea.select();try{if(!document.execCommand("copy"))throw Error();copy.textContent="Nusxalandi ✓"}catch{alert("PIN-kod: "+pin)}finally{textArea.remove()}}}
 });
 (async()=>{
  if(!/^\d{6}$/.test(pin)){root.textContent="O‘yin PIN-kodi noto‘g‘ri.";return}
