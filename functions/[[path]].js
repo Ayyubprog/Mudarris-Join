@@ -215,7 +215,8 @@ const gm=path.match(/^games\/(\d+)$/);
    await env.DB.prepare("UPDATE players SET score=score+?,streak=?,last_answered_question=? WHERE id=?").bind(earned,nextStreak,s.current_question,player.id).run();
    let health=null,enemiesDefeated=null;
    if(s.mode==="shooter"){
-    await env.DB.prepare("UPDATE player_loadouts SET health=CASE WHEN ?=1 THEN MIN(100,health+8) ELSE MAX(0,health-22) END,enemies_defeated=enemies_defeated+CASE WHEN ?=1 THEN 1 ELSE 0 END WHERE player_id=? AND session_id=? AND mode='shooter'").bind(correct===true?1:0,correct===true?1:0,player.id,s.id).run();
+    const resultFlag=correct===null?null:correct===true?1:0;
+    await env.DB.prepare("UPDATE player_loadouts SET health=CASE WHEN ? IS NULL THEN health WHEN ?=1 THEN MIN(100,health+8) ELSE MAX(0,health-22) END,enemies_defeated=enemies_defeated+CASE WHEN ?=1 THEN 1 ELSE 0 END WHERE player_id=? AND session_id=? AND mode='shooter'").bind(resultFlag,resultFlag,resultFlag,player.id,s.id).run();
     const progress=await env.DB.prepare("SELECT health,enemies_defeated FROM player_loadouts WHERE player_id=? AND session_id=?").bind(player.id,s.id).first();health=progress?.health??100;enemiesDefeated=progress?.enemies_defeated??0;
    }
    const updated=await env.DB.prepare("SELECT score FROM players WHERE id=?").bind(player.id).first();
