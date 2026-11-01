@@ -2,7 +2,7 @@
 "use strict";
 const $=selector=>document.querySelector(selector);
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-const MAX_QUESTIONS=200,MAX_ANSWERS=6;
+const MAX_QUESTIONS=200,MAX_ANSWERS=4;
 const noPoints=new Set(["poll","word_cloud","open_ended","brainstorm"]);
 const textTypes=new Set(["type_answer","open_ended","word_cloud","brainstorm"]);
 const labels={
@@ -146,7 +146,7 @@ function validationError(question){
   if(["quiz","poll"].includes(question.type)){
     const answers=activeAnswers(question);
     if(answers.length<2)return question.type==="poll"?"So‘rovnomada kamida 2 ta javob bo‘lishi kerak.":"Viktorinada kamida 2 ta javob bo‘lishi kerak.";
-    if(answers.length>6)return "Ko‘pi bilan 6 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
+    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 4 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
@@ -620,7 +620,7 @@ function bindEvents(){
   });
   $("#add-answer").addEventListener("click",()=>{
     const question=current();
-    if(question.answers.length>=MAX_ANSWERS){toast("Ko‘pi bilan 6 ta javob qo‘shish mumkin.");return}
+    if(question.answers.length>=MAX_ANSWERS){toast("Ko‘pi bilan 4 ta javob qo‘shish mumkin.");return}
     question.answers.push("");
     renderAnswerEditor(question);markDirty();
     const input=$('[data-answer-input="'+(question.answers.length-1)+'"]');if(input)input.focus();
