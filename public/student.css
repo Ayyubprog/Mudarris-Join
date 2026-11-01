@@ -910,3 +910,18 @@ body.student-home{
  .student-site .student-answer-grid .answer-symbol{width:27px;height:27px;flex-basis:27px;font-size:14px}
 }
 @media(max-width:370px){.mj-avatar-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.student-site .student-answer-grid .student-answer-tile{min-height:82px;padding:7px 5px;font-size:10px}}
+
+.mj-join-icon{width:48px;height:48px;margin:17px auto 10px;border-radius:15px;background:linear-gradient(145deg,#f3e8ff,#e4d5fb);color:#7748ac;font-size:25px;box-shadow:inset 0 1px #fff,0 7px 18px #64339d18}
+.mj-join-copy{max-width:300px}
+.mj-join-form{margin-top:20px}
+.mj-join-form>label{font-size:9px}
+.mj-waiting-avatar{position:relative!important;padding:0!important;border:7px solid #fff!important;cursor:pointer!important;outline:0;transition:transform .18s,box-shadow .18s}
+.mj-waiting-avatar:hover{transform:translateY(-3px) scale(1.025);box-shadow:0 15px 38px #6634a02b}
+.mj-waiting-avatar #waiting-avatar-art{display:grid;place-items:center;width:100%;height:100%}
+.mj-waiting-avatar .mj-avatar-art{width:100px;height:100px;display:block}
+.mj-waiting-avatar-edit{position:absolute;right:-9px;bottom:-7px;width:32px;height:32px;display:grid;place-items:center;border:3px solid #fff;border-radius:11px;background:#673a9e;color:#fff;font-size:16px;font-weight:1000;box-shadow:0 4px 12px #44226933}
+.mj-waiting-edit-link{display:inline-flex;align-items:center;gap:6px;margin:1px auto 8px;padding:6px 11px;border:0;border-radius:99px;background:#f2eafa;color:#6c4297;font-size:9px;font-weight:1000;cursor:pointer}
+.mj-waiting-edit-link:hover{background:#eaddf8}
+.mj-avatar-save-error{min-height:0;padding:0 22px;color:#c04c5c;font-size:10px;font-weight:800;text-align:center}
+.mj-avatar-save-error:empty{display:none}
+@media(max-width:560px){.mj-waiting-avatar .mj-avatar-art{width:91px;height:91px}}
