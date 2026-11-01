@@ -24,32 +24,44 @@ function showJoin(){
 function openAvatarStudio(){
  if($("#avatar-studio"))return;
  const selected=MJAvatars.parts(player.avatar);
- let selectedHead=selected.head.id,selectedAccessory=selected.accessory.id,activeTab="heads",saving=false;
- root.insertAdjacentHTML("beforeend",'<div class="mj-avatar-backdrop" id="avatar-studio"><section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title"><header class="mj-avatar-modal-head"><div><span class="mj-avatar-modal-kicker">SENING O‘YINCHI QIYOFANG</span><h2 id="avatar-studio-title">Qahramoningni tanla</h2></div><button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button></header><div class="mj-avatar-selected-preview"><span id="avatar-modal-art">'+MJAvatars.render(player.avatar,"mj-avatar-modal-art")+'</span><div><strong id="avatar-character-name">'+selected.head.name+'</strong><small id="avatar-accessory-name">'+selected.accessory.name+'</small></div><span class="mj-avatar-live-dot"></span></div><div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari"><button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>'+MJAvatars.heads.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>'+MJAvatars.hats.length+'</span></button></div><div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div><div id="avatar-save-error" class="mj-avatar-save-error" role="alert"></div><footer class="mj-avatar-modal-footer"><span>O‘zingga mos qiyofani yarat ✨</span><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></footer></section></div>');
+ let selectedHead=selected.special?"fox":selected.head.id,selectedAccessory=selected.special?"none":selected.accessory.id,selectedSpecial=selected.special?player.avatar:"",activeTab=selected.special?"specials":"heads",saving=false;
+ const specialState=id=>(data?.specials||[]).find(item=>item.id===id)||{id,spawned:false,player_id:null};
+ root.insertAdjacentHTML("beforeend",'<div class="mj-avatar-backdrop" id="avatar-studio"><section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title"><header class="mj-avatar-modal-head"><div><span class="mj-avatar-modal-kicker">SENING O‘YINCHI QIYOFANG</span><h2 id="avatar-studio-title">Qahramoningni tanla</h2></div><button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button></header><div class="mj-avatar-selected-preview"><span id="avatar-modal-art">'+MJAvatars.render(player.avatar,"mj-avatar-modal-art")+'</span><div><strong id="avatar-character-name">'+selected.head.name+'</strong><small id="avatar-accessory-name">'+(selected.special?"AFSONAVIY · 1/1":selected.accessory.name)+'</small></div><span class="mj-avatar-live-dot"></span></div><div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari"><button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>'+MJAvatars.heads.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>'+MJAvatars.hats.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="specials" role="tab" aria-selected="false">✨ Maxsus <span>2</span></button></div><div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div><div id="avatar-save-error" class="mj-avatar-save-error" role="alert"></div><footer class="mj-avatar-modal-footer"><span>Maxsus qahramonlar har biri 15% ehtimol bilan paydo bo‘ladi · 1/1</span><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></footer></section></div>');
  document.body.classList.add("mj-avatar-picker-open");
  const studio=$("#avatar-studio");
- const getKey=()=>MJAvatars.key(selectedHead,selectedAccessory);
+ const getKey=()=>selectedSpecial||MJAvatars.key(selectedHead,selectedAccessory);
  const close=()=>{studio.remove();document.body.classList.remove("mj-avatar-picker-open");document.removeEventListener("keydown",onKey)};
  const onKey=event=>{if(event.key==="Escape")close()};
  const refreshPreview=()=>{
-  const parts=MJAvatars.parts(getKey());
-  $("#avatar-modal-art").innerHTML=MJAvatars.render(getKey(),"mj-avatar-modal-art");
+  const key=getKey(),parts=MJAvatars.parts(key);
+  $("#avatar-modal-art").innerHTML=MJAvatars.render(key,"mj-avatar-modal-art");
   $("#avatar-character-name").textContent=parts.head.name;
-  $("#avatar-accessory-name").textContent=parts.accessory.name;
+  $("#avatar-accessory-name").textContent=parts.special?"AFSONAVIY · 1/1":parts.accessory.name;
  };
  const renderGallery=()=>{
-  const isHeads=activeTab==="heads",items=isHeads?MJAvatars.heads:MJAvatars.hats;
   studio.querySelectorAll("[data-avatar-tab]").forEach(button=>{const active=button.dataset.avatarTab===activeTab;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
+  if(activeTab==="specials"){
+   $("#avatar-gallery").innerHTML=MJAvatars.specials.map(item=>{
+    const state=specialState(item.id),mine=Number(state.player_id)===Number(player.id),claimable=state.spawned&&(!state.player_id||mine),chosen=selectedSpecial===item.key;
+    const status=!state.spawned?"BU O‘YINDA CHIQMADI":mine?"SENIKI · 1/1":state.player_id?"OLINGAN · 1/1":"TOPILDI · 1/1";
+    return '<button type="button" class="mj-avatar-choice mj-special-choice '+(chosen?"selected ":"")+(claimable?"":"mj-special-locked")+'" data-avatar-choice="'+item.key+'" aria-pressed="'+chosen+'" '+(claimable?"":"disabled")+'><span class="mj-avatar-choice-art">'+MJAvatars.render(item.key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span><small class="mj-special-rarity">✦ '+item.rarity+' · 15%</small><em class="mj-special-state">'+status+'</em>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
+   }).join("");
+   if(!MJAvatars.specials.some(item=>specialState(item.id).spawned))$("#avatar-gallery").insertAdjacentHTML("beforeend",'<p class="mj-special-empty">Bu o‘yinda maxsus qahramonlar chiqmagan. Keyingi o‘yinda yana omadni sinab ko‘r! 🍀</p>');
+   return;
+  }
+  const isHeads=activeTab==="heads",items=isHeads?MJAvatars.heads:MJAvatars.hats;
   $("#avatar-gallery").innerHTML=items.map(item=>{
    const key=MJAvatars.key(isHeads?item.id:selectedHead,isHeads?selectedAccessory:item.id),chosen=isHeads?item.id===selectedHead:item.id===selectedAccessory;
    return '<button type="button" class="mj-avatar-choice '+(chosen?"selected":"")+'" data-avatar-choice="'+item.id+'" aria-pressed="'+chosen+'"><span class="mj-avatar-choice-art">'+MJAvatars.render(key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
   }).join("");
  };
+ const setTab=tab=>{activeTab=tab;renderGallery()};
  renderGallery();
- studio.querySelectorAll("[data-avatar-tab]").forEach(button=>button.addEventListener("click",()=>{activeTab=button.dataset.avatarTab;renderGallery()}));
+ studio.querySelectorAll("[data-avatar-tab]").forEach(button=>button.addEventListener("click",()=>setTab(button.dataset.avatarTab)));
  $("#avatar-gallery").addEventListener("click",event=>{
   const choice=event.target.closest("[data-avatar-choice]");if(!choice)return;
-  if(activeTab==="heads")selectedHead=choice.dataset.avatarChoice;else selectedAccessory=choice.dataset.avatarChoice;
+  if(activeTab==="specials")selectedSpecial=choice.dataset.avatarChoice;
+  else{selectedSpecial="";if(activeTab==="heads")selectedHead=choice.dataset.avatarChoice;else selectedAccessory=choice.dataset.avatarChoice}
   refreshPreview();renderGallery();
  });
  $("#close-avatar-picker").addEventListener("click",close);
