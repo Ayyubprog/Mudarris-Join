@@ -1764,3 +1764,85 @@ body.mj-dashboard .mj-report-symbol svg{width:17px;height:17px;fill:none;stroke:
 
 .mj-status-pill.status-revealed{background:#f1eafa;color:#68409b}
 .mj-live-status.status-revealed{background:#8f6bc7;box-shadow:0 0 0 4px #8f6bc71a}
+
+
+/* MUDARRIS JOIN — expanded Kahoot-style creator and game modes */
+.qb-layout{grid-template-columns:232px minmax(560px,1fr) 276px}
+.qb-main{padding:25px clamp(18px,2.5vw,38px) 34px;background:#f3f5fa}
+.qb-quiz-details{padding:16px 19px;border-radius:15px}
+.qb-editor-heading h1{font-size:24px}
+.qb-question-card{padding:clamp(18px,2.4vw,30px);border-radius:18px;box-shadow:0 12px 34px #1d23400b}
+.qb-question-card-top{margin-bottom:24px}
+.qb-prompt-area{margin-bottom:18px}
+.qb-prompt-area textarea{min-height:154px;padding:22px 24px;border:1px solid #dce3ef;border-radius:15px;background:#fbfcff;font:900 clamp(25px,2.8vw,38px)/1.25 'Nunito',system-ui,sans-serif;letter-spacing:-.035em}
+.qb-media-area{min-height:190px;margin-bottom:23px;padding:20px;border:2px dashed #cbd7e8;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#f5f4ff);display:flex;flex-direction:column;justify-content:center}
+.qb-media-toolbar{width:100%}
+.qb-media-toolbar strong{font-size:12px}
+.qb-media-toolbar small{font-size:10px}
+.qb-media-symbol{width:42px;height:42px}
+.qb-media-add{padding:11px 15px;font-size:10px;border-radius:10px}
+.qb-media-preview{width:100%;margin-top:14px;padding:12px;border-radius:12px;background:#eef2f8}
+.qb-media-preview img{max-height:300px;object-fit:contain}
+.qb-answers-heading{margin:0 0 12px}
+.qb-answers-heading>div strong{font-size:14px}
+.qb-answers-heading>div small{font-size:10px}
+.qb-answer-grid{gap:12px}
+.qb-answer-row{min-height:72px;border-radius:13px}
+.qb-answer-input{font-size:14px!important;font-weight:800}
+.qb-answer-mark{width:48px!important}
+.qb-add-answer{min-height:43px;border-radius:10px;font-size:10px}
+.qb-special-editor{padding:17px;border:1px solid #e3e8f0;border-radius:13px;background:#f8faff}
+.qb-special-label{font-size:11px!important}
+#correct-text{min-height:48px;padding:0 14px!important;border:1px solid #d8e0ed!important;border-radius:10px!important;font-size:15px!important;font-weight:900}
+.qb-special-editor p{font-size:10px;line-height:1.55;color:#718096}
+.qb-settings{padding:22px 17px;background:#fff}
+.qb-settings-heading{margin-bottom:24px}
+.qb-setting-block{margin-bottom:24px}
+.qb-setting-block>label,.qb-setting-label{font-size:10px}
+.qb-setting-control select{height:46px;font-size:12px}
+.qb-points-options button{min-height:42px;font-size:12px}
+.qb-change-type{min-height:62px}
+.qb-settings-actions{gap:8px}
+.qb-settings-actions .qb-button{min-height:43px}
+.qb-local-upload{display:grid;gap:6px;margin-top:13px;padding:13px;border:1px dashed #c7d4e7;border-radius:12px;background:#f6f9ff}
+.qb-local-upload label{font-size:9px;font-weight:1000;letter-spacing:.08em;color:#4b5e79}
+.qb-local-upload input{max-width:100%;font-size:10px;color:#44546b}
+.qb-local-upload small{font-size:9px;color:#8190a5}
+@media(max-width:1180px){.qb-layout{grid-template-columns:205px minmax(0,1fr) 248px}.qb-main{padding:19px 16px 28px}}
+@media(max-width:900px){.qb-layout{height:auto;min-height:calc(100vh - 68px);grid-template-columns:190px minmax(0,1fr)}.qb-settings{grid-column:2;min-height:auto;border-top:1px solid #eae5ee;border-left:0}.qb-main{overflow:visible}.qb-settings-actions{position:sticky;bottom:0;background:#fff;padding:10px 0}}
+@media(max-width:640px){.qb-layout{display:flex;flex-direction:column;height:auto}.qb-sidebar{max-height:230px;min-height:180px}.qb-main{padding:13px 10px 20px}.qb-details-fields{grid-template-columns:1fr 1fr}.qb-description-field{grid-column:1/-1}.qb-question-card{padding:14px}.qb-prompt-area textarea{min-height:120px;padding:15px;font-size:25px}.qb-media-area{min-height:150px;padding:12px}.qb-answer-grid{grid-template-columns:1fr}.qb-answer-row{min-height:62px}.qb-settings{padding:17px 14px}.qb-topbar{gap:8px}.qb-topbar-right{gap:5px}}
+
+
+
+/* Live projector game art and after-question character leaderboard */
+.mj-host-game-scene{position:relative;height:160px;overflow:hidden;margin:0 0 14px;border:1px solid #ffffff55;border-radius:16px;box-shadow:0 12px 30px #08031e33}
+.mj-host-shooter{background:linear-gradient(180deg,#7bc9f2 0%,#d2eaf6 53%,#d5a16c 54%,#8b5039 100%)}
+.mj-host-sun{position:absolute;top:16px;right:15%;width:42px;height:42px;border-radius:50%;background:#fff0ad;box-shadow:0 0 40px #ffe9a1}
+.mj-host-mesa{position:absolute;bottom:0;left:0;width:100%;height:80%;background:#a96d4d;clip-path:polygon(0 72%,13% 48%,27% 62%,39% 12%,54% 51%,67% 28%,83% 57%,100% 31%,100% 100%,0 100%)}
+.mj-host-battle-title{position:absolute;top:13px;left:17px;display:grid;gap:3px;color:white;font-size:12px;font-weight:1000;letter-spacing:.15em;text-shadow:0 2px 6px #3c251c}
+.mj-host-battle-title small{font-size:8px}
+.mj-host-duel-hero,.mj-host-duel-enemy{position:absolute;bottom:12px;font-size:74px;filter:drop-shadow(0 8px 6px #3d281f77);animation:mjHostIdle 1.5s ease-in-out infinite alternate}
+.mj-host-duel-hero{left:18%}.mj-host-duel-enemy{right:18%;animation-delay:.4s}
+@keyframes mjHostIdle{to{transform:translateY(-7px)}}
+.mj-host-battle-ground{position:absolute;left:0;right:0;bottom:0;height:18px;background:#73432f}
+.mj-host-racing{background:linear-gradient(180deg,#8bd5fa 0%,#d8f2ff 50%,#7bb58b 51%,#4b9469 100%)}
+.mj-host-race-hills{position:absolute;inset:30px 0 0;background:#579b7a;clip-path:polygon(0 100%,20% 0,38% 100%,63% 12%,84% 100%,100% 30%,100% 100%)}
+.mj-host-race-road{position:absolute;left:30%;right:30%;top:30px;bottom:-30px;transform:perspective(280px) rotateX(38deg);background:repeating-linear-gradient(90deg,#303a4c 0 32%,#424c5f 32% 64%);border-left:7px solid white;border-right:7px solid white}
+.mj-host-race-road i{position:absolute;top:0;bottom:0;width:4px;background:repeating-linear-gradient(180deg,#fff 0 20px,transparent 20px 40px)}
+.mj-host-race-road i:first-child{left:33%}.mj-host-race-road i:nth-child(2){right:33%}
+.mj-host-race-road b,.mj-host-race-road em{position:absolute;font-size:34px;font-style:normal;filter:drop-shadow(0 5px 3px #1119)}
+.mj-host-race-road b{bottom:20%;left:45%}.mj-host-race-road em{top:10%;right:20%}
+.mj-host-race-caption{position:absolute;left:14px;top:12px;color:white;font-size:11px;font-weight:1000;letter-spacing:.12em;text-shadow:0 2px 5px #244}
+.live-round-leaderboard{margin:14px 0;padding:14px;border:1px solid #eee6f7;border-radius:14px;background:#faf8ff}
+.live-round-leaderboard-title{margin-bottom:9px;color:#67409c;font-size:10px;font-weight:1000;letter-spacing:.12em}
+.live-round-ranks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.live-round-rank{min-width:0;display:grid;justify-items:center;gap:5px;padding:10px 5px;border:1px solid #eee8f5;border-radius:11px;background:white}
+.live-round-rank>span{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:#f1eafa}
+.live-round-rank .live-player-avatar-svg{width:42px;height:42px}
+.live-round-rank>b{color:#8a75b5;font-size:12px}
+.live-round-rank>strong{max-width:100%;overflow:hidden;color:#3d2b50;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.live-round-rank>em{color:#6b50a1;font-size:9px;font-style:normal;font-weight:1000}
+.live-round-rank.rank-1{border-color:#ead69b;background:#fffdf4}
+.live-round-rank.rank-1>b{color:#c08b23}
+@media(max-width:650px){.live-round-ranks{grid-template-columns:repeat(3,minmax(0,1fr))}.mj-host-game-scene{height:130px}.mj-host-duel-hero,.mj-host-duel-enemy{font-size:58px}}
+
