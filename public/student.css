@@ -16,58 +16,46 @@
 @media(max-width:390px){.student-nav,.student-play-nav{padding:0 11px}.student-brand-name{font-size:15px}.student-teacher-link{padding:8px 9px;font-size:9px}.student-landing{width:calc(100% - 22px)}.student-join-card{padding:22px 17px}.student-pin-input-wrap input{font-size:23px}.student-benefit{flex-basis:100%}.student-game-toolbar .student-pin-badge{padding:0 8px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.student-site *,.student-site *:before,.student-site *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
-/* MUDARRIS JOIN — centered PIN landing with soft-focus study photography */
-.student-atmosphere{
-  position:fixed;
-  isolation:isolate;
-  background:#160929;
+/* MUDARRIS JOIN — clean premium PIN screen (no photography) */
+.student-site{
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(126,83,191,.22),transparent 38%),
+    radial-gradient(ellipse at 8% 92%,rgba(67,49,120,.18),transparent 34%),
+    linear-gradient(135deg,#160d29 0%,#21163a 52%,#170d2b 100%);
 }
+.student-atmosphere{background:transparent}
 .student-atmosphere::before,
 .student-atmosphere::after{
-  content:"";
-  position:absolute;
-  pointer-events:none;
-}
-.student-atmosphere::before{
-  z-index:-2;
-  inset:-28px;
-  background:
-    linear-gradient(120deg,rgba(15,6,34,.78),rgba(19,8,42,.72)),
-    url("https://images.unsplash.com/photo-1758708536050-e911f468ea83?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") center 54% / cover no-repeat;
-  filter:blur(9px) saturate(.78);
-  transform:scale(1.04);
-  opacity:.96;
-}
-.student-atmosphere::after{
-  z-index:-1;
-  inset:0;
-  background:
-    linear-gradient(90deg,rgba(19,7,41,.12),rgba(19,7,41,.08)),
-    url("https://images.unsplash.com/photo-1769794371055-54436b54577e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") left 3% center / min(31vw,440px) 78vh no-repeat,
-    url("https://images.unsplash.com/photo-1773887859326-80208f2679b6?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") right 3% center / min(31vw,440px) 78vh no-repeat;
-  filter:blur(9px) saturate(.78);
-  opacity:.5;
-  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 20%,transparent 43%,transparent 57%,#000 80%,#000 100%);
-  mask-image:linear-gradient(90deg,#000 0%,#000 20%,transparent 43%,transparent 57%,#000 80%,#000 100%);
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  filter:none!important;
 }
 .student-grid-glow{
   opacity:.1;
-  background-size:64px 64px;
-  mask-image:radial-gradient(ellipse at center,#000 0%,transparent 76%);
+  background-size:68px 68px;
+  mask-image:radial-gradient(ellipse at center,rgba(0,0,0,.75),transparent 78%);
 }
 .student-glow-one{
-  width:520px;
-  height:520px;
-  top:-300px;
-  left:12%;
-  opacity:.42;
-}
-.student-glow-two{
   width:560px;
   height:560px;
-  right:-260px;
-  bottom:-300px;
-  opacity:.38;
+  top:-330px;
+  left:calc(50% - 280px);
+  opacity:.34;
+  filter:blur(18px);
+}
+.student-glow-two{
+  width:520px;
+  height:520px;
+  right:-280px;
+  bottom:-310px;
+  opacity:.25;
+  filter:blur(22px);
+}
+.student-star{display:none!important}
+.student-nav{
+  background:rgba(15,8,29,.38);
+  border-bottom-color:rgba(255,255,255,.08);
 }
 .student-landing{
   display:grid;
@@ -77,7 +65,7 @@
   max-width:none;
   min-height:calc(100svh - 78px - 42px);
   gap:0;
-  padding:24px 20px 28px;
+  padding:26px 20px;
 }
 .student-hero{display:none!important}
 .student-join-column{
@@ -85,81 +73,42 @@
   max-width:480px;
   justify-self:center;
   margin:0 auto;
-  animation:studentPinEnter .65s cubic-bezier(.2,.8,.2,1) both;
+  animation:studentPinEnter .55s cubic-bezier(.2,.8,.2,1) both;
 }
 .student-join-card{
   padding:clamp(30px,4vw,43px);
-  border:1px solid rgba(255,255,255,.82);
+  border:1px solid rgba(255,255,255,.88);
   border-radius:27px;
-  background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(249,246,255,.94));
-  box-shadow:0 34px 100px rgba(4,1,17,.45),0 0 0 1px rgba(255,255,255,.13),0 0 60px rgba(156,104,225,.12);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  background:linear-gradient(145deg,#fff 0%,#fbf9ff 100%);
+  color:#27163d;
+  box-shadow:0 30px 90px rgba(3,1,12,.34),0 0 0 1px rgba(255,255,255,.1);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
 }
 .student-join-card:after{
   content:"";
   position:absolute;
   inset:0;
   border-radius:inherit;
-  background:linear-gradient(115deg,rgba(255,255,255,.35),transparent 35%,rgba(188,155,255,.08));
+  background:linear-gradient(115deg,rgba(255,255,255,.5),transparent 42%,rgba(188,155,255,.06));
   pointer-events:none;
 }
-.student-card-icon{
-  box-shadow:inset 0 1px white,0 10px 24px rgba(88,43,145,.14);
-}
-.student-join-card h2{
-  font-size:clamp(31px,4vw,38px);
-}
+.student-join-card h2{font-size:clamp(31px,4vw,38px)}
 .student-pin-form{margin-top:25px}
-.student-pin-input-wrap{
-  height:70px;
-  border-radius:16px;
-  box-shadow:0 5px 18px rgba(61,35,91,.04);
-}
+.student-pin-input-wrap{height:70px;border-radius:16px}
 .student-pin-input-wrap input{font-size:29px}
-.student-primary-button{
-  min-height:60px;
-  border-radius:15px;
-  box-shadow:0 5px 0 #4c218e,0 14px 28px rgba(101,46,177,.24);
-}
+.student-primary-button{min-height:60px;border-radius:15px}
 .student-join-foot{
   margin-top:15px;
-  color:rgba(244,234,255,.78);
-  text-shadow:0 1px 8px rgba(0,0,0,.35);
+  color:rgba(225,215,240,.76);
+  text-shadow:none;
 }
 .student-footer{
   width:min(1210px,calc(100% - 48px));
   padding:8px 0 15px;
-  color:rgba(229,215,246,.72);
-}
-.student-photo-credit{
-  color:rgba(229,215,246,.72);
-  font-size:9px;
-  font-weight:800;
-  text-decoration:underline;
-  text-underline-offset:3px;
-  transition:color .18s ease;
-}
-.student-photo-credit:hover{color:#fff}
-@keyframes studentPinEnter{
-  from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(5px)}
-  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+  color:rgba(225,215,240,.62);
 }
 @media(max-width:700px){
-  .student-atmosphere::before{
-    background:
-      linear-gradient(145deg,rgba(15,6,34,.8),rgba(19,8,42,.78)),
-      url("https://images.unsplash.com/photo-1758708536050-e911f468ea83?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") center / cover no-repeat;
-  }
-  .student-atmosphere::after{
-    background:
-      linear-gradient(90deg,rgba(19,7,41,.1),rgba(19,7,41,.1)),
-      url("https://images.unsplash.com/photo-1769794371055-54436b54577e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") left -50px center / 230px 55vh no-repeat,
-      url("https://images.unsplash.com/photo-1773887859326-80208f2679b6?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000") right -55px center / 230px 55vh no-repeat;
-    opacity:.34;
-    -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 38%,transparent 62%,#000 100%);
-    mask-image:linear-gradient(90deg,#000 0%,transparent 38%,transparent 62%,#000 100%);
-  }
   .student-landing{
     display:grid;
     grid-template-columns:minmax(0,1fr);
@@ -169,15 +118,8 @@
     padding:18px 14px 22px;
   }
   .student-hero{display:none!important}
-  .student-join-column{
-    width:min(480px,100%);
-    max-width:480px;
-    margin:0 auto;
-  }
-  .student-join-card{
-    padding:29px 23px;
-    border-radius:24px;
-  }
+  .student-join-column{width:min(480px,100%);max-width:480px;margin:0 auto}
+  .student-join-card{padding:29px 23px;border-radius:24px}
   .student-join-card h2{font-size:30px}
   .student-pin-input-wrap{height:62px}
   .student-pin-input-wrap input{font-size:26px}
@@ -209,4 +151,3 @@
 @media(prefers-reduced-motion:reduce){
   .student-join-column{animation:none!important}
 }
-
