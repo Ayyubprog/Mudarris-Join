@@ -210,3 +210,75 @@
   .student-join-column{animation:none!important}
 }
 
+
+
+/* MUDARRIS JOIN — clean premium PIN screen (no photography) */
+.student-site{
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(126,83,191,.22),transparent 38%),
+    radial-gradient(ellipse at 8% 92%,rgba(67,49,120,.18),transparent 34%),
+    linear-gradient(135deg,#160d29 0%,#21163a 52%,#170d2b 100%);
+}
+.student-atmosphere{background:transparent}
+.student-atmosphere::before,
+.student-atmosphere::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  filter:none!important;
+}
+.student-grid-glow{
+  opacity:.1;
+  background-size:68px 68px;
+  mask-image:radial-gradient(ellipse at center,rgba(0,0,0,.75),transparent 78%);
+}
+.student-glow-one{
+  width:560px;
+  height:560px;
+  top:-330px;
+  left:calc(50% - 280px);
+  opacity:.34;
+  filter:blur(18px);
+}
+.student-glow-two{
+  width:520px;
+  height:520px;
+  right:-280px;
+  bottom:-310px;
+  opacity:.25;
+  filter:blur(22px);
+}
+.student-star{display:none!important}
+.student-nav{
+  background:rgba(15,8,29,.38);
+  border-bottom-color:rgba(255,255,255,.08);
+}
+.student-landing{
+  min-height:calc(100svh - 78px - 42px);
+  padding-top:26px;
+  padding-bottom:26px;
+}
+.student-join-card{
+  border-color:rgba(255,255,255,.88);
+  background:linear-gradient(145deg,#fff 0%,#fbf9ff 100%);
+  box-shadow:0 30px 90px rgba(3,1,12,.34),0 0 0 1px rgba(255,255,255,.1);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+.student-join-card:after{
+  background:linear-gradient(115deg,rgba(255,255,255,.5),transparent 42%,rgba(188,155,255,.06));
+}
+.student-join-column{
+  animation:studentPinEnter .55s cubic-bezier(.2,.8,.2,1) both;
+}
+.student-footer{color:rgba(225,215,240,.62)}
+.student-join-foot{
+  color:rgba(225,215,240,.76);
+  text-shadow:none;
+}
+@media(max-width:700px){
+  .student-landing{
+    min-height:calc(100svh - 64px - 42px);
+    padding:18px 14px 22px;
+  }
+}
