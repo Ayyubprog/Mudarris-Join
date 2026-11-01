@@ -4,7 +4,7 @@ const $=selector=>document.querySelector(selector);
 const root=$("#host-root");
 const pin=new URLSearchParams(location.search).get("pin")||"";
 const state={data:null,loading:false,timer:null,clock:null,lastHtml:"",autoRevealKey:""};
-const avatars={tiger:"🐯",earth:"🌍",skull:"💀",alien:"👽",cat:"🐱",fox:"🦊",robot:"🤖",ghost:"👻",lion:"🦁",panda:"🐼",rocket:"🚀",crown:"👑"};
+const avatarIcon=key=>window.MJAvatars?MJAvatars.render(key,"live-player-avatar-svg"):"🙂";
 const modes={classic:"KLASSIK",team:"JAMOAVIY",accuracy:"ANIQLIK",confidence:"ISHONCH",marble:"SHARLAR POYGASI",racing:"AVTOMOBIL POYGASI",kingdoms:"RANGLAR QIROLLIGI",tower:"ENG BALAND MINORA",treasure:"XAZINA IZLOVCHILAR",submarine:"SUVOSTI JAMOASI",robot:"ROBOTLAR POYGASI",cosmic:"KOINOT SARI"};
 const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const safeArray=value=>{try{const parsed=JSON.parse(String(value??""));return Array.isArray(parsed)?parsed:null}catch{return null}};
@@ -52,7 +52,7 @@ function questionOptions(question,revealed){
 }
 function playerWall(players,editable=false){
  if(!players.length)return '<div class="live-player-empty"><div><span>🎮</span><strong>Birinchi o‘yinchi kutilmoqda</strong><small>O‘quvchilar saytga kirib, PIN-kod va taxallusini yozishi bilan shu yerda ko‘rinadi.</small></div></div>';
- return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+(avatars[player.avatar]||"🙂")+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
+ return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+avatarIcon(player.avatar)+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
 }
 function lobbyView(data){
  const players=data.players||[],session=data.session,locked=!!session.join_locked;
