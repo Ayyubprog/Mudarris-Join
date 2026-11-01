@@ -1846,3 +1846,5 @@ body.mj-dashboard .mj-report-symbol svg{width:17px;height:17px;fill:none;stroke:
 .live-round-rank.rank-1>b{color:#c08b23}
 @media(max-width:650px){.live-round-ranks{grid-template-columns:repeat(3,minmax(0,1fr))}.mj-host-game-scene{height:130px}.mj-host-duel-hero,.mj-host-duel-enemy{font-size:58px}}
 
+
+.live-player-loadout{display:inline-grid;place-items:center;flex:none;width:25px;height:25px;margin-left:4px;border-radius:8px;background:#f3efff;color:#7054b5;font-size:15px}
