@@ -98,21 +98,36 @@ async function main(req,env){
    }catch(error){await env.DB.prepare("DELETE FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).run();throw error}
    return json({game:{id,title,subject:safe(b.subject).slice(0,60),grade:safe(b.grade).slice(0,30),question_count:normalized.questions.length}},201);
   }
-if(method==="PUT"){
- const b=await parseBody(req),title=safe(b.title).slice(0,90),normalized=normalizeQuestionSet(b.questions);
- const owned=await env.DB.prepare("SELECT id FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).first();
- if(!owned)return json({error:"O‘yin topilmadi."},404);
- if(title.length<3)return json({error:"Viktorina nomini kiriting (kamida 3 belgi)."},400);
- if(normalized.error)return json({error:normalized.error},400);
- const statements=[
-  env.DB.prepare("UPDATE games SET title=?,subject=?,grade=?,description=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND teacher_id=?").bind(title,safe(b.subject).slice(0,60),safe(b.grade).slice(0,30),safe(b.description).slice(0,240),id,user.id),
-  env.DB.prepare("DELETE FROM questions WHERE game_id=?").bind(id),
-  ...normalized.questions.map((q,index)=>env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,index,q.type,q.prompt,JSON.stringify(q.options.map((text,j)=>({id:String(j),text}))),q.correct,q.time,q.points,q.media))
- ];
- await env.DB.batch(statements);
- return json({ok:true,game:await loadGame(env,id,user.id)});
-}
-}
+const gm=path.match(/^games\/(\d+)$/);
+ if(gm){
+  const user=await teacherRequired(req,env);
+  if(!user)return json({error:"Tizimga kirish talab etiladi."},401);
+  const id=Number(gm[1]);
+  if(method==="GET"){
+   const game=await loadGame(env,id,user.id);
+   return game?json({game}):json({error:"O‘yin topilmadi."},404);
+  }
+  if(method==="DELETE"){
+   await env.DB.prepare("DELETE FROM questions WHERE game_id=? AND game_id IN(SELECT id FROM games WHERE teacher_id=?)").bind(id,user.id).run();
+   const result=await env.DB.prepare("DELETE FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).run();
+   if(!result.meta.changes)return json({error:"O‘yin topilmadi."},404);
+   return json({ok:true});
+  }
+  if(method==="PUT"){
+   const b=await parseBody(req),title=safe(b.title).slice(0,90),normalized=normalizeQuestionSet(b.questions);
+   const owned=await env.DB.prepare("SELECT id FROM games WHERE id=? AND teacher_id=?").bind(id,user.id).first();
+   if(!owned)return json({error:"O‘yin topilmadi."},404);
+   if(title.length<3)return json({error:"Viktorina nomini kiriting (kamida 3 belgi)."},400);
+   if(normalized.error)return json({error:normalized.error},400);
+   const statements=[
+    env.DB.prepare("UPDATE games SET title=?,subject=?,grade=?,description=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND teacher_id=?").bind(title,safe(b.subject).slice(0,60),safe(b.grade).slice(0,30),safe(b.description).slice(0,240),id,user.id),
+    env.DB.prepare("DELETE FROM questions WHERE game_id=?").bind(id),
+    ...normalized.questions.map((q,index)=>env.DB.prepare("INSERT INTO questions(game_id,position,question_type,prompt,options,correct_answer,time_limit,points,media_url) VALUES(?,?,?,?,?,?,?,?,?)").bind(id,index,q.type,q.prompt,JSON.stringify(q.options.map((text,j)=>({id:String(j),text}))),q.correct,q.time,q.points,q.media))
+   ];
+   await env.DB.batch(statements);
+   return json({ok:true,game:await loadGame(env,id,user.id)});
+  }
+ }
  if(path==="classes"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT c.*,COUNT(s.id) AS student_count FROM classes c LEFT JOIN class_students s ON s.class_id=c.id WHERE c.teacher_id=? GROUP BY c.id ORDER BY c.created_at DESC").bind(user.id).all();return json({classes:results})}
  if(path==="classes"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),name=safe(b.name).slice(0,70);if(!name)return json({error:"Sinf nomini kiriting."},400);const code=Math.random().toString(36).slice(2,8).toUpperCase();const r=await env.DB.prepare("INSERT INTO classes(teacher_id,name,grade,join_code) VALUES(?,?,?,?)").bind(user.id,name,safe(b.grade).slice(0,50),code).run();return json({class:{id:r.meta.last_row_id,name,grade:b.grade||"",join_code:code,student_count:0}},201)}
  const cl=path.match(/^classes\/(\d+)$/);if(cl){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const id=Number(cl[1]),c=await env.DB.prepare("SELECT * FROM classes WHERE id=? AND teacher_id=?").bind(id,user.id).first();if(!c)return json({error:"Sinf topilmadi."},404);if(method==="POST"){const b=await parseBody(req),names=Array.isArray(b.students)?b.students.slice(0,80):[];for(const name of names){const clean=safe(name).slice(0,80);if(clean)await env.DB.prepare("INSERT INTO class_students(class_id,name) VALUES(?,?)").bind(id,clean).run()}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({ok:true,students:results})}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({class:c,students:results})}
