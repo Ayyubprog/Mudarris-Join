@@ -1,36 +1,81 @@
 (()=>{
 const $=s=>document.querySelector(s),root=$("#play-root"),pin=new URLSearchParams(location.search).get("pin")||"";
 let player=null,data=null,lastQuestion=-2,answered=-1,timer=null,lastScreen="";
-const avatars=["🐯","🌍","💀","👽","🐱","🦊","🤖","👻","🦁","🐼","🚀","👑"];
-const avatarKeys=["tiger","earth","skull","alien","cat","fox","robot","ghost","lion","panda","rocket","crown"];
-const avatarIcons={tiger:"🐯",earth:"🌍",skull:"💀",alien:"👽",cat:"🐱",fox:"🦊",robot:"🤖",ghost:"👻",lion:"🦁",panda:"🐼",rocket:"🚀",crown:"👑"};
-function avatarIcon(key){return avatarIcons[key]||"🙂"}
+function avatarIcon(key){return window.MJAvatars?MJAvatars.render(key,"mj-avatar-art"):"🙂"}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function api(path,opts){const r=await fetch("/api/"+path,opts||{}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||"So‘rov bajarilmadi");return d}
 function showJoin(){
  if(lastScreen==="join")return;
  lastScreen="join";
- const suggested=["Zukko Sher","Chaqqon Tulki","Jasur Burgut","Topqir Panda","Bilimdon Robot","Tezkor Yo‘lbars","Aqlli Arslon","Quvnoq Mushuk","Kuchli Ajdar","Zehnli Boyo‘g‘li"];
- root.innerHTML='<section class="student-card student-onboard-card"><div class="student-card-heading"><span class="student-step-chip">01</span><span class="student-card-eyebrow">O‘ZINGNI TANIT</span><span class="student-heading-spark">✦</span></div><div class="student-avatar-stage"><span class="student-avatar-halo"></span><span class="student-avatar-stage-icon">🎯</span></div><h1 class="student-card-title">Taxallusingni tanla!</h1><p class="student-card-copy">Sinfdagilar seni shu ism va avatar bilan ko‘radi. O‘zingga yoqqanini tanla.</p><form id="join-player" class="student-player-form"><label for="nickname">TAXALLUSING</label><div class="student-nickname-tools"><input class="field student-nickname-input" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingni yoz..." autocomplete="nickname"><button type="button" id="random-name" class="student-random-button">🎲 Tasodifiy</button></div><div class="student-avatar-heading"><span>AVATARINGNI TANLA</span><button type="button" id="random-avatar" class="student-random-link">🎲 Tasodifiy avatar</button></div><div class="avatar-grid student-avatar-grid">'+avatars.map((a,i)=>'<button type="button" class="avatar student-avatar '+(i===0?"selected":"")+'" data-avatar="'+i+'" aria-label="Avatar '+(i+1)+'" aria-pressed="'+(i===0?"true":"false")+'">'+a+'</button>').join("")+'</div><button class="student-primary-button student-enter-button" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button><div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div></form><div class="student-privacy-note"><span>✓</span> Akkaunt ochish shart emas · Ismingni o‘zing tanlaysan</div></section>';
- let chosen=0;
- const pickAvatar=index=>{chosen=index;root.querySelectorAll("[data-avatar]").forEach(button=>{const selected=Number(button.dataset.avatar)===chosen;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected))})};
- root.querySelectorAll("[data-avatar]").forEach(button=>button.addEventListener("click",()=>pickAvatar(Number(button.dataset.avatar))));
- $("#random-avatar").addEventListener("click",()=>pickAvatar(Math.floor(Math.random()*avatars.length)));
- $("#random-name").addEventListener("click",()=>{$("#nickname").value=suggested[Math.floor(Math.random()*suggested.length)];$("#join-error").textContent="";$("#nickname").focus()});
+ const joiningAvatar=MJAvatars.randomKey();
+ root.innerHTML='<section class="student-card student-onboard-card mj-join-card"><div class="mj-join-kicker"><span class="mj-join-kicker-dot"></span> MUDARRIS JOIN · JONLI BELLASHUV</div><div class="student-card-icon mj-join-icon">✦</div><h1 class="student-card-title mj-join-title">Taxallusingni kiriting</h1><p class="student-card-copy mj-join-copy">O‘qituvchingiz va sinfdoshlaringiz sizni shu nom bilan ko‘radi.</p><form id="join-player" class="student-player-form mj-join-form"><label for="nickname">TAXALLUSINGIZ</label><input class="field student-nickname-input mj-join-nickname" id="nickname" maxlength="24" minlength="2" required placeholder="Ismingizni yozing..." autocomplete="nickname"><button class="student-primary-button student-enter-button mj-join-submit" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button><div id="join-error" class="student-form-error" role="alert" aria-live="polite"></div></form><div class="student-privacy-note mj-join-privacy"><span>✓</span> Akkaunt ochish shart emas</div></section>';
  $("#nickname").focus({preventScroll:true});
  $("#join-player").onsubmit=async event=>{
   event.preventDefault();
   const nickname=$("#nickname").value.trim().replace(/\s+/g," "),button=root.querySelector("button[type=submit]"),error=$("#join-error");
   if(nickname.length<2){error.textContent="Taxallus kamida 2 ta belgidan iborat bo‘lsin.";return}
   button.disabled=true;button.querySelector("span").textContent="O‘YINGA QO‘SHILMOQDA...";
-  try{const response=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname,avatar:avatarKeys[chosen]})});player=response.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load()}
-  catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="O‘YINGA KIRISH"}
+  try{
+   const response=await api("join",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,nickname,avatar:joiningAvatar})});
+   player=response.player;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));lastScreen="";await load();
+  }catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="O‘YINGA KIRISH"}
  };
+}
+function openAvatarStudio(){
+ if($("#avatar-studio"))return;
+ const selected=MJAvatars.parts(player.avatar);
+ let selectedHead=selected.head.id,selectedAccessory=selected.accessory.id,activeTab="heads",saving=false;
+ root.insertAdjacentHTML("beforeend",'<div class="mj-avatar-backdrop" id="avatar-studio"><section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title"><header class="mj-avatar-modal-head"><div><span class="mj-avatar-modal-kicker">SENING O‘YINCHI QIYOFANG</span><h2 id="avatar-studio-title">Qahramoningni tanla</h2></div><button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button></header><div class="mj-avatar-selected-preview"><span id="avatar-modal-art">'+MJAvatars.render(player.avatar,"mj-avatar-modal-art")+'</span><div><strong id="avatar-character-name">'+selected.head.name+'</strong><small id="avatar-accessory-name">'+selected.accessory.name+'</small></div><span class="mj-avatar-live-dot"></span></div><div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari"><button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>'+MJAvatars.heads.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>'+MJAvatars.hats.length+'</span></button></div><div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div><div id="avatar-save-error" class="mj-avatar-save-error" role="alert"></div><footer class="mj-avatar-modal-footer"><span>O‘zingga mos qiyofani yarat ✨</span><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></footer></section></div>');
+ document.body.classList.add("mj-avatar-picker-open");
+ const studio=$("#avatar-studio");
+ const getKey=()=>MJAvatars.key(selectedHead,selectedAccessory);
+ const close=()=>{studio.remove();document.body.classList.remove("mj-avatar-picker-open");document.removeEventListener("keydown",onKey)};
+ const onKey=event=>{if(event.key==="Escape")close()};
+ const refreshPreview=()=>{
+  const parts=MJAvatars.parts(getKey());
+  $("#avatar-modal-art").innerHTML=MJAvatars.render(getKey(),"mj-avatar-modal-art");
+  $("#avatar-character-name").textContent=parts.head.name;
+  $("#avatar-accessory-name").textContent=parts.accessory.name;
+ };
+ const renderGallery=()=>{
+  const isHeads=activeTab==="heads",items=isHeads?MJAvatars.heads:MJAvatars.hats;
+  studio.querySelectorAll("[data-avatar-tab]").forEach(button=>{const active=button.dataset.avatarTab===activeTab;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
+  $("#avatar-gallery").innerHTML=items.map(item=>{
+   const key=MJAvatars.key(isHeads?item.id:selectedHead,isHeads?selectedAccessory:item.id),chosen=isHeads?item.id===selectedHead:item.id===selectedAccessory;
+   return '<button type="button" class="mj-avatar-choice '+(chosen?"selected":"")+'" data-avatar-choice="'+item.id+'" aria-pressed="'+chosen+'"><span class="mj-avatar-choice-art">'+MJAvatars.render(key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
+  }).join("");
+ };
+ renderGallery();
+ studio.querySelectorAll("[data-avatar-tab]").forEach(button=>button.addEventListener("click",()=>{activeTab=button.dataset.avatarTab;renderGallery()}));
+ $("#avatar-gallery").addEventListener("click",event=>{
+  const choice=event.target.closest("[data-avatar-choice]");if(!choice)return;
+  if(activeTab==="heads")selectedHead=choice.dataset.avatarChoice;else selectedAccessory=choice.dataset.avatarChoice;
+  refreshPreview();renderGallery();
+ });
+ $("#close-avatar-picker").addEventListener("click",close);
+ studio.addEventListener("click",event=>{if(event.target===studio)close()});
+ document.addEventListener("keydown",onKey);
+ $("#done-avatar-picker").addEventListener("click",async()=>{
+  if(saving)return;
+  saving=true;const button=$("#done-avatar-picker");button.disabled=true;button.textContent="SAQLANMOQDA...";
+  try{
+   const response=await api("player/avatar",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,player_id:player.id,avatar:getKey()})});
+   player.avatar=response.avatar||getKey();sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));
+   const preview=$("#waiting-avatar-art");if(preview)preview.innerHTML=MJAvatars.render(player.avatar,"mj-avatar-art");
+   close();
+  }catch(error){const message=$("#avatar-save-error");if(message)message.textContent=error.message;button.disabled=false;button.innerHTML='TAYYOR <b>✓</b>';saving=false}
+ });
 }
 function waiting(){
  lastScreen="waiting";clearInterval(timer);
  const count=(data?.players||[]).length;
- root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span><div class="player-big student-player-avatar">'+avatarIcon(player.avatar)+'</div></div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">Hamma tayyormi?</h1><p class="student-card-copy">O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!</p><div class="student-waiting-player-count" id="lobby-player-count">'+count+' nafar o‘quvchi o‘yinga qo‘shildi</div><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘YIN KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">★ '+Number(player.score||0).toLocaleString()+' ball</span></div></section>';
+ root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span><button type="button" class="player-big student-player-avatar mj-waiting-avatar" id="waiting-avatar" aria-label="Qahramonni o‘zgartirish"><span id="waiting-avatar-art">'+avatarIcon(player.avatar)+'</span><span class="mj-waiting-avatar-edit">✎</span></button></div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">Hamma tayyormi?</h1><p class="student-card-copy">O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!</p><button type="button" class="mj-waiting-edit-link" id="waiting-avatar-link">✎ Qahramonni o‘zgartirish</button><div class="student-waiting-player-count" id="lobby-player-count">'+count+' nafar o‘quvchi o‘yinga qo‘shildi</div><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘YIN KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">★ '+Number(player.score||0).toLocaleString()+' ball</span></div></section>';
+ $("#waiting-avatar").addEventListener("click",openAvatarStudio);
+ $("#waiting-avatar-link").addEventListener("click",openAvatarStudio);
+}
+function paused(){
+ lastScreen="paused";clearInterval(timer);
+ root.innerHTML='<section class="student-card student-state-card student-paused-card"><div class="student-state-icon paused-icon">Ⅱ</div><div class="student-card-eyebrow">BIR OZ TANAFFUS</div><h1 class="student-card-title">O‘yin pauzada</h1><p class="student-card-copy">Xavotir olma! O‘qituvchingiz o‘yinni davom ettirishi bilan yana boshlaymiz.</p><div class="student-waiting-animation"><span></span><span></span><span></span><b>DAVOM ETISH KUTILMOQDA</b></div></section>';
 }
 function revealed(){
  lastScreen="revealed";clearInterval(timer);
