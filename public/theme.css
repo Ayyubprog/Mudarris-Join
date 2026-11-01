@@ -1750,3 +1750,14 @@ body.mj-dashboard .mj-mode-symbol svg{width:21px;height:21px;fill:none;stroke:cu
  body.mj-dashboard .mj-side-link>span:first-child{width:18px;height:18px}
  body.mj-dashboard .mj-side-link>span:first-child svg{width:15px;height:15px}
 }
+
+
+body.mj-dashboard .mj-class-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-class-icon.large svg{width:21px;height:21px}
+body.mj-dashboard .mj-class-code-box button{display:grid;place-items:center}
+body.mj-dashboard .mj-class-code-box button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-quiz-meta span{display:inline-flex;align-items:center;gap:4px}
+body.mj-dashboard .mj-quiz-meta svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-mode-symbol{display:grid;place-items:center}
+body.mj-dashboard .mj-recent-report .mj-report-symbol{display:grid;place-items:center}
+body.mj-dashboard .mj-report-symbol svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
