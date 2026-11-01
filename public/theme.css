@@ -1725,3 +1725,28 @@ body.qb-page [hidden]{display:none!important}
   .qb-media-kind-tabs button{font-size:7px}
 }
 @media(prefers-reduced-motion:reduce){body.qb-page *,body.qb-page *::before,body.qb-page *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+/* Consistent dashboard SVG icon treatment */
+body.mj-dashboard .mj-side-link>span:first-child{display:grid;place-items:center;width:22px;height:22px;flex:none}
+body.mj-dashboard .mj-side-link>span:first-child svg{display:block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-search-icon{display:grid;place-items:center;width:18px;height:18px;flex:none}
+body.mj-dashboard .mj-search-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-top-refresh{display:grid;place-items:center}
+body.mj-dashboard .mj-top-refresh svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-promo-mark{display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#ffffff16}
+body.mj-dashboard .mj-promo-mark svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-current-date span:first-child{display:grid;place-items:center;width:17px;height:17px}
+body.mj-dashboard .mj-current-date svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-stat-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-stat-arrow{display:grid;place-items:center;width:20px;height:20px}
+body.mj-dashboard .mj-stat-arrow svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-quick-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-icon-link{display:grid;place-items:center}
+body.mj-dashboard .mj-icon-link svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-quiz-cover>span svg{width:35px;height:35px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.mj-dashboard .mj-mode-symbol svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:760px){
+ body.mj-dashboard .mj-side-link>span:first-child{width:18px;height:18px}
+ body.mj-dashboard .mj-side-link>span:first-child svg{width:15px;height:15px}
+}
