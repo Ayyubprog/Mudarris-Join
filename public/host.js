@@ -51,9 +51,13 @@ function questionOptions(question,revealed){
   return '<div class="live-answer-tile live-answer-'+colors[i%4]+' '+(revealed&&right?"is-correct":"")+'"><span class="shape">'+shapes[i%4]+'</span><strong>'+esc(label)+'</strong>'+(revealed&&right?'<span class="live-answer-check">✓</span>':'')+'</div>';
  }).join("")+'</div>';
 }
+function playerLoadoutBadge(player){
+ const icons={ranger:"🤠",cyber:"🦾",knight:"🛡️",ninja:"🥷",pilot:"🧑‍🚀",falcon:"🏎️",vortex:"🚙",comet:"🚗",titan:"🚘",blaze:"🏁"};
+ return player.loadout?'<span class="live-player-loadout" title="'+esc(player.loadout)+'">'+(icons[player.loadout]||"✦")+'</span>':"";
+}
 function playerWall(players,editable=false){
  if(!players.length)return '<div class="live-player-empty"><div><span>🎮</span><strong>Birinchi o‘yinchi kutilmoqda</strong><small>O‘quvchilar saytga kirib, PIN-kod va taxallusini yozishi bilan shu yerda ko‘rinadi.</small></div></div>';
- return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+avatarIcon(player.avatar)+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+(String(player.avatar||"").startsWith("special_")?'<span class="live-player-special" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#9a68e7;background:#f1e8ff;border-radius:6px;padding:4px 5px;white-space:nowrap">1/1 MAXSUS</span>':'')+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
+ return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+avatarIcon(player.avatar)+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+playerLoadoutBadge(player)+(String(player.avatar||"").startsWith("special_")?'<span class="live-player-special" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#9a68e7;background:#f1e8ff;border-radius:6px;padding:4px 5px;white-space:nowrap">1/1 MAXSUS</span>':'')+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
 }
 function lobbyView(data){
  const players=data.players||[],session=data.session,locked=!!session.join_locked;
@@ -67,7 +71,7 @@ function hostModeScene(mode,index,players){
 function roundLeaderboard(players){
  const top=players.slice().sort((a,b)=>Number(b.score||0)-Number(a.score||0)).slice(0,5);
  if(!top.length)return "";
- return '<div class="live-round-leaderboard"><div class="live-round-leaderboard-title">🏆 SAVOLDAN KEYINGI REYTING</div><div class="live-round-ranks">'+top.map((p,i)=>'<div class="live-round-rank rank-'+(i+1)+'"><b>'+(i===0?"👑":i+1)+'</b><span>'+avatarIcon(p.avatar)+'</span><strong>'+esc(p.nickname)+'</strong><em>'+Number(p.score||0).toLocaleString("uz-UZ")+' ball</em></div>').join("")+'</div></div>';
+ return '<div class="live-round-leaderboard"><div class="live-round-leaderboard-title">🏆 SAVOLDAN KEYINGI REYTING</div><div class="live-round-ranks">'+top.map((p,i)=>'<div class="live-round-rank rank-'+(i+1)+'"><b>'+(i===0?"👑":i+1)+'</b><span>'+avatarIcon(p.avatar)+'</span><strong>'+esc(p.nickname)+'</strong>'+playerLoadoutBadge(p)+'<em>'+Number(p.score||0).toLocaleString("uz-UZ")+' ball</em></div>').join("")+'</div></div>';
 }
 function questionView(data,revealed){
  const q=data.current_question,session=data.session,players=data.players||[],index=Number(session.current_question||0),total=data.questions.length,time=Number(q?.time||20);
