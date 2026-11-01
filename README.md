@@ -1,46 +1,48 @@
 # MUDARRIS JOIN
 
-MUDARRIS JOIN is a classroom quiz and live game platform for Mudarris School.
+MUDARRIS JOIN is an open classroom quiz and live-game platform.
 
-## Stack
+## Roles
 
-- Cloudflare Pages for hosting
-- Cloudflare Pages Worker (functions/[[path]].js) for the API
-- Cloudflare D1 for teachers, quizzes, questions, classes, sessions, players and answers
-- GitHub repository: https://github.com/Ayyubprog/Mudarris-Join
+- **Teachers:** Anyone can create a teacher account with an email address and password. Teachers sign in to create and manage their own quizzes, classes, game sessions and reports.
+- **Students:** Students do not create accounts or sign in. They enter the six-digit game PIN, choose a nickname and avatar, and join the live game.
+
+There is no school administrator role, school-wide administrator dashboard, or invitation-only teacher registration.
 
 ## Teacher workflow
 
-1. Create an account with any valid email and password, or use Google account creation once OAuth is configured.
-2. Sign in later with email/password or Google. Google sign-in and Google account creation use separate buttons.
-3. Create a Kahoot manually: title, subject, grade, questions and answers.
-3. Save it to My Kahoots.
-4. Choose Play on a saved Kahoot.
-5. Pick a live game mode on the separate mode-selection page.
-6. Share the six-digit PIN with students and host the session.
+1. Create an account with any valid email address and a password of at least 8 characters.
+2. Sign in with that email address and password. Google sign-in and registration are optional and work only when OAuth is configured.
+3. Create and save a quiz.
+4. Choose a game mode and host the live session.
+5. Share the six-digit PIN. Students join directly without accounts.
 
-Game modes currently presented in the picker: Classic, Team Mode, Accuracy, Confidence, Marble Race, Racing Cars (MUDARRIS JOIN original), Color Kingdoms, Tallest Tower, Treasure Trove, Submarine Squad, Robot Run and Cosmic Conquest.
+Teacher-owned quizzes, classes, sessions and reports are scoped to the signed-in teacher.
 
-## Cloudflare setup
+## Stack
 
-The Pages project is mudarris-join and the D1 binding is DB.
+- Cloudflare Pages for the web application
+- Cloudflare Pages advanced-mode Worker (built from `functions/[[path]].js`) for the Pages API
+- Separate Cloudflare Worker in `cloudflare-worker/worker.js` for the Vercel API rewrite
+- Cloudflare D1 for teachers, quizzes, questions, classes, sessions, players and answers
+- GitHub repository: https://github.com/Ayyubprog/Mudarris-Join
 
-Optional Pages environment variables:
+## Cloudflare configuration
 
-- ADMIN_EMAIL: the school administrator email. When this address creates an account or signs in, it receives administrator permissions.
-- GOOGLE_CLIENT_ID: Google OAuth client ID.
-- GOOGLE_CLIENT_SECRET: Google OAuth client secret.
+The Pages project is `mudarris-join`. Its D1 binding is `DB`.
 
-Google OAuth redirect URI:
+Google OAuth is optional. Email/password teacher registration does not depend on Google OAuth or any school invitation. Configure `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` on the API runtime to enable Google sign-in and registration.
 
-https://mudarris-join.pages.dev/api/auth/google/callback
+The Pages Google OAuth callback URL is:
 
-Email/password account creation is open. The configured ADMIN_EMAIL receives school administrator access on sign-up or next successful sign-in. Google account creation and sign-in require GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.
+`https://mudarris-join.pages.dev/api/auth/google/callback`
+
+The separate Worker uses `cloudflare-worker/wrangler.toml`; its `APP_ORIGIN` is currently the Vercel application URL.
 
 ## Database
 
-The Cloudflare D1 schema is in migrations/0004_cloudflare_d1.sql. It has already been applied to the dedicated mudarris-join-db database.
+The schema is in `migrations/0004_cloudflare_d1.sql`. It has already been applied to the dedicated `mudarris-join-db` database. Legacy `school_admins` and `invited_users` tables may remain for compatibility, but the application no longer reads or writes them. No existing teacher or game data is deleted by this change.
 
-## Deployment note
+## Deployment
 
-The first Cloudflare Pages production deployment was uploaded directly and is live. Cloudflare's GitHub integration returned an internal Git installation error when automatic source linking was attempted, so GitHub-to-Cloudflare automatic deploys are not enabled yet. The deployed site is not using Hatchable; the old Hatchable-specific API files and configuration have been removed from this repository.
+GitHub Actions builds and deploys the Cloudflare Pages site and separately deploys the API Worker when the relevant source files change. The workflow requires the repository secret `CLOUDFLARE_API_TOKEN` with permission to deploy Pages and Workers.

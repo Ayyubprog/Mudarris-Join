@@ -115,8 +115,6 @@
       const messages = [];
       setGoogleEnabled(!!status.googleEnabled);
       if (!status.googleEnabled) messages.push("Google orqali kirish hozircha sozlanmagan. Elektron pochta va paroldan foydalaning.");
-      if (!status.hasTeacherAccounts) messages.push("Hali o‘qituvchi akkaunti yo‘q. Birinchi account “Account ochish” orqali ochilgach, administrator huquqini oladi.");
-      else if (!status.adminConfigured) messages.push("Maktab administratori hali sozlanmagan. Yagona mavjud o‘qituvchi akkaunti muvaffaqiyatli kirgach, administrator huquqini oladi.");
       note.textContent = messages.join(" ");
       note.hidden = messages.length === 0;
     } catch {
@@ -130,7 +128,6 @@
   const errors = {
     google_setup: "Google orqali kirish hali sozlanmagan. Elektron pochta va paroldan foydalaning.",
     no_account: "Bu Google akkaunti bilan hali account ochilmagan. “Account ochish” bo‘limidan Google bilan account oching.",
-    not_invited: "Bu Google akkauntiga maktab administratori tomonidan ruxsat berilmagan.",
     unverified: "Google elektron pochtasi tasdiqlanmagan. Tasdiqlangan akkauntdan foydalaning.",
     google_state: "Google kirish sessiyasi muddati tugagan. Qayta urinib ko‘ring.",
     google: "Google orqali kirishda xatolik yuz berdi. Qayta urinib ko‘ring."
