@@ -62,15 +62,15 @@ const normalizeQuestionSet=input=>{
   }else{
    options=[];correct="";points=0;
   }
-  let media=safe(raw.media).slice(0,1500);
-  if(media){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}}
+  let media=safe(raw.media).slice(0,2800000);
+  if(media){const inlineImage=/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(media);if(!inlineImage){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}}}
   questions.push({type,prompt,options,correct,time,points,media});
  }
  return {questions};
 };
 async function loadGame(env,id,teacherId){const game=await env.DB.prepare("SELECT * FROM games WHERE id=? AND teacher_id=?").bind(id,teacherId).first();if(!game)return null;const {results}=await env.DB.prepare("SELECT * FROM questions WHERE game_id=? ORDER BY position").bind(id).all();return {...game,questions:results.map(publicQuestion)}}
 async function loadSession(env,pin){return await env.DB.prepare("SELECT s.*,g.title,g.subject,g.grade FROM live_sessions s JOIN games g ON g.id=s.game_id WHERE s.pin=?").bind(pin).first()}
-async function playerList(env,sessionId){const {results}=await env.DB.prepare("SELECT id,nickname,avatar,score,streak,joined_at FROM players WHERE session_id=? ORDER BY score DESC,joined_at ASC").bind(sessionId).all();return results}
+async function playerList(env,sessionId){const {results}=await env.DB.prepare("SELECT p.id,p.nickname,p.avatar,p.score,p.streak,p.joined_at,pl.choice_id AS loadout FROM players p LEFT JOIN player_loadouts pl ON pl.player_id=p.id AND pl.session_id=p.session_id WHERE p.session_id=? ORDER BY p.score DESC,p.joined_at ASC").bind(sessionId).all();return results}
 async function sessionSpecials(env,sessionId){
  const {results}=await env.DB.prepare("SELECT ss.special_id AS id,ss.player_id,p.nickname AS claimed_by FROM session_specials ss LEFT JOIN players p ON p.id=ss.player_id WHERE ss.session_id=?").bind(sessionId).all();
  const map=new Map(results.map(item=>[item.id,item]));
@@ -138,7 +138,20 @@ const gm=path.match(/^games\/(\d+)$/);
  if(path==="classes"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),name=safe(b.name).slice(0,70);if(!name)return json({error:"Sinf nomini kiriting."},400);const code=Math.random().toString(36).slice(2,8).toUpperCase();const r=await env.DB.prepare("INSERT INTO classes(teacher_id,name,grade,join_code) VALUES(?,?,?,?)").bind(user.id,name,safe(b.grade).slice(0,50),code).run();return json({class:{id:r.meta.last_row_id,name,grade:b.grade||"",join_code:code,student_count:0}},201)}
  const cl=path.match(/^classes\/(\d+)$/);if(cl){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const id=Number(cl[1]),c=await env.DB.prepare("SELECT * FROM classes WHERE id=? AND teacher_id=?").bind(id,user.id).first();if(!c)return json({error:"Sinf topilmadi."},404);if(method==="POST"){const b=await parseBody(req),names=Array.isArray(b.students)?b.students.slice(0,80):[];for(const name of names){const clean=safe(name).slice(0,80);if(clean)await env.DB.prepare("INSERT INTO class_students(class_id,name) VALUES(?,?)").bind(id,clean).run()}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({ok:true,students:results})}const {results}=await env.DB.prepare("SELECT id,name FROM class_students WHERE class_id=? ORDER BY name").bind(id).all();return json({class:c,students:results})}
   if(path==="reports"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT s.id,s.pin,s.status,s.created_at,g.title,s.mode,COUNT(DISTINCT p.id) players,COUNT(a.id) answers,SUM(CASE WHEN q.question_type NOT IN ('poll','word_cloud','open_ended','brainstorm') THEN 1 ELSE 0 END) graded_answers,SUM(CASE WHEN q.question_type NOT IN ('poll','word_cloud','open_ended','brainstorm') THEN a.correct ELSE 0 END) correct_answers FROM live_sessions s JOIN games g ON g.id=s.game_id LEFT JOIN players p ON p.session_id=s.id LEFT JOIN answers a ON a.session_id=s.id LEFT JOIN questions q ON q.game_id=g.id AND q.position=a.question_position WHERE s.teacher_id=? GROUP BY s.id ORDER BY s.created_at DESC LIMIT 60").bind(user.id).all();return json({reports:results.map(x=>({...x,graded_answers:x.graded_answers||0,correct_answers:x.correct_answers||0}))})}
- if(path==="join"&&method==="POST"){const b=await parseBody(req),pin=safe(b.pin),nickname=safe(b.nickname).slice(0,24),avatarCandidate=safe(b.avatar||"fox:none").slice(0,48),avatar=/^[a-z0-9]+(?::[a-z0-9]+)?$/i.test(avatarCandidate)&&!avatarCandidate.startsWith("special_")?avatarCandidate:"fox:none";const session=await loadSession(env,pin);if(!session||session.status!=="waiting"||session.join_locked)return json({error:"Bu o‘yinga hozir yangi o‘yinchilar qo‘shila olmaydi."},404);if(nickname.length<2)return json({error:"Taxallus kamida 2 ta belgidan iborat bo‘lishi kerak."},400);const count=await env.DB.prepare("SELECT COUNT(*) n FROM players WHERE session_id=?").bind(session.id).first();if(count.n>=100)return json({error:"Bu o‘yinda bo‘sh joy qolmagan."},409);try{const r=await env.DB.prepare("INSERT INTO players(session_id,nickname,avatar) VALUES(?,?,?)").bind(session.id,nickname,avatar).run();return json({player:{id:r.meta.last_row_id,nickname,avatar,score:0}} ,201)}catch{return json({error:"Bu taxallus band. Boshqasini tanlang."},409)}}
+ if(path==="join"&&method==="POST"){
+  const b=await parseBody(req),pin=safe(b.pin),nickname=safe(b.nickname).replace(/\s+/g," ").slice(0,24),avatarCandidate=safe(b.avatar||"fox:none").slice(0,48),avatar=/^[a-z0-9]+(?::[a-z0-9]+)?$/i.test(avatarCandidate)&&!avatarCandidate.startsWith("special_")?avatarCandidate:"fox:none",session=await loadSession(env,pin);
+  if(!session||session.status!=="waiting"||session.join_locked)return json({error:"Bu o‘yinga hozir yangi o‘yinchilar qo‘shila olmaydi."},404);
+  if(nickname.length<2)return json({error:"Taxallus kamida 2 ta belgidan iborat bo‘lishi kerak."},400);
+  const loadouts={shooter:new Set(["ranger","cyber","knight","ninja","pilot"]),racing:new Set(["falcon","vortex","comet","titan","blaze"])},mode=session.mode,choice=safe(b.loadout||"");
+  if((mode==="shooter"||mode==="racing")&&!loadouts[mode].has(choice))return json({error:mode==="shooter"?"Jangchi qahramonni tanlang.":"Poyga mashinasini tanlang."},400);
+  const count=await env.DB.prepare("SELECT COUNT(*) n FROM players WHERE session_id=?").bind(session.id).first();
+  if(count.n>=100)return json({error:"Bu o‘yinda bo‘sh joy qolmagan."},409);
+  try{
+   const r=await env.DB.prepare("INSERT INTO players(session_id,nickname,avatar) VALUES(?,?,?)").bind(session.id,nickname,avatar).run(),playerId=r.meta.last_row_id;
+   if(mode==="shooter"||mode==="racing")await env.DB.prepare("INSERT INTO player_loadouts(player_id,session_id,mode,choice_id) VALUES(?,?,?,?)").bind(playerId,session.id,mode,choice).run();
+   return json({player:{id:playerId,nickname,avatar,score:0,loadout:mode==="shooter"||mode==="racing"?choice:null}});
+  }catch{return json({error:"Bu taxallus band. Boshqasini tanlang."},409)}
+ }
   if(path==="player/avatar"&&method==="POST"){
    const b=await parseBody(req),pin=safe(b.pin),playerId=Number(b.player_id),avatarCandidate=safe(b.avatar||"fox:none").slice(0,48);
    const session=await loadSession(env,pin);
@@ -184,7 +197,7 @@ const gm=path.match(/^games\/(\d+)$/);
       const submitted=parseArrayValue(answer)||[];
       const left=expected.map(normalize).sort(),right=submitted.map(normalize).sort();
       correct=left.length===right.length&&left.every((value,index)=>value===right[index]);
-    }else correct=normalize(answer)===normalize(q.correct);
+    }else const normalizeTyped=value=>normalize(value).replace(/[^\p{L}\p{N}\s]/gu,"").replace(/\s+/g," ");const accepted=parseArrayValue(q.correct)||[q.correct];correct=accepted.some(value=>normalizeTyped(answer)===normalizeTyped(value));
    }else if(q.type==="true_false"||q.type==="type_answer"){
     correct=normalize(answer)===normalize(q.correct);
    }else if(q.type==="puzzle"){
