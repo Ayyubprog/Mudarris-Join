@@ -52,7 +52,7 @@ function questionOptions(question,revealed){
 }
 function playerWall(players,editable=false){
  if(!players.length)return '<div class="live-player-empty"><div><span>🎮</span><strong>Birinchi o‘yinchi kutilmoqda</strong><small>O‘quvchilar saytga kirib, PIN-kod va taxallusini yozishi bilan shu yerda ko‘rinadi.</small></div></div>';
- return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+avatarIcon(player.avatar)+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
+ return players.map((player,index)=>'<div class="live-player-chip"><span class="live-player-avatar">'+avatarIcon(player.avatar)+'</span><strong title="'+esc(player.nickname)+'">'+esc(player.nickname)+'</strong>'+(String(player.avatar||"").startsWith("special_")?'<span class="live-player-special" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#9a68e7;background:#f1e8ff;border-radius:6px;padding:4px 5px;white-space:nowrap">1/1 MAXSUS</span>':'')+(editable?'<button type="button" data-remove="'+Number(player.id)+'" aria-label="O‘yinchini olib tashlash" title="O‘yinchidan chiqarish" style="margin-left:auto;border:0;background:transparent;color:#ae8195;font-size:16px;cursor:pointer">×</button>':'')+'</div>').join("");
 }
 function lobbyView(data){
  const players=data.players||[],session=data.session,locked=!!session.join_locked;
