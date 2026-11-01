@@ -1119,3 +1119,31 @@ body.student-home{
 .mj-player-health{width:66px;height:7px;overflow:hidden;border:1px solid #ffffff77;border-radius:99px;background:#321d29;box-shadow:0 2px 4px #0003}
 .mj-player-health i{display:block;width:100%;height:100%;border-radius:99px;background:linear-gradient(90deg,#ed4354,#f6a53e);transition:width .45s}
 .mj-health-label{color:#fff!important;font-size:7px!important;letter-spacing:.12em}
+
+
+/* Character studio refinements */
+.mj-avatar-backdrop{background:radial-gradient(circle at 50% 10%,#6e55ba66,transparent 48%),#120822d9;backdrop-filter:blur(10px)}
+.mj-avatar-modal{width:min(900px,calc(100vw - 26px));max-height:min(90vh,820px);padding:22px;border:1px solid #ffffffa8;border-radius:24px;background:linear-gradient(160deg,#fff,#f7f5ff);box-shadow:0 35px 100px #09031f88}
+.mj-avatar-modal-head{padding-bottom:15px}
+.mj-avatar-modal-kicker{font-size:9px;letter-spacing:.17em;color:#7a65c9}
+.mj-avatar-modal-head h2{font-size:26px;color:#2c2442}
+.mj-avatar-selected-preview{min-height:130px;margin:12px 0 17px;padding:12px 18px;border:1px solid #e7e2f6;border-radius:17px;background:radial-gradient(circle at 16% 50%,#eee9ff,#fff 55%,#f7f4ff);box-shadow:inset 0 1px #fff}
+.mj-avatar-selected-preview #avatar-modal-art .mj-avatar-modal-art{width:108px;height:108px;filter:drop-shadow(0 10px 10px #4d3c8c22)}
+.mj-avatar-character-name{font-size:15px}
+.mj-avatar-tabs{gap:8px;padding:5px;border-radius:13px;background:#f0eef8}
+.mj-avatar-tab{min-height:42px;border-radius:10px;font-size:10px}
+.mj-avatar-tab.active{background:#fff;color:#5d45b5;box-shadow:0 3px 10px #30205d12}
+.mj-avatar-gallery-wrap{padding:10px 2px}
+.mj-avatar-gallery{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.mj-avatar-choice{min-height:132px;padding:10px 6px;border:1.5px solid #e8e6f0;border-radius:15px;background:#fff;transition:transform .16s,border-color .16s,box-shadow .16s}
+.mj-avatar-choice:hover{transform:translateY(-3px);border-color:#b7a6e8;box-shadow:0 10px 24px #4b388b14}
+.mj-avatar-choice.selected{border:2px solid #735bd0;background:#f5f2ff;box-shadow:0 0 0 3px #735bd01b}
+.mj-avatar-choice .mj-avatar-choice-art{width:82px;height:82px}
+.mj-avatar-choice .mj-avatar-choice-svg{width:80px;height:80px}
+.mj-avatar-choice-name{font-size:10px}
+.mj-avatar-choice-check{width:23px;height:23px;border-radius:50%;background:#7056c9}
+.mj-avatar-modal-footer{padding-top:13px;border-top:1px solid #eeeaf5}
+.mj-avatar-modal-footer>span{font-size:9px;color:#8b839f}
+.mj-avatar-done{min-width:130px;min-height:44px;border-radius:11px;background:linear-gradient(110deg,#6048c5,#8267e3);box-shadow:0 8px 18px #7058d433}
+@media(max-width:600px){.mj-avatar-modal{padding:14px;border-radius:18px}.mj-avatar-modal-head h2{font-size:20px}.mj-avatar-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.mj-avatar-choice{min-height:110px}.mj-avatar-choice .mj-avatar-choice-art{width:68px;height:68px}.mj-avatar-choice .mj-avatar-choice-svg{width:66px;height:66px}.mj-avatar-modal-footer{gap:9px}.mj-avatar-modal-footer>span{max-width:56%;line-height:1.45}}
+
