@@ -71,11 +71,11 @@ async function start(){
    if(!root.isConnected){observer.disconnect();renderer.dispose();active.delete(root);return}
    const boost=root.classList.contains("is-boost"),slow=root.classList.contains("is-slow"),target=Math.max(0,Math.min(100,Number(root.dataset.progress)||12));
    const now=performance.now()*.001;
-   playerCar.position.z=7-(target*.12)+(boost?2:0)-(slow?1:0);
+   playerCar.position.z=6-(target*.28)+(boost?2:0)-(slow?1:0);
    playerCar.position.x=Math.sin(now*.45)*.12;
    playerCar.rotation.y=Math.sin(now*.7)*.025;
    const leaderScore=Math.max(1,Number(root.dataset.leaderScore)||1);
-   rivalCars.forEach((car,i)=>{const ratio=Math.max(0,Math.min(1,rivalData[i].score/leaderScore));car.position.z=-2-ratio*11-i*1.3+Math.sin(now*1.2+i)*.45;car.position.x=lanePositions[i%lanePositions.length]+Math.sin(now*.5+i)*.12});
+   rivalCars.forEach((car,i)=>{const ratio=Math.max(0,Math.min(1,rivalData[i].score/leaderScore));car.position.z=4-ratio*15-i*1.3+Math.sin(now*1.2+i)*.45;car.position.x=lanePositions[i%lanePositions.length]+Math.sin(now*.5+i)*.12});
    renderer.render(world,camera);state.frame=requestAnimationFrame(animate);
   };
   animate();
