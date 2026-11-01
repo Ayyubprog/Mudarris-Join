@@ -3,7 +3,7 @@
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const state={games:[],classes:[],reports:[],teacher:null,gameFilter:"all"};
-const statusNames={waiting:"Kutilmoqda",playing:"Davom etmoqda",paused:"To‘xtatilgan",finished:"Yakunlangan"};
+const statusNames={waiting:"Kutilmoqda",playing:"Davom etmoqda",revealed:"Natijalar",paused:"To‘xtatilgan",finished:"Yakunlangan"};
 const modeNames={classic:"Klassik",team:"Jamoaviy",marble:"Sharlar poygasi",racing:"Avtomobil poygasi",accuracy:"Aniqlik",confidence:"Ishonch",kingdoms:"Ranglar qirolligi",tower:"Eng baland minora",treasure:"Xazina izlovchilar",submarine:"Suvosti jamoasi",robot:"Robotlar poygasi",cosmic:"Koinot sari"};
 const icons={
  quiz:'<svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 8h8m-8 4h8m-8 4h5"/></svg>',
