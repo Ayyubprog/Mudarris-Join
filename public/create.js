@@ -2,16 +2,16 @@
 "use strict";
 const $=selector=>document.querySelector(selector);
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-const MAX_QUESTIONS=200,MAX_ANSWERS=6;
+const MAX_QUESTIONS=200,MAX_ANSWERS=4;
 const noPoints=new Set(["poll","word_cloud","open_ended","brainstorm"]);
 const textTypes=new Set(["type_answer","open_ended","word_cloud","brainstorm"]);
 const labels={
-  quiz:"Viktorina",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Javob yozish",
+  quiz:"4 ta javob",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Matn yozish",
   puzzle:"Boshqotirma",slider:"Siljitgich",poll:"So‘rovnoma",
   word_cloud:"So‘zlar buluti",open_ended:"Ochiq savol",brainstorm:"G‘oyalar jamlanmasi"
 };
 const descriptions={
-  quiz:"Bir nechta variantdan to‘g‘ri javobni tanlang",
+  quiz:"4 ta variantdan to‘g‘ri javobni tanlang",
   true_false:"Fikr to‘g‘ri yoki noto‘g‘ri ekanini belgilang",
   type_answer:"O‘quvchi javobni o‘zi yozadi",
   puzzle:"Javoblarni to‘g‘ri ketma-ketlikka keltiring",
@@ -21,10 +21,7 @@ const descriptions={
   open_ended:"O‘quvchilar erkin fikr bildirsin",
   brainstorm:"Bir nechta g‘oyani bitta joyga jamlang"
 };
-const typeGroups=[
-  {title:"Bilimni tekshirish",items:["quiz","true_false","type_answer","puzzle","slider"]},
-  {title:"Fikr va g‘oyalar",items:["poll","word_cloud","open_ended","brainstorm"]}
-];
+const typeGroups=[{title:"SAVOL TURLARI",items:["quiz","true_false","type_answer"]}];
 const typeIcons={
   quiz:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7.5 12.5 3 3 6-7"/></svg>',
   true_false:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="5"/><circle cx="17" cy="12" r="5"/><path d="m6 12 1.5 1.5L10 10m5-1 1 1 2-2"/></svg>',
@@ -149,13 +146,13 @@ function validationError(question){
   if(["quiz","poll"].includes(question.type)){
     const answers=activeAnswers(question);
     if(answers.length<2)return question.type==="poll"?"So‘rovnomada kamida 2 ta javob bo‘lishi kerak.":"Viktorinada kamida 2 ta javob bo‘lishi kerak.";
-    if(answers.length>6)return "Ko‘pi bilan 6 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
+    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 4 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
   }
   if(question.type==="true_false"&&question.correct.length!==1)return "To‘g‘ri yoki noto‘g‘ri javobni belgilang.";
-  if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";
+  if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";if(question.type==="type_answer"&&question.correctText.trim().length>20)return "Qisqa javob 20 belgidan oshmasligi kerak.";
   if(question.type==="puzzle"){
     if(question.answers.length<2||question.answers.length>6||question.answers.some(answer=>!answer.trim()))return "Boshqotirma uchun 2–6 ta to‘liq javob kiriting.";
     if(question.answers.some(answer=>answer.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
@@ -291,7 +288,7 @@ function renderAnswerEditor(question){
   }else if(question.type==="type_answer"){
     editor.hidden=true;
     special.hidden=false;
-    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="75" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflarni hisobga olmasdan tekshiriladi.</p>';
+    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="20" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflar va tinish belgilarini hisobga olmasdan tekshiriladi. Masalan, Student, STUDENT va student — bir xil javob.</p>';
   }else if(question.type==="puzzle"){
     editor.hidden=true;
     special.hidden=false;
@@ -405,6 +402,7 @@ function reorderQuestions(from,to){
 }
 function mediaMarkup(value,withRemove=false){
   if(!value)return "";
+  if(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value))return '<div class="qb-media-preview-inner"><img src="'+value+'" alt="Savol uchun yuklangan rasm">'+(withRemove?'<button type="button" id="remove-media" class="qb-remove-media">Media olib tashlash</button>':"")+'</div>';
   let url;try{url=new URL(value)}catch{return '<div class="qb-media-invalid">Media havolasi noto‘g‘ri.</div>'}
   if(!["http:","https:"].includes(url.protocol))return "";
   const safe=escapeHtml(url.href),host=url.hostname.toLowerCase();
@@ -622,7 +620,7 @@ function bindEvents(){
   });
   $("#add-answer").addEventListener("click",()=>{
     const question=current();
-    if(question.answers.length>=MAX_ANSWERS){toast("Ko‘pi bilan 6 ta javob qo‘shish mumkin.");return}
+    if(question.answers.length>=MAX_ANSWERS){toast("Ko‘pi bilan 4 ta javob qo‘shish mumkin.");return}
     question.answers.push("");
     renderAnswerEditor(question);markDirty();
     const input=$('[data-answer-input="'+(question.answers.length-1)+'"]');if(input)input.focus();
@@ -654,6 +652,14 @@ function bindEvents(){
     if(Number.isInteger(from))reorderQuestions(from,to);
   });
   $("#open-media-modal").addEventListener("click",()=>{$("#media-url").value=current().media||"";$("#media-modal").hidden=false});
+  $("#media-file")?.addEventListener("change",event=>{
+    const file=event.target.files?.[0];if(!file)return;
+    if(!/^image\/(png|jpeg|gif|webp)$/i.test(file.type)){toast("PNG, JPG, GIF yoki WEBP rasm tanlang.");event.target.value="";return}
+    if(file.size>1.5*1024*1024){toast("Rasm 1.5 MB dan kichik bo‘lishi kerak.");event.target.value="";return}
+    const reader=new FileReader();
+    reader.onload=()=>{const value=String(reader.result||"");if(!/^data:image\/(png|jpeg|gif|webp);base64,/.test(value)){toast("Rasmni o‘qib bo‘lmadi.");return}current().media=value;$("#media-modal").hidden=true;$("#media-url").value="";event.target.value="";render();markDirty("Rasm yuklandi");toast("Rasm savolga qo‘shildi.")};
+    reader.onerror=()=>toast("Rasmni o‘qib bo‘lmadi.");reader.readAsDataURL(file);
+  });
   $("#apply-media").addEventListener("click",applyMedia);
   $("#media-url").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();applyMedia()}});
   $("#media-preview").addEventListener("click",event=>{if(event.target.closest("#remove-media"))removeMedia()});
