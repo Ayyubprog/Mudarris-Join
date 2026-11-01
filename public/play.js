@@ -84,7 +84,7 @@ function showJoin(){
   else selectedAccessory=choice.dataset.avatarChoice;
   refreshPreview();renderGallery();
  });
- document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!$("#avatar-studio").hidden)closePicker()},{once:true});
+ document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!$("#avatar-studio").hidden)closePicker()});
  $("#nickname").focus({preventScroll:true});
  $("#join-player").onsubmit=async event=>{
   event.preventDefault();
