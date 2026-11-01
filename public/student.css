@@ -546,3 +546,213 @@
     scroll-behavior:auto!important;transition-duration:.01ms!important;
   }
 }
+
+
+/* MUDARRIS JOIN — one-screen layout, no page scrolling */
+body.student-home{
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  overflow:hidden;
+  overscroll-behavior:none;
+  display:flex;
+  flex-direction:column;
+}
+.student-home .join-home-nav{
+  flex:0 0 62px;
+  height:62px;
+  min-height:62px;
+}
+.student-home .join-home-main{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  padding:clamp(8px,2dvh,18px) 20px;
+}
+.student-home .join-home-content{
+  width:min(620px,100%);
+}
+.student-home .join-home-kicker{
+  margin-bottom:8px;
+  font-size:8px;
+  gap:10px;
+}
+.student-home .join-home-kicker-line{width:20px}
+.student-home .join-home-title{
+  font-size:clamp(34px,4.5vw,54px);
+  line-height:.99;
+}
+.student-home .join-home-subtitle{
+  max-width:470px;
+  margin-top:7px;
+  font-size:11px;
+  line-height:1.45;
+}
+.student-home .join-home-card{
+  width:min(490px,100%);
+  margin-top:14px;
+  padding:17px 21px 13px;
+  border-radius:18px;
+  box-shadow:0 22px 62px rgba(4,2,15,.29),0 0 0 5px rgba(255,255,255,.03);
+}
+.student-home .join-home-card-top{gap:10px}
+.student-home .join-home-card-icon{
+  width:40px;height:40px;flex-basis:40px;border-radius:12px;
+}
+.student-home .join-home-card-icon svg{width:21px;height:21px}
+.student-home .join-home-card-heading{gap:3px}
+.student-home .join-home-card-heading>span{font-size:7px}
+.student-home .join-home-card-heading h2{font-size:18px}
+.student-home .join-home-card-chip{padding:6px 8px;font-size:7px}
+.student-home .join-home-form{margin-top:14px}
+.student-home .join-home-form>label{margin-bottom:5px;font-size:8px}
+.student-home .join-home-pin-wrap{
+  height:55px;
+  gap:10px;
+  padding:0 12px;
+  border-radius:11px;
+}
+.student-home .join-home-pin-prefix{
+  min-width:34px;height:29px;font-size:8px;
+}
+.student-home .join-home-pin-wrap input{font-size:24px;letter-spacing:.3em}
+.student-home .join-home-pin-count{font-size:9px}
+.student-home .join-home-pin-meta{min-height:18px;margin-top:5px}
+.student-home .join-home-pin-meta>span:first-child{font-size:8px}
+.student-home .join-home-pin-meta svg{width:12px;height:12px;flex-basis:12px}
+.student-home .join-home-progress{width:70px;flex-basis:70px}
+.student-home .join-home-submit{
+  min-height:47px;
+  margin-top:10px;
+  border-radius:10px;
+  font-size:10px;
+}
+.student-home .join-home-submit>b{width:29px;height:29px;flex-basis:29px}
+.student-home .join-home-submit svg{width:16px;height:16px}
+.student-home .join-home-error{min-height:12px;margin-top:5px;font-size:9px}
+.student-home .join-home-card-bottom{
+  margin-top:4px;
+  padding-top:10px;
+  font-size:8px;
+}
+.student-home .join-home-card-bottom>span:first-child i{width:14px;height:14px}
+.student-home .join-home-card-bottom svg{width:12px;height:12px}
+.student-home .join-home-steps{
+  width:min(490px,100%);
+  margin-top:11px;
+  gap:8px;
+}
+.student-home .join-home-step{gap:7px}
+.student-home .join-home-step-number{
+  width:26px;height:26px;flex-basis:26px;border-radius:8px;font-size:8px;
+}
+.student-home .join-home-step strong{font-size:8px}
+.student-home .join-home-step small{font-size:7px}
+.student-home .join-home-step-divider{height:20px}
+.student-home .join-home-footer{
+  flex:0 0 34px;
+  min-height:34px;
+}
+@media(max-width:760px){
+  .student-home .join-home-nav{
+    flex-basis:56px;height:56px;min-height:56px;
+    width:calc(100% - 36px);
+  }
+  .student-home .join-home-main{padding:10px 16px}
+  .student-home .join-home-title{font-size:clamp(32px,6.3vw,45px)}
+  .student-home .join-home-card{margin-top:12px;padding:16px 18px 12px}
+  .student-home .join-home-steps{margin-top:10px}
+  .student-home .join-home-footer{
+    flex-basis:31px;min-height:31px;width:calc(100% - 36px);
+  }
+}
+@media(max-width:520px){
+  .student-home .join-home-nav{
+    flex-basis:52px;height:52px;min-height:52px;
+    width:calc(100% - 28px);
+  }
+  .student-home .join-home-brand-mark{width:32px;height:32px}
+  .student-home .join-home-wordmark{font-size:14px}
+  .student-home .join-home-teacher{min-height:32px;padding:0 10px;font-size:9px}
+  .student-home .join-home-main{padding:8px 13px}
+  .student-home .join-home-kicker{margin-bottom:6px;font-size:7px;letter-spacing:.13em}
+  .student-home .join-home-kicker-line{width:14px}
+  .student-home .join-home-title{font-size:clamp(30px,8vw,39px);line-height:.99}
+  .student-home .join-home-subtitle{
+    max-width:370px;margin-top:6px;font-size:9px;line-height:1.4;
+  }
+  .student-home .join-home-card{
+    margin-top:11px;padding:14px 14px 10px;border-radius:16px;
+  }
+  .student-home .join-home-card-icon{width:36px;height:36px;flex-basis:36px;border-radius:10px}
+  .student-home .join-home-card-icon svg{width:19px;height:19px}
+  .student-home .join-home-card-heading>span{font-size:6px}
+  .student-home .join-home-card-heading h2{font-size:16px}
+  .student-home .join-home-card-chip{padding:5px 6px;font-size:6px}
+  .student-home .join-home-form{margin-top:11px}
+  .student-home .join-home-form>label{margin-bottom:4px;font-size:7px}
+  .student-home .join-home-pin-wrap{height:49px;gap:8px;padding:0 9px}
+  .student-home .join-home-pin-prefix{min-width:30px;height:25px;font-size:7px}
+  .student-home .join-home-pin-wrap input{font-size:21px;letter-spacing:.25em}
+  .student-home .join-home-pin-count{min-width:25px;font-size:8px}
+  .student-home .join-home-pin-meta{min-height:15px;margin-top:4px}
+  .student-home .join-home-pin-meta>span:first-child{font-size:7px;gap:4px}
+  .student-home .join-home-pin-meta svg{width:11px;height:11px;flex-basis:11px}
+  .student-home .join-home-progress{width:48px;flex-basis:48px;height:3px}
+  .student-home .join-home-submit{min-height:43px;margin-top:8px;font-size:9px}
+  .student-home .join-home-submit>b{width:26px;height:26px;flex-basis:26px}
+  .student-home .join-home-error{min-height:11px;margin-top:4px;font-size:8px}
+  .student-home .join-home-card-bottom{
+    margin-top:3px;padding-top:8px;font-size:7px;gap:8px;
+  }
+  .student-home .join-home-card-bottom>span{gap:4px}
+  .student-home .join-home-card-bottom>span:first-child i{width:12px;height:12px;font-size:7px}
+  .student-home .join-home-card-bottom svg{width:10px;height:10px}
+  .student-home .join-home-steps{
+    margin-top:8px;gap:5px;
+    grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr) 1px minmax(0,1fr);
+  }
+  .student-home .join-home-step{
+    flex-direction:column;justify-content:center;gap:3px;text-align:center;
+  }
+  .student-home .join-home-step-number{width:21px;height:21px;flex-basis:21px;font-size:7px}
+  .student-home .join-home-step>span:last-child{gap:1px;text-align:center}
+  .student-home .join-home-step strong{font-size:7px;white-space:normal;line-height:1.15}
+  .student-home .join-home-step small{display:none}
+  .student-home .join-home-step-divider{height:26px}
+  .student-home .join-home-footer{
+    flex-basis:27px;min-height:27px;width:calc(100% - 28px);font-size:6px;
+  }
+}
+@media(max-width:360px){
+  .student-home .join-home-brand{gap:6px}
+  .student-home .join-home-wordmark{font-size:12px}
+  .student-home .join-home-title{font-size:29px}
+  .student-home .join-home-card-chip{display:none}
+  .student-home .join-home-card-bottom{font-size:6px}
+  .student-home .join-home-step strong{font-size:6px}
+}
+@media(max-height:700px){
+  .student-home .join-home-nav{flex-basis:48px;height:48px;min-height:48px}
+  .student-home .join-home-footer{flex-basis:25px;min-height:25px}
+  .student-home .join-home-main{padding-top:5px;padding-bottom:5px}
+  .student-home .join-home-kicker{margin-bottom:4px}
+  .student-home .join-home-title{font-size:clamp(28px,4vw,42px)}
+  .student-home .join-home-subtitle{margin-top:4px;font-size:9px;line-height:1.3}
+  .student-home .join-home-card{margin-top:8px;padding-top:11px;padding-bottom:8px}
+  .student-home .join-home-card-icon{width:31px;height:31px;flex-basis:31px}
+  .student-home .join-home-form{margin-top:8px}
+  .student-home .join-home-pin-wrap{height:43px}
+  .student-home .join-home-submit{min-height:38px;margin-top:6px}
+  .student-home .join-home-card-bottom{padding-top:6px}
+  .student-home .join-home-steps{margin-top:6px}
+}
+@media(max-height:620px){
+  .student-home .join-home-subtitle{display:none}
+  .student-home .join-home-steps{display:none}
+  .student-home .join-home-title{font-size:clamp(27px,4vw,36px)}
+  .student-home .join-home-card{margin-top:6px}
+}
+@media(prefers-reduced-motion:reduce){
+  .student-home .join-home-card,.student-home .join-home-steps{animation:none!important}
+}
