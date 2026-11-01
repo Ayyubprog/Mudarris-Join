@@ -74,7 +74,7 @@
   <script>
     const joinForm=document.getElementById("join-form"),pinInput=document.getElementById("pin"),pinCount=document.getElementById("pin-count"),joinError=document.getElementById("join-error");
     pinInput.addEventListener("input",()=>{
-      pinInput.value=pinInput.value.replace(/\\D/g,"").slice(0,6);
+      pinInput.value=pinInput.value.replace(/\D/g,"").slice(0,6);
       pinCount.textContent=pinInput.value.length+"/6";
       joinError.textContent="";
       pinInput.closest(".student-pin-input-wrap").classList.toggle("is-complete",pinInput.value.length===6);
@@ -82,7 +82,7 @@
     joinForm.addEventListener("submit",event=>{
       event.preventDefault();
       const pin=pinInput.value.trim();
-      if(!/^\\d{6}$/.test(pin)){joinError.textContent="Iltimos, 6 xonali o‘yin PIN-kodini kiriting.";pinInput.focus();return}
+      if(!/^\d{6}$/.test(pin)){joinError.textContent="Iltimos, 6 xonali o‘yin PIN-kodini kiriting.";pinInput.focus();return}
       const button=joinForm.querySelector("button[type=submit]");
       button.disabled=true;button.querySelector("span").textContent="O‘YIN QIDIRILMOQDA...";
       location.href="/play.html?pin="+encodeURIComponent(pin);
