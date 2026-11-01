@@ -291,7 +291,7 @@ function renderAnswerEditor(question){
   }else if(question.type==="type_answer"){
     editor.hidden=true;
     special.hidden=false;
-    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="75" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflarni hisobga olmasdan tekshiriladi.</p>';
+    special.innerHTML='<label class="qb-special-label" for="correct-text">Qabul qilinadigan to‘g‘ri javob</label><input type="text" id="correct-text" maxlength="75" value="'+escapeHtml(question.correctText)+'" placeholder="Masalan, Toshkent"><p>Javob katta-kichik harflar va tinish belgilarini hisobga olmasdan tekshiriladi. Masalan, Student, STUDENT va student — bir xil javob.</p>';
   }else if(question.type==="puzzle"){
     editor.hidden=true;
     special.hidden=false;
@@ -405,6 +405,7 @@ function reorderQuestions(from,to){
 }
 function mediaMarkup(value,withRemove=false){
   if(!value)return "";
+  if(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value))return '<div class="qb-media-preview-inner"><img src="'+value+'" alt="Savol uchun yuklangan rasm">'+(withRemove?'<button type="button" id="remove-media" class="qb-remove-media">Media olib tashlash</button>':"")+'</div>';
   let url;try{url=new URL(value)}catch{return '<div class="qb-media-invalid">Media havolasi noto‘g‘ri.</div>'}
   if(!["http:","https:"].includes(url.protocol))return "";
   const safe=escapeHtml(url.href),host=url.hostname.toLowerCase();
@@ -654,6 +655,14 @@ function bindEvents(){
     if(Number.isInteger(from))reorderQuestions(from,to);
   });
   $("#open-media-modal").addEventListener("click",()=>{$("#media-url").value=current().media||"";$("#media-modal").hidden=false});
+  $("#media-file")?.addEventListener("change",event=>{
+    const file=event.target.files?.[0];if(!file)return;
+    if(!/^image\/(png|jpeg|gif|webp)$/i.test(file.type)){toast("PNG, JPG, GIF yoki WEBP rasm tanlang.");event.target.value="";return}
+    if(file.size>1.5*1024*1024){toast("Rasm 1.5 MB dan kichik bo‘lishi kerak.");event.target.value="";return}
+    const reader=new FileReader();
+    reader.onload=()=>{const value=String(reader.result||"");if(!/^data:image\/(png|jpeg|gif|webp);base64,/.test(value)){toast("Rasmni o‘qib bo‘lmadi.");return}current().media=value;$("#media-modal").hidden=true;$("#media-url").value="";event.target.value="";render();markDirty("Rasm yuklandi");toast("Rasm savolga qo‘shildi.")};
+    reader.onerror=()=>toast("Rasmni o‘qib bo‘lmadi.");reader.readAsDataURL(file);
+  });
   $("#apply-media").addEventListener("click",applyMedia);
   $("#media-url").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();applyMedia()}});
   $("#media-preview").addEventListener("click",event=>{if(event.target.closest("#remove-media"))removeMedia()});
