@@ -62,7 +62,7 @@ const normalizeQuestionSet=input=>{
    options=[];correct="";points=0;
   }
   let media=safe(raw.media).slice(0,1500);
-  if(media){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}
+  if(media){try{const url=new URL(media);if(!["http:","https:"].includes(url.protocol))throw Error()}catch{return {error:(index+1)+"-savol media havolasi noto‘g‘ri."}}}
   questions.push({type,prompt,options,correct,time,points,media});
  }
  return {questions};
@@ -111,6 +111,7 @@ if(method==="PUT"){
  ];
  await env.DB.batch(statements);
  return json({ok:true,game:await loadGame(env,id,user.id)});
+}
 }
  if(path==="classes"&&method==="GET"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const {results}=await env.DB.prepare("SELECT c.*,COUNT(s.id) AS student_count FROM classes c LEFT JOIN class_students s ON s.class_id=c.id WHERE c.teacher_id=? GROUP BY c.id ORDER BY c.created_at DESC").bind(user.id).all();return json({classes:results})}
  if(path==="classes"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),name=safe(b.name).slice(0,70);if(!name)return json({error:"Sinf nomini kiriting."},400);const code=Math.random().toString(36).slice(2,8).toUpperCase();const r=await env.DB.prepare("INSERT INTO classes(teacher_id,name,grade,join_code) VALUES(?,?,?,?)").bind(user.id,name,safe(b.grade).slice(0,50),code).run();return json({class:{id:r.meta.last_row_id,name,grade:b.grade||"",join_code:code,student_count:0}},201)}
