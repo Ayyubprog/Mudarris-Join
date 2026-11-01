@@ -1147,3 +1147,13 @@ body.student-home{
 .mj-avatar-done{min-width:130px;min-height:44px;border-radius:11px;background:linear-gradient(110deg,#6048c5,#8267e3);box-shadow:0 8px 18px #7058d433}
 @media(max-width:600px){.mj-avatar-modal{padding:14px;border-radius:18px}.mj-avatar-modal-head h2{font-size:20px}.mj-avatar-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.mj-avatar-choice{min-height:110px}.mj-avatar-choice .mj-avatar-choice-art{width:68px;height:68px}.mj-avatar-choice .mj-avatar-choice-svg{width:66px;height:66px}.mj-avatar-modal-footer{gap:9px}.mj-avatar-modal-footer>span{max-width:56%;line-height:1.45}}
 
+
+
+.mj-loadout-art .mj-loadout-svg{display:block;width:76px;height:72px;overflow:visible;filter:drop-shadow(0 6px 5px #26365322)}
+.mj-loadout-art .mj-hero-svg{width:62px;height:72px}
+.mj-loadout-art .mj-car-svg{width:86px;height:56px}
+.mj-shooter-hero>b .mj-hero-svg{width:80px;height:91px;filter:drop-shadow(0 8px 5px #2d1d2055)}
+.mj-shooter-enemy>b .mj-bandit-svg{width:73px;height:88px;filter:drop-shadow(0 8px 5px #2d1d2055)}
+.mj-race-car .mj-car-svg{width:76px;height:48px;filter:drop-shadow(0 7px 4px #101a2c88)}
+.mj-race-car.player-car .mj-car-svg{width:95px;height:58px}
+@media(max-width:700px){.mj-shooter-hero>b .mj-hero-svg{width:64px;height:75px}.mj-shooter-enemy>b .mj-bandit-svg{width:60px;height:72px}.mj-race-car .mj-car-svg{width:60px;height:40px}.mj-race-car.player-car .mj-car-svg{width:75px;height:48px}}
