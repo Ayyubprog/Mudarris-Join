@@ -146,7 +146,7 @@ function validationError(question){
     if(answers.length>6)return "Ko‘pi bilan 6 ta javob kiritish mumkin.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
-    if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
+    if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
   }
   if(question.type==="true_false"&&question.correct.length!==1)return "To‘g‘ri yoki noto‘g‘ri javobni belgilang.";
   if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";
@@ -351,7 +351,7 @@ function addQuestion(type="quiz"){
   if(state.questions.length>=MAX_QUESTIONS){toast("Bitta viktorinada 200 tagacha savol bo‘lishi mumkin.");return}
   const previous=current();
   const next=fresh(type);
-  next.prompt=previous?previous.prompt===" "? "": "":"";
+  next.prompt="";
   next.time=previous?.time||20;
   next.points=noPoints.has(type)?0:(previous?.points??1000);
   next.media="";
