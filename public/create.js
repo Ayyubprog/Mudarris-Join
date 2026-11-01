@@ -36,7 +36,7 @@ const typeIcons={
   open_ended:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v13H9l-5 3V4Z"/><path d="M8 9h8m-8 4h5"/></svg>',
   brainstorm:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4m-5.5-5.5a6 6 0 1 1 7 0c-.8.6-1.2 1.2-1.3 2H9.8c-.1-.8-.5-1.4-1.3-2Z"/><path d="M12 5v4m-4-2 2 2m6-2-2 2"/></svg>'
 };
-const state={gameId:null,questions:[],current:0,busy:false,dirty:false,mediaKind:"image",previewIndex:0,dragIndex:null,gameUpdatedAt:null};
+const state={gameId:null,questions:[],current:0,busy:false,dirty:false,mediaKind:"image",previewIndex:0,dragIndex:null,gameUpdatedAt:null,typeModalMode:"add"};
 let draftTimer=null;
 const newDraftKey="mudarris-join-quiz-draft-v2";
 function fresh(type="quiz"){
@@ -100,6 +100,12 @@ function normalizeLoadedQuestion(question){
     item.answers=optionTexts.length?optionTexts:["",""];
     item.correct=[];
   }else if(type==="puzzle"){
+    if(!optionTexts.length&&String(question.correct||"").trim()){
+      item.type="type_answer";
+      item.correctText=String(question.correct||"");
+      item.answers=[];
+      return item;
+    }
     const ordered=parseJsonArray(question.correct);
     if(ordered){
       item.answers=ordered.map(String);
@@ -143,7 +149,7 @@ function validationError(question){
   if(["quiz","poll"].includes(question.type)){
     const answers=activeAnswers(question);
     if(answers.length<2)return question.type==="poll"?"So‘rovnomada kamida 2 ta javob bo‘lishi kerak.":"Viktorinada kamida 2 ta javob bo‘lishi kerak.";
-    if(answers.length>6)return "Ko‘pi bilan 6 ta javob kiritish mumkin.";
+    if(answers.length>6)return "Ko‘pi bilan 6 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
@@ -273,7 +279,7 @@ function renderAnswerEditor(question){
     editor.hidden=false;
     editor.innerHTML=question.answers.map((answer,index)=>{
       const selected=question.correct.includes(index);
-      const locked=question.type==="true_false";
+      const locked=false;
       return '<div class="qb-answer-row answer-'+index%4+' '+(selected?"is-correct":"")+'" data-answer-index="'+index+'">'+
         '<button type="button" class="qb-answer-mark" data-mark-answer="'+index+'" '+(question.type==="poll"?"disabled":"")+' aria-label="'+(selected?"To‘g‘ri javob":"To‘g‘ri deb belgilash")+'" title="'+(question.type==="poll"?"So‘rovnoma javoblari baholanmaydi":"To‘g‘ri javobni belgilash")+'">'+
           (question.type==="poll"?'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>':selected?'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>':'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>')+
@@ -323,7 +329,11 @@ function renderAnswerEditor(question){
 }
 function toggleCorrect(index){
   const question=current();
-  if(question.type==="poll"||question.type==="true_false")return;
+  if(question.type==="poll")return;
+  if(question.type==="true_false"){
+    question.correct=[index];
+    renderAnswerEditor(question);markDirty();updateQuestionStatus();return;
+  }
   if(question.multiple){
     if(question.correct.includes(index))question.correct=question.correct.filter(item=>item!==index);
     else question.correct.push(index);
@@ -402,9 +412,9 @@ function mediaMarkup(value,withRemove=false){
   let content="";
   if((host==="youtube.com"||host.endsWith(".youtube.com")||host==="youtu.be")&&/^[A-Za-z0-9_-]{6,15}$/.test(id)){
     content='<div class="qb-media-embed"><iframe src="https://www.youtube-nocookie.com/embed/'+escapeHtml(id)+'" title="YouTube video" loading="lazy" allowfullscreen></iframe></div>';
-  }else if(/.(png|jpe?g|gif|webp|avif)(?.*)?$/i.test(url.pathname)){
+  }else if([".png",".jpg",".jpeg",".gif",".webp",".avif"].some(extension=>url.pathname.toLowerCase().endsWith(extension))){
     content='<img src="'+safe+'" alt="Savol uchun rasm">';
-  }else if(/.(mp4|webm|ogg)(?.*)?$/i.test(url.pathname)){
+  }else if([".mp4",".webm",".ogg"].some(extension=>url.pathname.toLowerCase().endsWith(extension))){
     content='<video src="'+safe+'" controls playsinline></video>';
   }else{
     content='<a href="'+safe+'" target="_blank" rel="noopener">Media havolasini ochish ↗</a>';
@@ -617,21 +627,16 @@ function bindEvents(){
     renderAnswerEditor(question);markDirty();
     const input=$('[data-answer-input="'+(question.answers.length-1)+'"]');if(input)input.focus();
   });
-  $("#open-question-types").addEventListener("click",()=>{$("#type-modal").hidden=false});
-  $("#change-question-type").addEventListener("click",()=>{$("#type-modal").hidden=false});
+  $("#open-question-types").addEventListener("click",()=>{state.typeModalMode="add";$("#type-modal").hidden=false});
+  $("#change-question-type").addEventListener("click",()=>{state.typeModalMode="change";$("#type-modal").hidden=false});
   $("#type-grid").addEventListener("click",event=>{
     const button=event.target.closest("[data-new-type]");if(!button)return;
-    if(button.dataset.newType==="quiz"&&current().type==="quiz"){
-      addQuestion("quiz");
-    }else if(button.dataset.newType===current().type){
-      addQuestion(button.dataset.newType);
-    }else{
-      changeType(button.dataset.newType);
-    }
+    if(state.typeModalMode==="add")addQuestion(button.dataset.newType);
+    else changeType(button.dataset.newType);
   });
   $("#duplicate-question").addEventListener("click",duplicateQuestion);
   $("#delete-question").addEventListener("click",deleteQuestion);
-  $("#footer-add-question").addEventListener("click",()=>{$("#type-modal").hidden=false});
+  $("#footer-add-question").addEventListener("click",()=>{state.typeModalMode="add";$("#type-modal").hidden=false});
   $("#question-list").addEventListener("click",event=>{
     const item=event.target.closest("[data-question-index]");if(!item)return;
     state.current=Number(item.dataset.questionIndex);render();
@@ -686,7 +691,7 @@ function bindEvents(){
     if(event.key==="Escape")closeModal();
   });
   window.addEventListener("beforeunload",event=>{
-    if(state.dirty&&!state.gameId){event.preventDefault();event.returnValue=""}
+    if(state.dirty){event.preventDefault();event.returnValue=""}
   });
 }
 async function init(){
