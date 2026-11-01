@@ -14,13 +14,14 @@
   function setGoogleEnabled(enabled) {
     const entries = [
       [loginGoogle, "/api/auth/google/start?flow=login", "Google bilan kirish"],
-      [signupGoogle, "/api/auth/google/start?flow=signup", "Google bilan account ochish"]
+      [signupGoogle, "/api/auth/google/start?flow=signup", "Google bilan ro‘yxatdan o‘tish"]
     ];
     for (const [link, href, label] of entries) {
       if (!link) continue;
       link.classList.toggle("google-disabled", !enabled);
       link.setAttribute("aria-disabled", String(!enabled));
-      link.title = enabled ? label : "Google OAuth hali sozlanmagan";
+      link.tabIndex = enabled ? 0 : -1;
+      link.title = enabled ? label : "Google OAuth hali serverda sozlanmagan";
       if (enabled) link.setAttribute("href", href);
       else link.removeAttribute("href");
     }
@@ -41,6 +42,8 @@
     registerTab.classList.toggle("active", registering);
     loginTab.setAttribute("aria-selected", String(!registering));
     registerTab.setAttribute("aria-selected", String(registering));
+    loginTab.tabIndex = registering ? -1 : 0;
+    registerTab.tabIndex = registering ? 0 : -1;
     error.textContent = "";
   }
 
@@ -90,7 +93,7 @@
     submitAuth(loginForm, "auth/login", {
       email: $("#email").value.trim(),
       password: $("#password").value
-    }, "Kirilmoqda...");
+    }, "Kabinet ochilmoqda...");
   });
 
   registerForm.addEventListener("submit", event => {
@@ -100,7 +103,7 @@
       name: $("#name").value.trim(),
       email: $("#new-email").value.trim(),
       password: $("#new-password").value
-    }, "Account yaratilmoqda...");
+    }, "Akkaunt yaratilmoqda...");
   });
 
   async function checkSystem() {
@@ -112,22 +115,23 @@
       });
       if (!response.ok) throw new Error("Server holatini tekshirib bo‘lmadi.");
       const status = await response.json();
-      const messages = [];
-      setGoogleEnabled(!!status.googleEnabled);
-      if (!status.googleEnabled) messages.push("Google orqali kirish hozircha sozlanmagan. Elektron pochta va paroldan foydalaning.");
-      note.textContent = messages.join(" ");
-      note.hidden = messages.length === 0;
+      const googleEnabled = !!status.googleEnabled;
+      setGoogleEnabled(googleEnabled);
+      note.textContent = googleEnabled
+        ? ""
+        : "Google orqali kirish hali sozlanmagan. Hozircha e-pochta va parol orqali kiring.";
+      note.hidden = googleEnabled;
     } catch {
       setGoogleEnabled(false);
-      note.textContent = "Serverga ulanib bo‘lmadi. Internet aloqasini tekshirib, sahifani yangilang.";
+      note.textContent = "Server holatini tekshirib bo‘lmadi. Internet aloqasini tekshiring.";
       note.hidden = false;
     }
   }
 
   const params = new URLSearchParams(location.search);
   const errors = {
-    google_setup: "Google orqali kirish hali sozlanmagan. Elektron pochta va paroldan foydalaning.",
-    no_account: "Bu Google akkaunti bilan hali account ochilmagan. “Account ochish” bo‘limidan Google bilan account oching.",
+    google_setup: "Google orqali kirish hali sozlanmagan. Hozircha e-pochta va parol bilan davom eting.",
+    no_account: "Bu Google akkaunti hali ro‘yxatdan o‘tmagan. Google orqali ro‘yxatdan o‘tish bo‘limidan foydalaning.",
     unverified: "Google elektron pochtasi tasdiqlanmagan. Tasdiqlangan akkauntdan foydalaning.",
     google_state: "Google kirish sessiyasi muddati tugagan. Qayta urinib ko‘ring.",
     google: "Google orqali kirishda xatolik yuz berdi. Qayta urinib ko‘ring."

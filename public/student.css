@@ -756,3 +756,18 @@ body.student-home{
 @media(prefers-reduced-motion:reduce){
   .student-home .join-home-card,.student-home .join-home-steps{animation:none!important}
 }
+
+
+/* Student invalid PIN — clear red X feedback */
+.student-error-card .student-invalid-pin-icon{
+  display:grid;
+  place-items:center;
+  border:1px solid #ffd5dc;
+  background:linear-gradient(145deg,#fff4f5,#ffe8ec);
+  color:#d83550;
+  box-shadow:0 10px 26px rgba(216,53,80,.13),inset 0 1px #fff;
+  font-family:Arial,sans-serif;
+  font-size:38px;
+  font-weight:700;
+  line-height:1;
+}
