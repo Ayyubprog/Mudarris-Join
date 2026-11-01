@@ -1,25 +1,92 @@
 <!doctype html>
-<html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MUDARRIS JOIN — Birgalikda o‘ynang</title><link rel="icon" type="image/svg+xml" href="/mudarris-book-purple.svg"><link rel="stylesheet" href="/theme.css"><meta name="theme-color" content="#46178f"><style id="student-viewport-fix">html{min-height:100%;background:#321064}body.student-join{min-height:100svh;min-height:100dvh}</style></head>
-<body class="game-bg student-join" style="min-height:100vh;color:white">
-<header class="join-header" style="height:76px;padding:0 clamp(18px,5vw,70px);display:flex;align-items:center;justify-content:space-between">
-  <a class="brand" href="/" style="font-size:22px"><span class="brand-mark"><img src="/mudarris-book-purple.svg" alt="MUDARRIS JOIN ochiq kitob logotipi"></span><span class="brand-wordmark"><span>MUDARRIS</span><strong>JOIN</strong></span></a>
-  <a href="/login" class="btn" style="background:#ffffff18;color:white;border:1px solid #ffffff40">O‘qituvchi kirishi ↗</a>
-</header>
-<main class="join-main" style="min-height:calc(100vh - 76px);display:grid;place-items:center;padding:30px 18px 70px">
-  <section class="join-panel" style="width:min(510px,100%);text-align:center">
-    <div class="join-emoji" style="font-size:56px;margin-bottom:12px;filter:drop-shadow(0 8px 14px #1d073d66)">🎮</div>
-    <div class="eyebrow join-eyebrow" style="color:#d9c5f4;margin-bottom:10px">MUDARRIS SINF O‘YINLARI</div>
-    <h1 class="display join-title" style="font-size:clamp(42px,8vw,68px);line-height:.98;margin:0 0 14px;color:#fff">Qani, o‘ynaymiz!</h1>
-    <p class="join-subtitle" style="color:#e5d8f5;font-size:17px;margin:0 0 28px">O‘qituvchingiz bergan o‘yin PIN-kodini kiriting.</p>
-    <form id="join-form" class="card join-card" style="padding:24px;text-align:left">
-      <label for="pin" class="eyebrow" style="display:block;margin-bottom:9px">O‘yin PIN-kodi</label>
-      <input id="pin" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="O‘yin PIN-kodini kiriting" required style="font-size:21px;font-weight:900;letter-spacing:.12em;text-align:center">
-      <button class="btn btn-primary" type="submit" style="width:100%;margin-top:14px;height:54px;font-size:17px">O‘YINGA KIRISH <span>→</span></button>
-      <p id="join-error" class="muted" style="font-size:13px;text-align:center;min-height:18px;margin:12px 0 0"></p>
-    </form>
-    <div class="join-hints" style="display:flex;justify-content:center;gap:18px;margin-top:25px;color:#e4d8f1;font-size:13px;font-weight:700"><span>⚡ O‘quvchi akkaunti kerak emas</span><span>✦ Kodni kiriting va o‘ynang</span></div>
-  </section>
-</main>
-<script>
-document.getElementById('join-form').addEventListener('submit',e=>{e.preventDefault();const pin=document.getElementById('pin').value.trim();const err=document.getElementById('join-error');if(!/^\d{6}$/.test(pin)){err.textContent='Iltimos, 6 xonali o‘yin PIN-kodini kiriting.';return}location.href='/play.html?pin='+encodeURIComponent(pin)});
-</script></body></html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>MUDARRIS JOIN — O‘yin boshlansin!</title>
+  <link rel="icon" type="image/svg+xml" href="/mudarris-book-purple.svg">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/student.css?v=student-visuals-1">
+  <meta name="theme-color" content="#1b0b38">
+  <meta name="description" content="O‘yin PIN-kodini kiriting va sinfdoshlaringiz bilan jonli viktorinaga qo‘shiling.">
+</head>
+<body class="student-site student-home">
+  <div class="student-atmosphere" aria-hidden="true">
+    <span class="student-glow student-glow-one"></span>
+    <span class="student-glow student-glow-two"></span>
+    <span class="student-star student-star-one">✦</span>
+    <span class="student-star student-star-two">✧</span>
+    <span class="student-star student-star-three">✦</span>
+    <span class="student-grid-glow"></span>
+  </div>
+  <header class="student-nav">
+    <a class="student-brand" href="/" aria-label="MUDARRIS JOIN bosh sahifa">
+      <span class="student-brand-mark"><img src="/mudarris-book-purple.svg" alt=""></span>
+      <span class="student-brand-name">MUDARRIS <b>JOIN</b></span>
+    </a>
+    <div class="student-nav-right">
+      <span class="student-live-label"><i></i> JONLI SINF O‘YINLARI</span>
+      <a href="/login" class="student-teacher-link">O‘qituvchi uchun <span>↗</span></a>
+    </div>
+  </header>
+  <main class="student-landing">
+    <section class="student-hero">
+      <div class="student-hero-kicker"><span>✦</span> BILIM • TEZLIK • JAMOA</div>
+      <h1>O‘YIN<br><span>BOSHLANSIN!</span></h1>
+      <p class="student-hero-copy">Sinfdoshlaring bilan bellash. Savollarga javob ber. Va g‘alaba sari olg‘a!</p>
+      <div class="student-benefits">
+        <div class="student-benefit"><span class="student-benefit-icon">⚡</span><div><strong>Bir zumda qo‘shil</strong><small>PIN-kodni kiritish kifoya</small></div></div>
+        <div class="student-benefit"><span class="student-benefit-icon">🎮</span><div><strong>Birga o‘yna</strong><small>Do‘stlaring bilan bellash</small></div></div>
+        <div class="student-benefit"><span class="student-benefit-icon">🏆</span><div><strong>Eng zo‘ri bo‘l</strong><small>Ball to‘pla va g‘olib bo‘l</small></div></div>
+      </div>
+      <div class="student-preview" aria-hidden="true">
+        <div class="student-preview-top"><span class="student-preview-live"><i></i> LIVE</span><span>BUGUNGI BELLASHUV</span><b>✦</b></div>
+        <div class="student-preview-question">Qaysi javobni tanlaysan?</div>
+        <div class="student-preview-answers"><span class="preview-answer preview-red">▲</span><span class="preview-answer preview-blue">◆</span><span class="preview-answer preview-yellow">●</span><span class="preview-answer preview-green">■</span></div>
+        <div class="student-preview-bottom"><span>Javob berishga tayyormisan?</span><b>100%</b></div>
+        <div class="student-preview-progress"><i></i></div>
+      </div>
+    </section>
+    <section class="student-join-column">
+      <div class="student-join-card">
+        <div class="student-card-decoration" aria-hidden="true"><span>✦</span><span>✧</span></div>
+        <div class="student-card-icon">🚀</div>
+        <div class="student-card-eyebrow">SENING NAVBATING!</div>
+        <h2>O‘yinga qo‘shil</h2>
+        <p class="student-card-copy">O‘qituvching bergan 6 xonali PIN-kodni kiriting.</p>
+        <form id="join-form" class="student-pin-form">
+          <label for="pin">O‘YIN PIN-KODI</label>
+          <div class="student-pin-input-wrap">
+            <span class="student-pin-symbol" aria-hidden="true">#</span>
+            <input id="pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000 000" aria-describedby="pin-hint join-error" required>
+            <span class="student-pin-count" id="pin-count">0/6</span>
+          </div>
+          <div class="student-pin-hint" id="pin-hint"><span>⌁</span> PIN-kod 6 ta raqamdan iborat</div>
+          <button class="student-primary-button" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button>
+          <p id="join-error" class="student-form-error" role="alert" aria-live="polite"></p>
+        </form>
+        <div class="student-no-account"><span>✓</span> O‘quvchi akkaunti kerak emas</div>
+      </div>
+      <div class="student-join-foot"><span>🔒</span> Xavfsiz va tezkor qo‘shilish</div>
+    </section>
+  </main>
+  <footer class="student-footer"><span>© MUDARRIS JOIN</span><span>Bilim bilan porla <b>✦</b></span></footer>
+  <script>
+    const joinForm=document.getElementById("join-form"),pinInput=document.getElementById("pin"),pinCount=document.getElementById("pin-count"),joinError=document.getElementById("join-error");
+    pinInput.addEventListener("input",()=>{
+      pinInput.value=pinInput.value.replace(/\D/g,"").slice(0,6);
+      pinCount.textContent=pinInput.value.length+"/6";
+      joinError.textContent="";
+      pinInput.closest(".student-pin-input-wrap").classList.toggle("is-complete",pinInput.value.length===6);
+    });
+    joinForm.addEventListener("submit",event=>{
+      event.preventDefault();
+      const pin=pinInput.value.trim();
+      if(!/^\d{6}$/.test(pin)){joinError.textContent="Iltimos, 6 xonali o‘yin PIN-kodini kiriting.";pinInput.focus();return}
+      const button=joinForm.querySelector("button[type=submit]");
+      button.disabled=true;button.querySelector("span").textContent="O‘YIN QIDIRILMOQDA...";
+      location.href="/play.html?pin="+encodeURIComponent(pin);
+    });
+  </script>
+</body>
+</html>
