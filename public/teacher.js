@@ -21,7 +21,7 @@ const icons={
  submarine:'<svg viewBox="0 0 24 24"><path d="M3 14h18l-2 4H7l-4-4Z"/><path d="M10 14V8h5v6m-2-6V5m-1 0h2M6 20c1-1 2-1 3 0s2 1 3 0 2-1 3 0 2 1 3 0"/></svg>',
  rocket:'<svg viewBox="0 0 24 24"><path d="M12 21s-2-3-2-7 2-9 7-12c3 5 1 11-3 15-1 1-2 4-2 4Z"/><path d="M10 14 5 19l1-6 4-2m4 3 5 1-4 3"/></svg>'
 };
-const modeIconKeys=["quiz","team","target","spark","trophy","car","globe","building","book","submarine","robot","rocket"];
+const modeIconKeys=["quiz","team","target","spark","trophy","car","globe","building","book","submarine","robot","rocket","target"];
 
 function toast(message){const root=$("#toast-root");root.innerHTML='<div class="mj-toast">'+esc(message)+'</div>';clearTimeout(toast.timer);toast.timer=setTimeout(()=>root.innerHTML="",3200)}
 async function api(path,options={}){const response=await fetch("/api/"+path,{credentials:"same-origin",headers:{"content-type":"application/json",...(options.headers||{})},...options});const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.error||"So‘rov bajarilmadi. Qayta urinib ko‘ring.");return data}
