@@ -51,6 +51,7 @@ function parts(value){
  if(!hatMap.has(hat))hat="none";
  return {head:headMap.get(head),accessory:hatMap.get(hat),key:head+":"+hat,special:false};
 }
+function randomKey(){return heads[Math.floor(Math.random()*heads.length)].id+":"+hats.filter(x=>x.id!=="none")[Math.floor(Math.random()*(hats.length-1))].id}
 function render(value,className="mj-avatar-art"){
  const selected=parts(value),safeClass=/^[a-zA-Z0-9 _-]*$/.test(className)?className:"mj-avatar-art";
  const aura=selected.special?'<circle cx="50" cy="55" r="47" fill="none" stroke="#f7c84b" stroke-width="3" stroke-dasharray="4 5"/><circle cx="50" cy="55" r="43" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="1.5"/>':'';
