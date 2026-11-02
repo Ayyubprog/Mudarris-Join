@@ -11,17 +11,17 @@ const loadoutCatalog={
   {id:"pilot",name:"Osmon uchuvchisi",icon:"🧑‍🚀",tone:"#51bca8",desc:"Maxsus jihozlar"}
  ],
  racing:[
-  {id:"falcon",name:"Falcon GT",icon:"🏎️",tone:"#ef4b55",desc:"Tez start"},
-  {id:"vortex",name:"Vortex X",icon:"🚙",tone:"#4e83e8",desc:"Muvozanatli"},
-  {id:"comet",name:"Comet R",icon:"🚗",tone:"#8e62d2",desc:"Yengil kuzov"},
-  {id:"titan",name:"Titan Turbo",icon:"🚘",tone:"#4da98a",desc:"Kuchli motor"},
-  {id:"blaze",name:"Blaze RS",icon:"🏁",tone:"#df963b",desc:"Poyga afsonasi"}
+  {id:"falcon",name:"APEX GP 01",icon:"🏎️",tone:"#ef4b55",desc:"Keskin va tezkor"},
+  {id:"vortex",name:"VORTEX R",icon:"🏎️",tone:"#4e83e8",desc:"Barqaror boshqaruv"},
+  {id:"comet",name:"COMET 09",icon:"🏎️",tone:"#8e62d2",desc:"Yengil aerodinamika"},
+  {id:"titan",name:"TITAN RS",icon:"🏎️",tone:"#4da98a",desc:"Kuchli tezlanish"},
+  {id:"blaze",name:"BLAZE X",icon:"🏎️",tone:"#df963b",desc:"Yuqori tezlik"}
  ]
 };
 const loadoutFor=(mode,id)=>(loadoutCatalog[mode]||[]).find(item=>item.id===id)||null;
 function loadoutVisual(mode,id){
- const colors={ranger:"#d49a42",cyber:"#5a9de8",knight:"#a7aebc",ninja:"#8c65c9",pilot:"#51bca8",falcon:"#ef4b55",vortex:"#4e83e8",comet:"#8e62d2",titan:"#4da98a",blaze:"#df963b"},color=colors[id]||"#6b70a8";
- if(mode==="racing")return '<svg class="mj-loadout-svg mj-car-svg" viewBox="0 0 140 82" role="img" aria-label="Poyga mashinasi"><ellipse cx="70" cy="70" rx="53" ry="7" fill="#1d2b4533"/><path d="M16 53 25 36q5-8 18-10l17-15h33l18 15q12 2 17 13l-1 14q-1 7-10 7H25q-9 0-9-7Z" fill="'+color+'" stroke="#25334c" stroke-width="3" stroke-linejoin="round"/><path d="m49 29 15-13h27l15 13Z" fill="#bfeaff" stroke="#25334c" stroke-width="2.5" stroke-linejoin="round"/><path d="M68 17v12m-44 11h93" stroke="#fff" stroke-opacity=".75" stroke-width="3"/><path d="M17 51h14m84 0h9" stroke="#ffe79a" stroke-width="5" stroke-linecap="round"/><circle cx="40" cy="59" r="11" fill="#202b3d" stroke="#fff" stroke-width="3"/><circle cx="104" cy="59" r="11" fill="#202b3d" stroke="#fff" stroke-width="3"/><circle cx="40" cy="59" r="4" fill="#9ca8bd"/><circle cx="104" cy="59" r="4" fill="#9ca8bd"/><path d="M31 34h15m52 0h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>';
+ const colors={ranger:"#d49a42",cyber:"#5a9de8",knight:"#a7aebc",ninja:"#8c65c9",pilot:"#51bca8",falcon:"#ef4b55",vortex:"#2476e8",comet:"#8e55d8",titan:"#22a98b",blaze:"#f0a532"},color=colors[id]||"#6b70a8";
+ if(mode==="racing")return '<svg class="mj-loadout-svg mj-car-svg mj-f1-car-svg" viewBox="0 0 180 108" role="img" aria-label="Formula poyga mashinasi"><ellipse cx="90" cy="93" rx="72" ry="8" fill="#14233b33"/><path d="M13 67h26l10-18 23-7h42l24 8 17 17h12v10h-27l-8-9H49l-8 9H13Z" fill="'+color+'" stroke="#192539" stroke-width="3" stroke-linejoin="round"/><path d="m69 46 9-21h25l12 22-13 10H73Z" fill="#9eddf4" stroke="#192539" stroke-width="3"/><path d="M79 26q14-8 26 0" fill="none" stroke="#fff" stroke-width="3"/><path d="M46 48 26 42l-14 6v8h32m91-9 22-7 16 8v8h-32" fill="none" stroke="#172238" stroke-width="6" stroke-linejoin="round"/><path d="M12 80h42v5H12zm113 0h43v5h-43z" fill="#e8edf4" stroke="#172238" stroke-width="2"/><path d="M55 56h69" stroke="#fff" stroke-width="4" opacity=".8"/><path d="M90 58v15" stroke="#18243a" stroke-width="4"/><g fill="#101722" stroke="#8794a8" stroke-width="3"><circle cx="48" cy="76" r="15"/><circle cx="133" cy="76" r="15"/></g><g fill="#c9d4e0"><circle cx="48" cy="76" r="5"/><circle cx="133" cy="76" r="5"/></g><path d="M70 67 79 60h22l10 7" fill="none" stroke="#fff" stroke-width="3" opacity=".82"/></svg>';
  const visor=id==="ninja"?"<path d='M39 31q31-18 62 0l-5 12H44Z' fill='#1c2138'/>":id==="knight"?"<path d='m40 34 30-21 30 21-7 20H47Z' fill='#cbd3df' stroke='#39445a' stroke-width='3'/>":id==="pilot"?"<path d='M40 31q30-28 60 0v18H40Z' fill='#c3f2ff' stroke='#31536b' stroke-width='3'/>":id==="cyber"?"<path d='M39 34q30-23 62 0v18H39Z' fill='#202b46' stroke='#7de8ff' stroke-width='3'/>":"<path d='M35 37q35-27 70 0l-8 10H43Z' fill='#a66a2c' stroke='#603d28' stroke-width='3'/>";
  return '<svg class="mj-loadout-svg mj-hero-svg" viewBox="0 0 120 132" role="img" aria-label="Jangchi"><ellipse cx="60" cy="123" rx="35" ry="6" fill="#1d2b4533"/><path d="M27 116q-5-32 9-47 9-10 24-10t24 10q14 15 9 47Z" fill="'+color+'" stroke="#25334c" stroke-width="3"/><path d="M44 78q16 10 32 0l7 35H37Z" fill="#25334c" opacity=".18"/><circle cx="60" cy="45" r="29" fill="#d99b70" stroke="#704a42" stroke-width="3"/>'+visor+'<path d="M47 48h3m20 0h3" stroke="#202b3d" stroke-width="4" stroke-linecap="round"/><path d="M52 61q8 6 16 0" fill="none" stroke="#77473d" stroke-width="2.5" stroke-linecap="round"/><path d="M31 89 17 108l13 7 17-21m42-5 14 19-13 7-17-21" fill="'+color+'" stroke="#25334c" stroke-width="3" stroke-linejoin="round"/><path d="M46 116v8m28-8v8" stroke="#25334c" stroke-width="7" stroke-linecap="round"/></svg>';
 }
@@ -143,12 +143,20 @@ function waiting(){
  lastScreen="waiting";clearInterval(timer);
  const count=(data?.players||[]).length,mode=data?.session?.mode||"classic",specialMode=mode==="shooter"||mode==="racing",loadout=loadoutFor(mode,player.loadout),character=specialMode?loadoutVisual(mode,player.loadout):avatarIcon(player.avatar);
  const modeTitle=mode==="shooter"?"Jang maydoniga tayyorlan!":mode==="racing"?"Start chizig‘iga tayyor!":"Hamma tayyormi?";
- const modeCopy=mode==="shooter"?"Jangching: "+(loadout?.name||"Jangchi")+". To‘g‘ri javob bilan banditlarni yeng!":mode==="racing"?"Mashinang: "+(loadout?.name||"Poyga mashinasi")+". To‘g‘ri javob bilan tezlikni oshir!":"O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!";
- const avatarControl=specialMode?'<div class="player-big student-player-avatar mj-waiting-avatar mj-waiting-loadout" aria-label="'+(mode==="shooter"?"Tanlangan jangchi":"Tanlangan mashina")+'"><span id="waiting-avatar-art">'+character+'</span></div>':'<button type="button" class="player-big student-player-avatar mj-waiting-avatar" id="waiting-avatar" aria-label="Qahramonni o‘zgartirish"><span id="waiting-avatar-art">'+character+'</span><span class="mj-waiting-avatar-edit">✎</span></button>';
- const editLink=specialMode?'<div class="mj-waiting-edit-link mj-waiting-loadout-label">'+(mode==="shooter"?"⚔ JANGCHI TANLANDI":"🏁 MASHINA TANLANDI")+'</div>':'<button type="button" class="mj-waiting-edit-link" id="waiting-avatar-link">✎ Qahramonni o‘zgartirish</button>';
- root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span>'+avatarControl+'</div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">'+modeTitle+'</h1><p class="student-card-copy">'+modeCopy+'</p>'+editLink+'<div class="student-waiting-player-count" id="lobby-player-count">'+count+' nafar o‘quvchi o‘yinga qo‘shildi</div><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘YIN KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">★ '+Number(player.score||0).toLocaleString()+' ball</span></div></section>';
+ const modeCopy=mode==="shooter"?"Jangching: "+(loadout?.name||"Jangchi")+". To‘g‘ri javob bilan raqiblarni yeng!":mode==="racing"?"Mashina: "+(loadout?.name||"F1 mashinasi")+". Barcha sinf bilan bir trassaga chiqasan!":"O‘qituvchingiz o‘yinni boshlashi bilan savollar shu yerda paydo bo‘ladi. Sahifani yopmang!";
+ const avatarControl=specialMode?'<div class="player-big student-player-avatar mj-waiting-avatar mj-waiting-loadout"><span id="waiting-avatar-art">'+character+'</span></div>':'<button type="button" class="player-big student-player-avatar mj-waiting-avatar" id="waiting-avatar"><span id="waiting-avatar-art">'+character+'</span><span class="mj-waiting-avatar-edit">✎</span></button>';
+ const editLink=specialMode?'<div class="mj-waiting-edit-link mj-waiting-loadout-label">'+(mode==="shooter"?"⚔ JANGCHI TANLANDI":"🏁 F1 MASHINASI TANLANDI")+'</div>':'<button type="button" class="mj-waiting-edit-link" id="waiting-avatar-link">✎ Qahramonni o‘zgartirish</button>';
+ root.innerHTML='<section class="student-card student-waiting-card"><div class="student-waiting-status"><i></i> O‘YINGA MUVAFFAQIYATLI QO‘SHILDING</div><div class="student-waiting-orbit"><span class="student-orbit-ring ring-one"></span><span class="student-orbit-ring ring-two"></span><span class="student-orbit-spark spark-one">✦</span><span class="student-orbit-spark spark-two">✧</span>'+avatarControl+'</div><div class="student-card-eyebrow">SALOM, '+esc(player.nickname.toUpperCase())+'!</div><h1 class="student-card-title">'+modeTitle+'</h1><p class="student-card-copy">'+modeCopy+'</p>'+editLink+'<div class="student-waiting-player-count" id="lobby-player-count">'+count+' nafar o‘quvchi o‘yinga qo‘shildi</div><div class="student-waiting-animation"><span></span><span></span><span></span><b>O‘QITUVCHI KUTILMOQDA</b></div><div class="student-waiting-footer"><span class="student-pin-badge">PIN '+pin+'</span><span class="student-score-pill">✦ MUDARRIS JOIN</span></div></section>';
  $("#waiting-avatar")?.addEventListener("click",openAvatarStudio);
  $("#waiting-avatar-link")?.addEventListener("click",openAvatarStudio);
+}
+function waitingForReveal(){
+ if(lastScreen==="waiting-reveal")return;
+ lastScreen="waiting-reveal";clearInterval(timer);
+ const mode=data?.session?.mode||"classic",copy=mode==="racing"?"Mashinangiz trassada. O‘qituvchi javoblarni ochgach poyga natijasi ko‘rinadi.":mode==="shooter"?"Jang maydoni tayyor. O‘qituvchi natijani ochgach zarba va energiya holati ko‘rinadi.":"Javobingiz qabul qilindi. To‘g‘ri javob ochilishini kuting — ballaringiz va reytingingiz shundan keyin chiqadi.";
+ const hero=mode==="racing"?'<div class="mj-await-art"><img src="/mode-racing.svg" alt="F1 poyga trassasi"></div>':mode==="shooter"?'<div class="mj-await-art"><img src="/mode-shooter.svg" alt="Shooter Arena"></div>':'<div class="mj-await-art"><img src="/mode-classic.svg" alt="Klassik jonli viktorina"></div>';
+ const title=mode==="racing"?"PIT STOP — JAVOB QABUL QILINDI":mode==="shooter"?"NISHON KUTILMOQDA":"AJOYIB! JAVOBING SAQLANDI";
+ root.innerHTML='<section class="student-card mj-wait-reveal"><div class="mj-await-top"><span>✦ MUDARRIS JOIN</span><span>SAVOL '+(Number(data.session.current_question)+1)+' · JAVOB QABUL QILINDI</span></div>'+hero+'<div class="mj-await-copy"><div class="mj-await-check">✓</div><div class="student-card-eyebrow">JAVOBINGIZ MUVAFFAQIYATLI YUBORILDI</div><h1>'+title+'</h1><p>'+copy+'</p><div class="mj-await-pulse"><i></i><i></i><i></i><b>O‘QITUVCHI NATIJANI OCHISHI KUTILMOQDA</b></div></div><div class="mj-await-footer"><span>'+esc(player.nickname)+'</span><span>Javob berildi · Natija yashirin</span></div></section>';
 }
 function paused(){
  lastScreen="paused";clearInterval(timer);
@@ -156,7 +164,7 @@ function paused(){
 }
 function revealed(){
  lastScreen="revealed";clearInterval(timer);
- const q=data.current_question||{},mine=data.player_answer,free=["poll","word_cloud","open_ended","brainstorm"].includes(q.type);
+ const q=data.current_question||{},mine=data.player_answer,free=["poll","word_cloud","open_ended","brainstorm","slide"].includes(q.type);
  const values=value=>{try{const parsed=JSON.parse(String(value??""));return Array.isArray(parsed)?parsed:[String(value??"")]}catch{return [String(value??"")]}};
  const answerText=value=>{if(value===null||value===undefined||value==="")return "Javob yuborilmadi";try{const parsed=JSON.parse(String(value));return Array.isArray(parsed)?parsed.join(" · "):String(value)}catch{return String(value)}};
  const correct=values(q.correct).filter(Boolean),correctText=q.type==="puzzle"?correct.join(" → "):q.type==="slider"?String(q.correct??"—"):correct.join(" · ");
@@ -173,19 +181,20 @@ function finish(){
  root.innerHTML='<section class="student-card student-finish-card mj-final-v2"><div class="student-trophy-stage"><span class="trophy-rays">✦</span><span class="trophy-icon">🏆</span><span class="trophy-confetti confetti-a">✦</span><span class="trophy-confetti confetti-b">✧</span></div><div class="student-card-eyebrow">BELLASHUV YAKUNLANDI</div><h1 class="student-card-title">Barakalla, '+esc(player.nickname)+'!</h1><p class="student-card-copy">Sen ajoyib qatnashding. Keyingi safar undan ham zo‘r natija ko‘rsat!</p><div class="student-final-score"><span>JAMI TO‘PLAGAN BALLARING</span><strong>'+Number(player.score||0).toLocaleString()+'</strong><small>ball</small></div>'+(place?'<div class="student-rank-note">🏅 Sen '+place+'-o‘rinni egallading!</div>':"")+podium+'<div class="student-leaderboard"><div class="student-leaderboard-head"><strong>🏆 Yakuniy reyting</strong><span>'+list.length+' o‘yinchi</span></div><div class="final-list">'+list.map((p,i)=>'<div class="'+(Number(p.id)===Number(player.id)?"is-me":"")+'"><strong><span class="student-rank-number">'+(i+1)+'</span>'+avatarIcon(p.avatar)+' '+esc(p.nickname)+(Number(p.id)===Number(player.id)?' <small>SEN</small>':"")+'</strong><b>'+Number(p.score||0).toLocaleString()+' ball</b></div>').join("")+'</div></div><a href="/" class="student-primary-button student-home-button"><span>BOSH SAHIFAGA QAYTISH</span><b>→</b></a></section>';
 }
 function raceBoard(){const list=(data.players||[]).slice().sort((a,b)=>b.score-a.score).slice(0,5),max=Math.max(1,...list.map(p=>p.score));return '<div class="race-board">'+list.map(p=>'<div class="race-row"><span>'+avatarIcon(p.avatar)+' '+esc(p.nickname)+'</span><div><i style="width:'+Math.max(5,p.score/max*100)+'%"></i></div><b>'+p.score+'</b></div>').join("")+'</div>'}
-function startTimer(seconds){clearInterval(timer);const start=Date.now();timer=setInterval(()=>{const left=Math.max(0,seconds-(Date.now()-start)/1000),n=$("#timer-number"),bar=$("#timer-fill");if(n)n.textContent=Math.ceil(left);if(bar)bar.style.width=(left/seconds*100)+"%";if(left<=0){clearInterval(timer);answered=data?.session?.current_question??answered;const area=$("#answer-area");if(area)area.querySelectorAll("button,input,textarea").forEach(x=>x.disabled=true);const st=$("#answer-status");if(st)st.textContent="Vaqt tugadi — keyingi savolni kuting."}},150)}
+function startTimer(seconds){clearInterval(timer);const start=Date.now();timer=setInterval(()=>{const left=Math.max(0,seconds-(Date.now()-start)/1000),n=$("#timer-number"),bar=$("#timer-fill");if(n)n.textContent=Math.ceil(left);if(bar)bar.style.width=(left/seconds*100)+"%";if(left<=0){clearInterval(timer);answered=data?.session?.current_question??answered;waitingForReveal()}},150)}
 let puzzleOrder=[],selectedMultiAnswers=new Set();
 function studentMediaMarkup(value){if(!value)return "";if(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value))return '<div class="student-media"><img src="'+value+'" alt="Savol uchun rasm"></div>';try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))return "";const safe=esc(u.href),host=u.hostname.toLowerCase(),id=(host==="youtu.be"?u.pathname.slice(1):u.searchParams.get("v"))||"";if((host==="youtube.com"||host.endsWith(".youtube.com")||host==="youtu.be")&&/^[A-Za-z0-9_-]{6,15}$/.test(id))return '<div class="student-media"><iframe class="student-video-frame" src="https://www.youtube-nocookie.com/embed/'+esc(id)+'" title="Savol videosi" loading="lazy" allowfullscreen></iframe></div>';if(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(u.pathname))return '<div class="student-media"><img src="'+safe+'" alt="Savol uchun media"></div>';if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u.pathname))return '<div class="student-media"><video src="'+safe+'" controls playsinline></video></div>';return '<div class="student-media student-media-link"><a href="'+safe+'" target="_blank" rel="noopener">Savolga biriktirilgan media ↗</a></div>'}catch{return ""}}
 function gameScene(mode,phase="playing",correct=null){
- const index=Number(data?.session?.current_question||0),players=(data?.players||[]).slice().sort((a,b)=>Number(b.score||0)-Number(a.score||0)),rank=Math.max(0,players.findIndex(p=>Number(p.id)===Number(player.id))),loadout=loadoutFor(mode,player.loadout),defeated=Math.max(0,Number(player.enemies_defeated)||0),health=Math.max(0,Math.min(100,Number(player.health??100)));
+ const players=(data?.players||[]).slice().sort((a,b)=>Number(b.score||0)-Number(a.score||0)),rank=Math.max(0,players.findIndex(p=>Number(p.id)===Number(player.id))),loadout=loadoutFor(mode,player.loadout),defeated=Math.max(0,Number(player.enemies_defeated)||0),health=Math.max(0,Math.min(100,Number(player.health??100)));
  if(mode==="shooter"){
-  const hero=loadoutVisual("shooter",player.loadout),bandit='<svg class="mj-bandit-svg" viewBox="0 0 90 110" aria-label="Bandit"><ellipse cx="45" cy="103" rx="27" ry="5" fill="#2b1b2544"/><path d="M17 102q1-35 28-35t28 35Z" fill="#583e39" stroke="#2e2528" stroke-width="3"/><circle cx="45" cy="43" r="25" fill="#d39a6b" stroke="#69483d" stroke-width="3"/><path d="M12 36 28 13h34l16 23Z" fill="#a96d31" stroke="#5e3a24" stroke-width="3"/><path d="M7 36h76" stroke="#4a2d24" stroke-width="6" stroke-linecap="round"/><path d="M34 44h5m12 0h5" stroke="#2a2022" stroke-width="4" stroke-linecap="round"/><path d="M36 59q9-6 18 0" fill="none" stroke="#5e332d" stroke-width="3"/><path d="M31 75 45 86l14-11" fill="none" stroke="#d5b38b" stroke-width="3"/></svg>',names=["Qaroqchi","Cho‘l banditi","Temir niqob","Soya boshliq","So‘nggi raqib"],enemyIndex=phase==="revealed"&&correct===true?Math.max(0,defeated-1):defeated,enemy=names[Math.min(names.length-1,enemyIndex%names.length)];
-  return '<div class="mj-game-scene mj-shooter-scene '+(phase==="revealed"?(correct===true?"is-victory":correct===false?"is-damaged":""):"")+'"><div class="mj-shooter-sky"><span class="mj-shooter-sun"></span><i class="mj-shooter-cloud cloud-a"></i><i class="mj-shooter-cloud cloud-b"></i><div class="mj-shooter-mesa mesa-back"></div><div class="mj-shooter-mesa mesa-front"></div><div class="mj-shooter-ground"></div><div class="mj-shooter-dust dust-a"></div><div class="mj-shooter-dust dust-b"></div><div class="mj-shooter-battle-label"><b>JANG MAYDONI</b><span>RAQIB '+(defeated+1)+'</span><small>TO‘G‘RI JAVOB = OTISH</small></div><div class="mj-shooter-hero"><span class="mj-shooter-shadow"></span><b>'+hero+'</b><small>'+esc(loadout?.name||"Jangchi")+'</small><span class="mj-player-health"><i style="width:'+health+'%"></i></span><small class="mj-health-label">HP '+health+'</small></div><div class="mj-shooter-projectile"></div><div class="mj-shooter-enemy"><span class="mj-enemy-health"><i style="width:'+(phase==="revealed"&&correct===true?"0":"100")+'%"></i></span><b>'+bandit+'</b><small>'+enemy+'</small></div><span class="mj-shooter-crosshair" aria-hidden="true"></span>'+(phase==="revealed"?'<div class="mj-shooter-impact">'+(correct===true?"💥 ZARB! RAQIBGA TEGDI":correct===false?"💢 SEN ZARAR OLDING":"JANG DAVOM ETADI")+'</div>':'')+'</div></div>';
+  const hero=loadoutVisual("shooter",player.loadout),names=["Qaroqchi","Cho‘l banditi","Temir niqob","Soya boshliq","So‘nggi raqib"],enemy=names[Math.min(names.length-1,defeated%names.length)];
+  return '<section class="mj-game-scene mj-shooter-scene '+(phase==="revealed"?(correct===true?"is-victory":correct===false?"is-damaged":""):"")+'"><div class="mj-shooter-backdrop"><img src="/mode-shooter.svg" alt="Shooter Arena jang maydoni"></div><div class="mj-shooter-game-header"><span>SHOOTER ARENA</span><b>RAQIB '+(defeated+1)+'</b></div><div class="mj-shooter-player"><div class="mj-shooter-player-art">'+hero+'</div><div class="mj-shooter-player-info"><strong>'+esc(loadout?.name||"Jangchi")+'</strong><small>JANGCHI</small><span class="mj-shooter-hp"><i style="width:'+health+'%"></i></span><b>'+health+' HP</b></div></div><div class="mj-shooter-target"><div class="mj-shooter-enemy-orbit">✦</div><div class="mj-shooter-enemy-avatar">👾</div><strong>'+enemy+'</strong><span class="mj-shooter-target-health"><i style="width:'+(phase==="revealed"&&correct===true?"0":"100")+'%"></i></span><small>'+defeated+' / 5 RAQIB YENGILDI</small></div>'+(phase==="revealed"?'<div class="mj-shooter-impact '+(correct===true?"good":"bad")+'">'+(correct===true?"⚡ ZARBA! RAQIB YENGILDI":correct===false?"💥 ZARBA QAYTDI · ENERGIYA KAMAYDI":"JANG DAVOM ETADI")+'</div>':'<div class="mj-shooter-attack-cue">TO‘G‘RI JAVOB = ZARBA</div>')+'</section>';
  }
  if(mode==="racing"){
-  const car=loadoutVisual("racing",player.loadout),progress=Math.max(10,Math.min(94,10+Number(player.score||0)/Math.max(1,players[0]?.score||1)*80+Math.max(0,players.length-1-rank)*.6));
-  const rivals=players.filter(item=>Number(item.id)!==Number(player.id)).slice(0,8).map(item=>(item.loadout||"vortex")+":"+Number(item.score||0)).join(","),leaderScore=Number(players[0]?.score||0);
-  return '<div class="mj-game-scene mj-racing-scene '+(phase==="revealed"?(correct===true?"is-boost":correct===false?"is-slow":""):"")+'" data-loadout="'+(player.loadout||"falcon")+'" data-progress="'+progress+'" data-rank="'+rank+'" data-rivals="'+rivals+'" data-leader-score="'+leaderScore+'"><div class="mj-race-sky"><span class="mj-race-sun"></span><i class="mj-race-hill hill-a"></i><i class="mj-race-hill hill-b"></i></div><div class="mj-race-track"><div class="mj-race-barrier barrier-left"></div><div class="mj-race-barrier barrier-right"></div><div class="mj-race-lane lane-one"></div><div class="mj-race-lane lane-two"></div><div class="mj-race-car rival rival-one">'+(loadoutVisual("racing",players[1]?.loadout)||loadoutVisual("racing","vortex"))+'</div><div class="mj-race-car rival rival-two">'+(loadoutVisual("racing",players[2]?.loadout)||loadoutVisual("racing","falcon"))+'</div><div class="mj-race-car player-car" style="--car-progress:'+progress+'%">'+car+'</div><div class="mj-race-speed-lines"></div><div class="mj-race-finish">FINISH</div></div><div class="mj-race-hud"><span>🏁 POG‘ONA <b>'+(rank+1)+'</b></span><span>⚡ BALL <b>'+Number(player.score||0).toLocaleString()+'</b></span><span>'+(phase==="revealed"?(correct===true?"TURBO! 🚀":correct===false?"TEZLIK KAMAYDI":"DAVOM ETAMIZ"):"TO‘G‘RI JAVOB = TEZLIK ↑")+'</span></div></div>';
+  const racers=players.some(item=>Number(item.id)===Number(player.id))?players:[...players,{...player,score:Number(player.score||0)}];
+  const sorted=racers.slice().sort((a,b)=>Number(b.score||0)-Number(a.score||0)),myRank=Math.max(0,sorted.findIndex(item=>Number(item.id)===Number(player.id))),score=Number(player.score||0),max=Math.max(1,...sorted.map(item=>Number(item.score||0)));
+  const racerData=esc(JSON.stringify(sorted.map(item=>({id:item.id,nickname:item.nickname,loadout:item.loadout||"falcon",score:Number(item.score||0)}))));
+  return '<section class="mj-game-scene mj-racing-scene '+(phase==="revealed"?(correct===true?"is-boost":correct===false?"is-slow":""):"")+'" data-racers="'+racerData+'" data-player-id="'+Number(player.id)+'"><canvas class="mj-race-world" aria-label="Barcha o‘yinchilar birga qatnashadigan Formula poyga trassasi"></canvas><div class="mj-race-topline"><span>MUDARRIS GRAND PRIX</span><b>'+String(index+1).padStart(2,"0")+' / '+String(data?.questions?.length||1).padStart(2,"0")+'</b></div><div class="mj-race-live-badge"><i></i> LIVE CIRCUIT</div><div class="mj-race-position-card"><small>SENING O‘RNING</small><strong>'+(phase==="revealed"?"#"+(myRank+1):"—")+'</strong><span>'+score.toLocaleString("uz-UZ")+' BALL</span></div><div class="mj-race-bottomline"><strong>'+esc(player.nickname)+'</strong><span>'+(phase==="revealed"?(correct===true?"TURBO BOOST!":correct===false?"KEYINGI SAVOLDA QAYT!":"POYGA DAVOM ETADI"):"JAVOB BILAN TEZLASH")+'</span></div></section>';
  }
  return "";
 }
@@ -194,68 +203,9 @@ function studentLeaderboard(){
  if(!list.length)return "";
  return '<section class="mj-student-leaderboard"><div class="mj-student-leaderboard-head"><span>🏆 SINFDAGI REYTING</span><small>TOP '+list.length+'</small></div><div class="mj-student-leaderboard-list">'+list.map((item,index)=>'<div class="mj-student-rank '+(Number(item.id)===Number(player.id)?"is-me":"")+' rank-'+(index+1)+'"><b class="mj-rank-position">'+(index===0?"👑":index+1)+'</b><span class="mj-rank-avatar">'+avatarIcon(item.avatar)+'</span><span class="mj-rank-name">'+(loadoutFor(data.session.mode,item.loadout)?.icon?loadoutFor(data.session.mode,item.loadout).icon+" ":"")+esc(item.nickname)+(Number(item.id)===Number(player.id)?' <small>SEN</small>':"")+'</span><strong>'+Number(item.score||0).toLocaleString()+'</strong></div>').join("")+'</div></section>';
 }
-function setupShooterAim(){
- const scene=document.querySelector(".mj-shooter-scene"),reticle=scene?.querySelector(".mj-shooter-crosshair"),enemy=scene?.querySelector(".mj-shooter-enemy"),hero=scene?.querySelector(".mj-shooter-hero");
- if(!scene||!reticle||!enemy||!hero)return;
- scene.tabIndex=0;
- const storageKey="mj-shooter-arcade-"+pin+"-"+player.id;
- let progress={ammo:24,kills:0,score:0,hp:100,enemyIndex:0};
- try{progress={...progress,...JSON.parse(sessionStorage.getItem(storageKey)||"{}")}}catch{}
- const enemies=["Qaroqchi","Cho‘l banditi","Temir niqob","Soya boshliq","So‘nggi raqib"];
- const hud=document.createElement("div");hud.className="mj-shooter-arcade-hud";
- hud.innerHTML='<div><span>NISHONLAR</span><strong data-shot-kills>0</strong></div><div><span>ANIQ ZARBALAR</span><strong data-shot-score>0</strong></div><div><span>O‘Q</span><strong data-shot-ammo>24</strong></div><small data-shot-help>Raqibni nishonga ol va bosib ot</small>';
- scene.append(hud);
- const hpBar=enemy.querySelector(".mj-enemy-health i"),enemyName=enemy.querySelector("small"),help=hud.querySelector("[data-shot-help]");
- const updateHud=()=>{
-  hud.querySelector("[data-shot-kills]").textContent=progress.kills;hud.querySelector("[data-shot-score]").textContent=progress.score;hud.querySelector("[data-shot-ammo]").textContent=progress.ammo;
-  if(hpBar)hpBar.style.width=progress.hp+"%";if(enemyName)enemyName.textContent=enemies[progress.enemyIndex%enemies.length];
-  try{sessionStorage.setItem(storageKey,JSON.stringify(progress))}catch{}
- };
- const aim=event=>{
-  const bounds=scene.getBoundingClientRect();
-  reticle.style.left=Math.max(18,Math.min(bounds.width-18,event.clientX-bounds.left))+"px";
-  reticle.style.top=Math.max(18,Math.min(bounds.height-18,event.clientY-bounds.top))+"px";scene.classList.add("is-aiming");
- };
- const fire=event=>{
-  if(event.target.closest(".mj-shooter-arcade-hud"))return;
-  aim(event);
-  if(progress.ammo<=0){help.textContent="O‘Q TUGADI · QAYTA O‘QLANMOQDA";return}
-  progress.ammo--;
-  const bounds=scene.getBoundingClientRect(),target=enemy.getBoundingClientRect(),heroBounds=hero.getBoundingClientRect(),x=event.clientX,y=event.clientY;
-  const inside=x>=target.left-8&&x<=target.right+8&&y>=target.top-8&&y<=target.bottom+8;
-  const near=Math.hypot(x-(target.left+target.width/2),y-(target.top+target.height/2))<Math.max(30,target.width*.38);
-  const startX=heroBounds.left-bounds.left+heroBounds.width*.7,startY=heroBounds.top-bounds.top+heroBounds.height*.35;
-  const shot=document.createElement("i");shot.className="mj-shooter-live-shot";shot.style.left=startX+"px";shot.style.top=startY+"px";
-  shot.style.setProperty("--shot-x",(x-bounds.left-startX)+"px");shot.style.setProperty("--shot-y",(y-bounds.top-startY)+"px");
-  scene.append(shot);shot.addEventListener("animationend",()=>shot.remove(),{once:true});
-  reticle.classList.remove("is-fired");void reticle.offsetWidth;reticle.classList.add("is-fired");
-  if(inside||near){
-   progress.hp=Math.max(0,progress.hp-34);progress.score+=25;help.textContent="ANIQ ZARBA! +25";
-   enemy.classList.remove("is-target-hit");void enemy.offsetWidth;enemy.classList.add("is-target-hit");
-   if(progress.hp===0){
-    progress.kills++;progress.score+=75;progress.hp=100;progress.enemyIndex++;
-    help.textContent="RAQIB YENGILDI! KEYINGI NISHON";
-    const label=scene.querySelector(".mj-shooter-battle-label span");if(label)label.textContent="RAQIB "+(progress.kills+Number(player.enemies_defeated||0)+1);
-   }
-  }else help.textContent="NISHONNI ANIQLA · QAYTA URIN";
-  if(progress.ammo===0)setTimeout(()=>{progress.ammo=24;help.textContent="YANGI O‘QLAR TAYYOR";updateHud()},850);
-  updateHud();
- };
- scene.addEventListener("pointermove",aim,{passive:true});
- scene.addEventListener("pointerdown",event=>{scene.focus({preventScroll:true});fire(event)});
- scene.addEventListener("pointerleave",()=>scene.classList.remove("is-aiming"),{passive:true});
- scene.addEventListener("keydown",event=>{
-  if(["ArrowLeft","KeyA","ArrowRight","KeyD"].includes(event.code)){
-   event.preventDefault();const direction=event.code==="ArrowLeft"||event.code==="KeyA"?-1:1;
-   const current=Number(scene.dataset.heroLane||0),next=Math.max(-24,Math.min(24,current+direction*8));
-   scene.dataset.heroLane=String(next);hero.style.transform="translateX("+next+"px)";
-  }
- });
- updateHud();
-}
 function question(q){
  lastScreen="question";
- const mode=data.session.mode||"classic",modeNames={classic:"KLASSIK",team:"JAMOAVIY",marble:"SHARLAR POYGASI",racing:"AVTOMOBIL POYGASI",shooter:"MERGANLAR JANGI",accuracy:"ANIQLIK",confidence:"ISHONCH",kingdoms:"RANGLAR QIROLLIGI",tower:"ENG BALAND MINORA",treasure:"XAZINA IZLOVCHILAR",submarine:"SUVOSTI JAMOASI",robot:"ROBOTLAR POYGASI",cosmic:"KOINOT SARI"},modeLabel=modeNames[mode]||"KLASSIK",type=q.type||"quiz",mediaHtml=studentMediaMarkup(q.media||"");
+ const mode=data.session.mode||"classic",modeNames={classic:"KLASSIK",racing:"F1 POYGASI",shooter:"SHOOTER ARENA"},modeLabel=modeNames[mode]||"KLASSIK",type=q.type||"quiz",mediaHtml=studentMediaMarkup(q.media||"");
  selectedMultiAnswers=new Set();puzzleOrder=[];let answerHtml="";
  if(type==="slider"){const min=Number(q.options?.[0]?.text??0),max=Number(q.options?.[1]?.text??100),step=Number(q.options?.[2]?.text??1),lo=Number.isFinite(min)?min:0,hi=Number.isFinite(max)&&max>lo?max:100,st=Number.isFinite(step)&&step>0?step:1,mid=lo+(hi-lo)/2;answerHtml='<form id="slider-answer-form" class="student-slider-answer"><div class="student-slider-value" id="slider-value">'+mid+'</div><input id="slider-input" type="range" min="'+lo+'" max="'+hi+'" step="'+st+'" value="'+mid+'"><div class="student-slider-limits"><span>'+lo+'</span><span>'+hi+'</span></div><button class="student-primary-button" type="submit">JAVOBNI YUBORISH →</button></form>'}
  else if(type==="puzzle"){puzzleOrder=(q.options||[]).map(o=>String(o.text||o));for(let i=puzzleOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[puzzleOrder[i],puzzleOrder[j]]=[puzzleOrder[j],puzzleOrder[i]]}answerHtml='<div class="student-puzzle-answer"><p>Javoblarni to‘g‘ri tartibga keltiring:</p><div id="puzzle-items">'+puzzleOrder.map((v,i)=>'<div class="student-puzzle-row"><span>'+(i+1)+'</span><strong>'+esc(v)+'</strong><div><button type="button" data-puzzle-move="'+i+'" data-direction="-1" '+(i===0?'disabled':'')+'>↑</button><button type="button" data-puzzle-move="'+i+'" data-direction="1" '+(i===puzzleOrder.length-1?'disabled':'')+'>↓</button></div></div>').join('')+'</div><button type="button" id="submit-puzzle" class="student-primary-button">TARTIBNI YUBORISH →</button></div>'}
@@ -264,7 +214,7 @@ function question(q){
  else if(["type_answer","open_ended","word_cloud","brainstorm"].includes(type)){const word=type==="word_cloud",open=type==="open_ended",brain=type==="brainstorm",max=word?20:open?250:brain?400:type==="type_answer"?20:75,field=open||brain?'<textarea class="field" id="typed-answer" maxlength="'+max+'" rows="'+(brain?4:3)+'" placeholder="'+(brain?"Har bir g‘oyani yangi qatordan yozing…":open?"Fikringizni yozing…":"Javobingizni yozing…")+'"></textarea>':'<input class="field" id="typed-answer" maxlength="'+max+'" placeholder="'+(word?"Bitta so‘z yoki qisqa ibora…":type==="type_answer"?"Qisqa javob (20 belgigacha)…":"Javobingizni yozing…")+'" autocomplete="off">';answerHtml='<form id="answer-form" class="typed-answer student-typed-answer">'+field+'<button class="student-primary-button" type="submit"><span>JAVOBNI YUBORISH</span><b>→</b></button></form>'}
  else{answerHtml=(q.options||[]).map((o,i)=>'<button class="answer-tile student-answer-tile '+["red","blue","yellow","green"][i%4]+'" data-answer="'+esc(o.text||o)+'"><span class="answer-symbol">'+["▲","◆","●","■"][i%4]+'</span><span>'+esc(o.text||o)+'</span><b class="student-answer-arrow">→</b></button>').join('')}
  root.innerHTML='<section class="question-wrap student-question-stage mj-question-v2"><div class="question-top student-game-toolbar"><div class="student-game-title"><span class="student-mini-logo">✦</span><span>'+esc(data.session.title)+'</span></div><span class="pill student-mode-pill">'+esc(modeLabel)+'</span><span class="student-pin-badge">PIN '+pin+'</span><div class="student-player-chip"><span>'+avatarIcon(player.avatar)+'</span><b>'+esc(player.nickname)+'</b><i>★ '+Number(player.score||0).toLocaleString()+'</i></div></div><div class="mj-question-v2-card"><div class="mj-question-v2-meta"><span>SAVOL '+(data.session.current_question+1)+' / '+(data.questions?.length||"?")+'</span><span>'+esc(modeLabel)+'</span></div><h1 class="display student-question-title">'+esc(q.prompt)+'</h1>'+(mediaHtml?'<div class="mj-question-v2-media">'+mediaHtml+'</div>':'<div class="mj-question-v2-media mj-question-media-empty"><span>✦</span><small>SAVOLGA DIQQAT QILING</small></div>')+gameScene(mode,"playing")+'<div class="mj-question-v2-timer"><span>QOLGAN VAQT</span><div><i id="timer-fill"></i></div><strong id="timer-number">'+q.time+'</strong></div><div id="answer-area" class="answer-grid student-answer-grid">'+answerHtml+'</div><div id="answer-status" class="answer-status student-answer-status" aria-live="polite"></div></div><div class="student-game-footer"><span>✦ MUDARRIS JOIN</span><span>Javobni tanla — ballarni yut!</span></div></section>';
- if(mode==="shooter")setupShooterAim();
+ 
  const area=$("#answer-area");
  if(type==="quiz"&&q.multi_select){area.querySelectorAll("[data-multi-answer]").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.multiAnswer;if(selectedMultiAnswers.has(v)){selectedMultiAnswers.delete(v);b.classList.remove("selected")}else{selectedMultiAnswers.add(v);b.classList.add("selected")}$("#submit-multi").disabled=selectedMultiAnswers.size===0}));$("#submit-multi").addEventListener("click",()=>submit(JSON.stringify(Array.from(selectedMultiAnswers))))}
  else if(type==="slider"){const slider=$("#slider-input");slider.addEventListener("input",()=>$("#slider-value").textContent=slider.value);$("#slider-answer-form").onsubmit=e=>{e.preventDefault();submit(slider.value)}}
@@ -277,8 +227,13 @@ function question(q){
 async function submit(answer){
  if(answer===undefined||answer===null||String(answer).trim()===""||answered===data.session.current_question)return;
  answered=data.session.current_question;clearInterval(timer);const area=$("#answer-area");if(area)area.querySelectorAll("button,input,textarea").forEach(x=>x.disabled=true);
- try{const d=await api("answer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,player_id:player.id,answer})});player.score=d.total;if(d.health!==null&&d.health!==undefined)player.health=d.health;if(d.enemies_defeated!==null&&d.enemies_defeated!==undefined)player.enemies_defeated=d.enemies_defeated;sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));const st=$("#answer-status");if(st){st.classList.toggle("is-correct",d.correct===true);st.classList.toggle("is-wrong",d.correct===false);st.classList.toggle("is-recorded",d.correct===null);st.textContent=d.correct===null?"✓ Javobingiz qabul qilindi!":(d.correct?"✓ To‘g‘ri javob! +":"✕ Bu safar noto‘g‘ri. +")+d.points+" ball"}}
- catch(e){answered=-1;const st=$("#answer-status");if(st){st.classList.remove("is-correct","is-wrong");st.textContent=e.message}if(area)area.querySelectorAll("button,input,textarea").forEach(x=>x.disabled=false)}
+ try{
+  await api("answer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,player_id:player.id,answer})});
+  data.player_answer={submitted:true};waitingForReveal();
+ }catch(e){
+  answered=-1;const st=$("#answer-status");if(st){st.classList.remove("is-correct","is-wrong");st.textContent=e.message}
+  if(area)area.querySelectorAll("button,input,textarea").forEach(x=>x.disabled=false);
+ }
 }
 function render(){
  if(!data)return;
@@ -290,6 +245,8 @@ function render(){
  if(data.session.status==="paused"){if(lastScreen!=="paused")paused();return}
  if(data.session.status==="revealed"){if(lastScreen!=="revealed")revealed();return}
  if(data.session.status==="finished"){if(lastScreen!=="finished")finish();return}
+ if(data.player_answer?.submitted){if(lastScreen!=="waiting-reveal")waitingForReveal();return}
+ if(lastScreen==="waiting-reveal"&&answered===data.session.current_question)return;
  const q=data.current_question;
  if(!q){if(lastScreen!=="waiting")waiting();return}
  if(data.session.current_question!==lastQuestion||lastScreen!=="question"){lastQuestion=data.session.current_question;answered=-1;question(q)}
@@ -303,7 +260,7 @@ async function load(){
    else if(lastScreen!=="started"){lastScreen="started";root.innerHTML='<section class="student-card student-state-card student-error-card"><div class="student-state-icon">🚦</div><div class="student-card-eyebrow">O‘YIN BOSHLANIB BO‘LDI</div><h1 class="student-card-title">Kech qoldingmi?</h1><p class="student-card-copy">Bu o‘yin allaqachon boshlangan. O‘qituvchingizdan yangi PIN-kod so‘rang.</p><a href="/" class="student-primary-button student-home-button"><span>BOSHQA PIN KIRITISH</span><b>→</b></a></section>'}
    return;
   }
-  const me=(data.players||[]).find(item=>Number(item.id)===Number(player.id));if(me)player={...player,...me};
+  const me=(data.players||[]).find(item=>Number(item.id)===Number(player.id));if(me){const visible=["revealed","finished"].includes(data.session.status);player={...player,...me,score:visible?Number(me.score||0):Number(player.score||0),health:visible?Number(me.health??100):Number(player.health??100),enemies_defeated:visible?Number(me.enemies_defeated||0):Number(player.enemies_defeated||0)};if(visible)sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player))}
   render();
  }catch(error){
   const invalidPin=error.message==="O‘yin PIN-kodi topilmadi.",screen=invalidPin?"invalid-pin":"load-error";

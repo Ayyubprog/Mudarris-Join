@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jonli viktorina — MUDARRIS JOIN</title>
 <link rel="icon" type="image/svg+xml" href="/mudarris-book-purple.svg">
-<link rel="stylesheet" href="/theme.css?v=student-game-v3-20261101">
+<link rel="stylesheet" href="/theme.css?v=gp-dashboard-20261102">
 <meta name="theme-color" content="#25113f">
 <style>
 :root{--live-bg:#211039;--live-purple:#6130a0;--live-ink:#291a3d;--live-muted:#857991;--live-line:#eee8f4;--live-white:#fff;--live-green:#20a36d}
@@ -110,6 +110,40 @@ body.live-host{margin:0;min-height:100vh;background:radial-gradient(ellipse at 1
 @media(max-width:570px){.live-header{padding:9px 11px;gap:7px}.live-brand{font-size:11px;gap:7px}.live-brand-mark{width:29px;height:29px}.live-header-actions{gap:5px}.live-header-button{height:32px;padding:0 8px;font-size:8px}.live-pin-pill{gap:5px;padding:5px 8px}.live-pin-label{font-size:6px}.live-pin-number{font-size:15px;letter-spacing:.12em}.live-main{padding:12px 10px 22px}.live-lobby{gap:10px}.live-invite-panel,.live-players-panel{padding:20px 16px;border-radius:15px}.live-invite-panel{min-height:360px}.live-lobby-title{font-size:34px}.live-big-pin{font-size:58px;letter-spacing:.12em}.live-player-wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.live-player-chip{padding:7px;gap:6px}.live-player-avatar{width:29px;height:29px;font-size:18px}.live-player-chip strong{font-size:9px}.live-stage-footer{align-items:stretch;padding:12px;gap:10px}.live-stage-hint{font-size:9px}.live-controls{width:100%}.live-control-button{flex:1;min-height:42px;padding:0 9px;font-size:10px}.live-question-card{padding:17px 11px;border-radius:14px;min-height:calc(100vh - 185px)}.live-question-prompt{font-size:28px}.live-answer-grid{gap:7px}.live-answer-tile{min-height:90px;padding:10px 8px;border-radius:9px;gap:7px}.live-answer-tile .shape{width:23px;font-size:18px}.live-answer-tile strong{font-size:12px}.live-question-top{gap:7px}.live-timer{min-width:140px}.live-timer-number{width:35px;font-size:19px}.live-podium{gap:5px}.live-podium-item{padding:11px 5px}.live-podium-item strong{font-size:9px}}
 
 .live-player-avatar{overflow:hidden;font-size:0}.live-player-avatar-svg{width:36px;height:36px;display:block}
+
+/* Grand Prix + Arena host visuals */
+.live-main{width:min(1660px,100%);padding:clamp(16px,2.7vw,42px)}
+.live-question-card{width:100%;min-height:calc(100vh - 310px);padding:clamp(22px,3vw,46px);border-radius:25px}
+.live-question-prompt{max-width:1180px;margin:13px auto 24px;font-size:clamp(32px,4vw,56px);line-height:1.08;letter-spacing:-.04em}
+.live-answer-grid{gap:14px}
+.live-answer-tile{min-height:clamp(105px,13vh,150px);border-radius:18px;padding:18px;gap:15px}
+.live-answer-tile strong{font-size:clamp(17px,1.8vw,25px)}
+.mj-host-game-scene{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(230px,.75fr);gap:14px;overflow:hidden;margin:0 0 19px;border:1px solid #ffffff24;border-radius:21px;background:#18122a;box-shadow:0 18px 45px #0003}
+.mj-host-race-art,.mj-host-arena-art{height:clamp(160px,22vh,245px);position:relative;overflow:hidden;background:#25113f}
+.mj-host-race-art img,.mj-host-arena-art img{width:100%;height:100%;display:block;object-fit:cover}
+.mj-host-scene-label{position:absolute;left:16px;bottom:14px;padding:9px 13px;border:1px solid #ffffff40;border-radius:999px;background:#140c29d9;color:#fff;font-size:10px;font-weight:1000;letter-spacing:.12em}
+.mj-host-race-standings{padding:18px 18px 14px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.mj-host-race-standings>div:first-child{display:flex;justify-content:space-between;align-items:center;color:#c9b1e2;font-size:9px;font-weight:1000;letter-spacing:.14em}
+.mj-host-race-standings>div:first-child strong{font-size:23px;color:#fff;letter-spacing:0}
+.mj-host-race-grid{display:flex;flex-direction:column;gap:7px}
+.mj-host-race-grid>div{display:grid;grid-template-columns:27px minmax(0,1fr) auto;align-items:center;gap:9px;padding:8px 10px;border:1px solid #ffffff18;border-radius:10px;background:#ffffff0b;color:#fff}
+.mj-host-race-grid b{color:#ffd36d;font-size:12px}
+.mj-host-race-grid span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:900}
+.mj-host-race-grid strong{font-size:11px;color:#d8c8e8}
+.mj-host-arena-stats{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center;color:#fff}
+.mj-host-arena-stats strong{font-size:42px;font-weight:1000;line-height:1}
+.mj-host-arena-stats span{font-size:10px;color:#cfbce4;font-weight:1000;letter-spacing:.15em}
+.mj-host-arena-stats p{max-width:220px;margin:0;color:#ddd1ec;font-size:12px;line-height:1.6}
+.live-round-leaderboard{margin:22px 0;padding:20px;border:1px solid #e9e1f1;border-radius:19px;background:#faf7fd}
+.live-round-leaderboard-title{font-size:13px;letter-spacing:.08em}
+.live-round-rank{min-height:54px;padding:10px 13px;border-radius:12px}
+.live-round-rank strong{font-size:14px}
+.live-round-rank em{font-size:13px}
+.live-stage-footer{padding:17px 20px}
+.live-control-button{min-height:48px;padding:0 19px;font-size:12px}
+@media(max-width:800px){.mj-host-game-scene{grid-template-columns:1fr}.mj-host-race-art,.mj-host-arena-art{height:190px}.mj-host-race-standings{padding:12px 15px}.mj-host-race-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.live-main{padding:10px 8px 22px}.live-question-card{padding:16px 11px;min-height:unset}.live-question-prompt{font-size:28px}.live-answer-tile{min-height:90px;padding:11px 8px}.live-answer-tile strong{font-size:13px}.mj-host-race-art,.mj-host-arena-art{height:145px}.mj-host-race-grid>div{padding:6px}.live-question-shell{gap:10px}}
+
 </style>
 </head>
 <body class="live-host">
@@ -126,6 +160,6 @@ body.live-host{margin:0;min-height:100vh;background:radial-gradient(ellipse at 1
 <div class="live-error">Jonli o‘yin yuklanmoqda…</div>
 </main>
 <script src="/avatars.js?v=special-avatars-20261101"></script>
-<script src="/host.js?v=uzbek-labels-20261102" defer></script>
+<script src="/host.js?v=grand-prix-host-20261102" defer></script>
 </body>
 </html>

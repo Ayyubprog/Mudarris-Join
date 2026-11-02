@@ -5,7 +5,7 @@ const root=$("#host-root");
 const pin=new URLSearchParams(location.search).get("pin")||"";
 const state={data:null,loading:false,timer:null,clock:null,lastHtml:"",autoRevealKey:""};
 const avatarIcon=key=>window.MJAvatars?MJAvatars.render(key,"live-player-avatar-svg"):"🙂";
-const modes={classic:"KLASSIK",team:"JAMOAVIY",accuracy:"ANIQLIK",confidence:"ISHONCH",marble:"SHARLAR POYGASI",racing:"AVTOMOBIL POYGASI",shooter:"MERGANLAR JANGI",kingdoms:"RANGLAR QIROLLIGI",tower:"ENG BALAND MINORA",treasure:"XAZINA IZLOVCHILAR",submarine:"SUVOSTI JAMOASI",robot:"ROBOTLAR POYGASI",cosmic:"KOINOT SARI"};
+const modes={classic:"KLASSIK",racing:"F1 POYGASI",shooter:"SHOOTER ARENA"};
 const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const safeArray=value=>{try{const parsed=JSON.parse(String(value??""));return Array.isArray(parsed)?parsed:null}catch{return null}};
 const colors=["red","blue","yellow","green"],shapes=["▲","◆","●","■"];
@@ -52,7 +52,7 @@ function questionOptions(question,revealed){
  }).join("")+'</div>';
 }
 function playerLoadoutBadge(player){
- const icons={ranger:"🤠",cyber:"🦾",knight:"🛡️",ninja:"🥷",pilot:"🧑‍🚀",falcon:"🏎️",vortex:"🚙",comet:"🚗",titan:"🚘",blaze:"🏁"};
+ const icons={ranger:"🤠",cyber:"🦾",knight:"🛡️",ninja:"🥷",pilot:"🧑‍🚀",falcon:"🏎️",vortex:"🏎️",comet:"🏎️",titan:"🏎️",blaze:"🏎️"};
  return player.loadout?'<span class="live-player-loadout" title="'+esc(player.loadout)+'">'+(icons[player.loadout]||"✦")+'</span>':"";
 }
 function playerWall(players,editable=false){
@@ -64,8 +64,13 @@ function lobbyView(data){
  return '<section class="live-stage"><div class="live-lobby"><section class="live-panel live-invite-panel"><div class="live-kicker">MUDARRIS JOIN · JONLI BELLASHUV</div><h1 class="live-lobby-title">Sinfingizni o‘yinga taklif qiling!</h1><p class="live-lobby-copy">O‘quvchilar telefon yoki kompyuterida saytni ochib, quyidagi PIN-kodni kiritadi. Keyin taxallus va avatarini tanlaydi.</p><div class="live-pin-block"><div class="live-pin-caption">O‘YINGA QO‘SHILISH PIN-KODI</div><div class="live-big-pin">'+esc(pin)+'</div><div class="live-join-url"><span>Sayt:</span><strong>'+esc(location.host)+'</strong><button class="live-pin-copy" type="button" data-copy-pin>Nusxalash</button></div></div><div class="live-invite-tip"><i></i><span>'+(locked?"Kutish xonasi yopilgan — yangi o‘quvchilar kira olmaydi.": "Yangi o‘quvchilar qo‘shilishi bilan ro‘yxat avtomatik yangilanadi.")+'</span></div></section><section class="live-panel live-players-panel"><div class="live-players-head"><h2>O‘yinchilar</h2><span class="live-count"><i></i><b>'+players.length+'</b> / 100</span></div><div class="live-player-wall">'+playerWall(players,true)+'</div></section></div><footer class="live-stage-footer"><div class="live-stage-hint"><strong>'+(players.length?players.length+" nafar o‘quvchi tayyor.":"O‘quvchilarni kutyapmiz.")+'</strong><br>'+(players.length?"Hammasi tayyor bo‘lsa, o‘yinni boshlang.":"Kamida bitta o‘quvchi qo‘shilgach, boshlash tugmasi faollashadi.")+'</div><div class="live-controls"><button class="live-control-button live-secondary" type="button" data-action="'+(locked?"unlock":"lock")+'">'+(locked?"Kirishni ochish":"Kirishni yopish")+'</button><button class="live-control-button live-primary" type="button" data-action="start" '+(!players.length?"disabled":"")+'>▶ O‘yinni boshlash · '+players.length+'</button></div></footer></section>';
 }
 function hostModeScene(mode,index,players){
- if(mode==="shooter")return '<div class="mj-host-game-scene mj-host-shooter"><div class="mj-host-sun"></div><span class="mj-host-mesa"></span><div class="mj-host-battle-title">⚔ SHOOTER ARENA <small>RAQIB '+(index+1)+'</small></div><div class="mj-host-duel-hero">🦸</div><div class="mj-host-duel-enemy">🤠</div><div class="mj-host-battle-ground"></div></div>';
- if(mode==="racing")return '<div class="mj-host-game-scene mj-host-racing"><div class="mj-host-race-hills"></div><div class="mj-host-race-road"><i></i><i></i><b>🏎️</b><em>🚙</em></div><div class="mj-host-race-caption">🏁 RACE CAR · SAVOL '+(index+1)+'</div></div>';
+ const ordered=players.slice().sort((a,b)=>Number(b.score||0)-Number(a.score||0));
+ if(mode==="racing"){
+  return '<section class="mj-host-game-scene mj-host-grand-prix"><div class="mj-host-race-art"><img src="/mode-racing.svg" alt="F1 poyga trassasi"><span class="mj-host-scene-label">MUDARRIS GRAND PRIX · '+(index+1)+'-BOSQICH</span></div><div class="mj-host-race-standings"><div><span>JONLI POYGACHILAR</span><strong>'+players.length+'</strong></div><div class="mj-host-race-grid">'+ordered.slice(0,5).map((p,i)=>'<div><b>'+(i===0?"🏆":i+1)+'</b><span>'+esc(p.nickname)+'</span><strong>'+Number(p.score||0).toLocaleString("uz-UZ")+'</strong></div>').join("")+'</div></div></section>';
+ }
+ if(mode==="shooter"){
+  return '<section class="mj-host-game-scene mj-host-arena"><div class="mj-host-arena-art"><img src="/mode-shooter.svg" alt="Shooter Arena jang maydoni"><span class="mj-host-scene-label">SHOOTER ARENA · '+(index+1)+'-BOSQICH</span></div><div class="mj-host-arena-stats"><div><strong>'+players.length+'</strong><span>JANGCHI</span></div><p>To‘g‘ri javob — zarba. Xato javob — energiya yo‘qotish.</p></div></section>';
+ }
  return "";
 }
 function roundLeaderboard(players){
@@ -77,7 +82,7 @@ function questionView(data,revealed){
  const q=data.current_question,session=data.session,players=data.players||[],index=Number(session.current_question||0),total=data.questions.length,time=Number(q?.time||20);
  if(!q)return '<section class="live-panel live-error">Savol topilmadi. <a href="/teacher.html">Kabinetga qayting</a>.</section>';
  const answerCount=Number(data.answer_stats?.total||0),correctCount=Number(data.answer_stats?.correct||0);
- const free=["poll","word_cloud","open_ended","brainstorm"].includes(q.type);
+ const free=["poll","word_cloud","open_ended","brainstorm","slide"].includes(q.type);
  const typeLabels={quiz:"VIKTORINA",true_false:"TO‘G‘RI / NOTO‘G‘RI",type_answer:"JAVOB YOZISH",puzzle:"TARTIBLASH",slider:"SILJITGICH",poll:"SO‘ROVNOMA",word_cloud:"SO‘ZLAR BULUTI",open_ended:"OCHIQ SAVOL",brainstorm:"G‘OYALAR"};
  let responseHtml="";
  if(revealed&&(free||q.type==="type_answer")){
