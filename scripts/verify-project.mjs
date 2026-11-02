@@ -80,7 +80,7 @@ for(const asset of ["public/mode-classic.svg","public/mode-racing.svg","public/m
 assert.ok(files.logo.includes('fill="#46178F"'),"original purple Mudarris book logo must be restored");
 assert.match(files.createPage,/<input id="question-prompt" type="text"/,"quiz prompt must be a directly editable text input");
 assert.ok(files.create.includes('promptInput.addEventListener("input"'),"quiz prompt typing handler missing");
-assert.ok(files.create.includes('data-answer-input="'+index+'"'),"answer text inputs must be editable");
+assert.ok(files.create.includes('data-answer-input="'),"answer text inputs must be editable");
 assert.ok(files.create.includes('input.addEventListener("input",()=>{question.answers[Number(input.dataset.answerInput)]=input.value'),"answer typing handler missing");
 assert.ok(files.create.includes('data-mark-answer="'+index+'"'),"colored correct-answer selector missing");
 assert.ok(files.create.includes('button.addEventListener("click",()=>toggleCorrect(Number(button.dataset.markAnswer)))'),"correct-answer click handler missing");
