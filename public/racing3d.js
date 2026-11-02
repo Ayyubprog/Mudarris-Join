@@ -11,9 +11,9 @@ function mountDriveControls(root){
  const controls={left:false,right:false,boost:false,brake:false,lane:0,hits:0,lastHit:0};
  root._mjDriveControls=controls;
  const ui=document.createElement("div");ui.className="mj-race-drive-ui";
- ui.innerHTML='<span class="mj-race-drive-tip">A / D yoki ← / → · SPACE = TURBO</span><span class="mj-race-drive-feedback" aria-live="polite">START</span>';root.append(ui);
+ ui.innerHTML='<span class="mj-race-drive-tip">A / D yoki ← / → · PROBEL = TEZLASHISH</span><span class="mj-race-drive-feedback" aria-live="polite">TAYYOR</span>';root.append(ui);
  const touch=document.createElement("div");touch.className="mj-race-touch-controls";
- touch.innerHTML='<div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="left" aria-label="Chapga burilish">◀</button><button type="button" class="mj-race-touch-button" data-drive="right" aria-label="O‘ngga burilish">▶</button></div><div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="brake" aria-label="Tormoz">BRAKE</button><button type="button" class="mj-race-touch-button" data-drive="boost" aria-label="Turbo">TURBO</button></div>';
+ touch.innerHTML='<div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="left" aria-label="Chapga burilish">◀</button><button type="button" class="mj-race-touch-button" data-drive="right" aria-label="O‘ngga burilish">▶</button></div><div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="brake" aria-label="Tormoz">TORMOZ</button><button type="button" class="mj-race-touch-button" data-drive="boost" aria-label="Turbo">TEZLA</button></div>';
  root.append(touch);
  const feedback=ui.querySelector(".mj-race-drive-feedback");
  controls.setFeedback=value=>{feedback.textContent=value};
@@ -171,7 +171,7 @@ async function start(){
    if(collision&&now-controls.lastHit>.7){
     controls.lastHit=now;controls.hits++;controls.setFeedback("TO‘SIQ! ×"+controls.hits);
     root.classList.remove("is-hit");void root.offsetWidth;root.classList.add("is-hit");
-   }else if(!collision&&now-controls.lastHit>1.3&&!boost&&!slow)controls.setFeedback("POG‘ONA "+(Number(root.dataset.rank||0)+1));
+   }else if(!collision&&now-controls.lastHit>1.3&&!boost&&!slow)controls.setFeedback("O‘RIN "+(Number(root.dataset.rank||0)+1));
    renderer.render(world,camera);state.frame=requestAnimationFrame(animate);
   };
   animate();
