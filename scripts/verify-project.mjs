@@ -82,7 +82,7 @@ assert.match(files.createPage,/<input id="question-prompt" type="text"/,"quiz pr
 assert.ok(files.create.includes('promptInput.addEventListener("input"'),"quiz prompt typing handler missing");
 assert.ok(files.create.includes('data-answer-input="'),"answer text inputs must be editable");
 assert.ok(files.create.includes('input.addEventListener("input",()=>{question.answers[Number(input.dataset.answerInput)]=input.value'),"answer typing handler missing");
-assert.ok(files.create.includes('data-mark-answer="'+index+'"'),"colored correct-answer selector missing");
+assert.ok(files.create.includes('data-mark-answer="'+index), "colored correct-answer selector missing");
 assert.ok(files.create.includes('button.addEventListener("click",()=>toggleCorrect(Number(button.dataset.markAnswer)))'),"correct-answer click handler missing");
 assert.ok(files.create.includes('qb-answer-correct-label">✓ To‘g‘ri javob'),"selected correct answer must be labeled visibly");
 assert.ok(files.createPage.includes('id="answer-guidance"'),"answer selection guidance must be visible");
