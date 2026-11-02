@@ -3,6 +3,8 @@ import { resolve } from "node:path";
 import assert from "node:assert/strict";
 const read=path=>readFileSync(resolve(process.cwd(),path),"utf8");
 const files={
+ create:read("public/create.js"),
+ createPage:read("public/create.html"),
  backend:read("functions/[[path]].js"),
  student:read("public/play.js"),
  race:read("public/racing3d.js"),
@@ -76,6 +78,16 @@ assert.ok(files.studentCss.includes(".mj-racing-scene{height:clamp(330px,46vh,56
 for(const asset of ["public/mode-classic.svg","public/mode-racing.svg","public/mode-shooter.svg"])
  assert.ok(read(asset).includes("<svg"),"mode illustration missing: "+asset);
 assert.ok(files.logo.includes('fill="#46178F"'),"original purple Mudarris book logo must be restored");
+assert.match(files.createPage,/<input id="question-prompt" type="text"/,"quiz prompt must be a directly editable text input");
+assert.ok(files.create.includes('$("#question-prompt").addEventListener("input"'),"quiz prompt typing handler missing");
+assert.ok(files.create.includes('data-answer-input="'+index+'"'),"answer text inputs must be editable");
+assert.ok(files.create.includes('input.addEventListener("input",()=>{question.answers[Number(input.dataset.answerInput)]=input.value'),"answer typing handler missing");
+assert.ok(files.create.includes('data-mark-answer="'+index+'"'),"colored correct-answer selector missing");
+assert.ok(files.create.includes('button.addEventListener("click",()=>toggleCorrect(Number(button.dataset.markAnswer)))'),"correct-answer click handler missing");
+assert.ok(files.create.includes('qb-answer-correct-label">✓ To‘g‘ri javob'),"selected correct answer must be labeled visibly");
+assert.ok(files.createPage.includes('id="answer-guidance"'),"answer selection guidance must be visible");
+assert.ok(files.theme.includes("body.qb-page .qb-answer-row{\n  position:relative;\n  min-height:132px"),"answer cards must be visibly larger");
+assert.ok(files.theme.includes("pointer-events:auto"),"quiz text fields must accept pointer input");
 assert.ok(files.dashboard.includes("mudarris-book-purple.svg"),"dashboard must use Mudarris book mark");
 assert.ok(files.studentPage.includes("grand-prix-circuit-20261102"),"3D race cache key missing");
 assert.ok(files.hostPage.includes("grand-prix-host-20261102"),"host visual cache key missing");
