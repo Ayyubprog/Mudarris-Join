@@ -288,7 +288,7 @@ function renderAnswerEditor(question){
       const locked=question.type==="true_false";
       return '<div class="qb-answer-row answer-'+index%4+' '+(selected?"is-correct":"")+'" data-answer-index="'+index+'">'+
         '<button type="button" class="qb-answer-mark" data-mark-answer="'+index+'" '+(question.type==="poll"?"disabled":"")+' aria-label="'+(selected?"To‘g‘ri javob":"To‘g‘ri deb belgilash")+'" title="'+(question.type==="poll"?"So‘rovnoma javoblari baholanmaydi":"To‘g‘ri javobni belgilash")+'">'+
-          (question.type==="poll"?'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>':selected?'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>':'<span class="qb-answer-letter">'+String.fromCharCode(65+index)+'</span>')+
+          (question.type==="poll"?'<span class="qb-answer-letter">'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>':selected?'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>':'<span class="qb-answer-letter">'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>')+
         '</button>'+
         '<input type="text" class="qb-answer-input" data-answer-input="'+index+'" maxlength="75" value="'+escapeHtml(answer)+'" placeholder="Javob varianti '+(index+1)+'" '+(locked?"disabled":"")+'>'+
         (question.type!=="true_false"&&question.answers.length>2?'<button type="button" class="qb-answer-remove" data-remove-answer="'+index+'" aria-label="Javobni olib tashlash">×</button>':'')+
@@ -537,7 +537,7 @@ function renderPreview(){
   if(["quiz","true_false","poll"].includes(question.type)){
     answers=question.answers.filter(answer=>answer.trim()).map((answer,index)=>{
       const correct=question.correct.includes(index);
-      return '<div class="qb-preview-answer answer-'+index%4+'"><span>'+String.fromCharCode(65+index)+'</span>'+escapeHtml(answer)+(question.type!=="poll"&&correct?'<b>✓</b>':'')+'</div>';
+      return '<div class="qb-preview-answer answer-'+index%4+'"><span>'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>'+escapeHtml(answer)+(question.type!=="poll"&&correct?'<b>✓</b>':'')+'</div>';
     }).join("");
   }else if(question.type==="puzzle"){
     answers=question.answers.map((answer,index)=>'<div class="qb-preview-puzzle"><b>'+(index+1)+'</b>'+escapeHtml(answer)+'</div>').join("");
