@@ -694,6 +694,7 @@ function bindEvents(){
   });
   document.addEventListener("keydown",event=>{
     if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="s"){event.preventDefault();saveQuiz()}
+    if((event.ctrlKey||event.metaKey)&&event.key==="Enter"){event.preventDefault();openPreview()}
     if(event.key==="Escape")closeModal();
   });
   window.addEventListener("beforeunload",event=>{

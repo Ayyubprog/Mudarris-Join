@@ -1,28 +1,9 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/api/:path*",
-      "destination": "https://mudarris-join-api.mudarrisdevuz.workers.dev/api/:path*"
-    },
-    {
-      "source": "/login",
-      "destination": "/login.html"
-    },
-    {
-      "source": "/teacher",
-      "destination": "/teacher.html"
-    },
-    {
-      "source": "/host",
-      "destination": "/host.html"
-    },
-    {
-      "source": "/modes",
-      "destination": "/modes.html"
-    },
-    {
-      "source": "/play",
-      "destination": "/play.html"
+      "source": "/:path*",
+      "destination": "https://mudarris-join.pages.dev/:path*",
+      "permanent": false
     }
   ]
 }

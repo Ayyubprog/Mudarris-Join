@@ -1188,3 +1188,40 @@ body.student-home{
 .mj-final-podium-item.place-2>i{background:linear-gradient(90deg,#b8c0d0,#e2e6ed)}
 .mj-final-podium-item.place-3>i{background:linear-gradient(90deg,#c68f69,#e9c5a8)}
 @media(max-width:420px){.mj-final-podium{gap:5px}.mj-final-podium-item{padding:9px 3px 0}.mj-final-podium-avatar{width:52px;height:52px;border-radius:15px}.mj-final-podium-avatar .mj-avatar-art{width:49px;height:49px}.mj-final-podium-item>strong{font-size:9px}.mj-final-podium-item>b{font-size:12px}}
+
+
+/* 2D Shooter: live aim reticle and pointer/touch feedback. */
+.mj-shooter-scene{touch-action:pan-y}
+.mj-shooter-crosshair{position:absolute;z-index:8;left:50%;top:52%;width:34px;height:34px;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;filter:drop-shadow(0 1px 3px #152033);transition:opacity .12s ease}
+.mj-shooter-crosshair:before,.mj-shooter-crosshair:after{content:"";position:absolute;left:50%;top:50%;background:#fff;transform:translate(-50%,-50%)}
+.mj-shooter-crosshair:before{width:48px;height:2px}
+.mj-shooter-crosshair:after{height:48px;width:2px}
+.mj-shooter-scene.is-aiming .mj-shooter-crosshair{opacity:.9}
+.mj-shooter-crosshair.is-fired{animation:mjCrosshairFire .22s ease}
+@keyframes mjCrosshairFire{50%{scale:1.35;border-color:#ffe38a;filter:drop-shadow(0 0 9px #ffe38a)}}
+.mj-shooter-battle-label small{display:block;margin-top:3px;color:#fff9;font-size:7px;letter-spacing:.1em}
+.mj-shooter-scene.is-aiming{cursor:crosshair}
+
+/* 3D Race: keyboard and touch controls. */
+.mj-racing-scene{outline:none;touch-action:pan-y}
+.mj-racing-scene:focus-visible{outline:3px solid #f8d66f;outline-offset:3px}
+.mj-race-drive-ui{position:absolute;z-index:6;inset:9px 9px auto;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}
+.mj-race-drive-tip,.mj-race-drive-feedback{padding:6px 9px;border:1px solid #ffffffa8;border-radius:9px;background:#172338c9;color:#fff;font-size:8px;font-weight:1000;letter-spacing:.04em;box-shadow:0 3px 12px #17233830}
+.mj-race-drive-feedback{color:#ffeaa1;min-width:78px;text-align:center}
+.mj-race-touch-controls{position:absolute;z-index:9;inset:auto 10px 38px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;pointer-events:none}
+.mj-race-touch-group{display:flex;gap:7px;pointer-events:auto}
+.mj-race-touch-button{width:47px;height:45px;display:grid;place-items:center;border:1px solid #ffffffb8;border-radius:13px;background:#172338ba;color:#fff;font:1000 16px/1 system-ui,sans-serif;box-shadow:0 5px 14px #17233838;backdrop-filter:blur(8px);touch-action:none;user-select:none}
+.mj-race-touch-button[data-drive="boost"]{width:64px;background:linear-gradient(145deg,#ed9a33,#d94e40);font-size:9px;letter-spacing:.06em}
+.mj-race-touch-button[data-drive="brake"]{width:58px;background:#273751e8;font-size:9px}
+.mj-race-touch-button.is-pressed{transform:translateY(2px) scale(.96);background:#6851c5;box-shadow:0 1px 5px #17233855}
+.mj-racing-scene.is-hit{animation:mjRaceHit .28s ease}
+@keyframes mjRaceHit{30%{filter:saturate(1.7) brightness(1.2)}70%{filter:saturate(.7)}}
+.mj-racing-scene.has-webgl .mj-race-touch-controls{bottom:12px}
+@media(pointer:fine){.mj-race-touch-controls{opacity:.88}.mj-race-touch-button{width:40px;height:37px;border-radius:10px}}
+@media(max-width:560px){
+ .mj-race-drive-tip{font-size:7px;max-width:56%}
+ .mj-race-touch-controls{inset:auto 7px 8px}
+ .mj-race-touch-button{width:43px;height:42px}
+ .mj-race-touch-button[data-drive="boost"]{width:56px}
+}
+@media(prefers-reduced-motion:reduce){.mj-shooter-crosshair.is-fired,.mj-racing-scene.is-hit{animation:none}}

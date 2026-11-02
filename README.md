@@ -23,7 +23,7 @@ Teacher-owned quizzes, classes, sessions and reports are scoped to the signed-in
 
 - Cloudflare Pages for the web application
 - Cloudflare Pages advanced-mode Worker (built from `functions/[[path]].js`) for the Pages API
-- Separate Cloudflare Worker in `cloudflare-worker/worker.js` for the Vercel API rewrite
+- Vercel is a legacy entry point that redirects visitors to the canonical Cloudflare Pages domain. The standalone API Worker remains in the repository for compatibility but is not part of the production login flow.
 - Cloudflare D1 for teachers, quizzes, questions, classes, sessions, players and answers
 - GitHub repository: https://github.com/Ayyubprog/Mudarris-Join
 
@@ -37,7 +37,7 @@ The Pages Google OAuth callback URL is:
 
 `https://mudarris-join.pages.dev/api/auth/google/callback`
 
-The separate Worker uses `cloudflare-worker/wrangler.toml`; its `APP_ORIGIN` is currently the Vercel application URL.
+The canonical application origin is `https://mudarris-join.pages.dev`. The Vercel domain redirects the browser to this origin so the Google OAuth callback and secure session cookies stay on the same host.
 
 ## Database
 
@@ -45,4 +45,4 @@ The schema is in `migrations/0004_cloudflare_d1.sql`. It has already been applie
 
 ## Deployment
 
-GitHub Actions builds and deploys the Cloudflare Pages site and separately deploys the API Worker when the relevant source files change. The workflow requires the repository secret `CLOUDFLARE_API_TOKEN` with permission to deploy Pages and Workers.
+GitHub Actions builds, syntax-checks and deploys the Cloudflare Pages site and Pages Functions. The `CLOUDFLARE_API_TOKEN` repository secret needs Pages deployment permission. The standalone Worker is no longer deployed by this workflow because the production application uses the Pages Functions API directly.

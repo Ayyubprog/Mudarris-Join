@@ -7,7 +7,6 @@ on:
     paths:
       - "public/**"
       - "functions/**"
-      - "cloudflare-worker/**"
       - "scripts/**"
       - "migrations/**"
       - "wrangler.toml"
@@ -46,8 +45,3 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 9e739c95393369e7dbe6bc2cac5899b1
 
-      - name: Deploy standalone API Worker
-        run: npx --yes wrangler deploy --config cloudflare-worker/wrangler.toml
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 9e739c95393369e7dbe6bc2cac5899b1

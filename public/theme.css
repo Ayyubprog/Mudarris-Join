@@ -1861,3 +1861,33 @@ body.mj-dashboard .mj-report-symbol svg{width:17px;height:17px;fill:none;stroke:
 .live-podium-item.first .live-podium-avatar{border-color:#f5df9a;box-shadow:0 0 0 4px #f5df9a44,0 8px 20px #27134116}
 .live-podium-item{animation:mjRankEntrance .45s ease both}
 .live-podium-item.second{animation-delay:.08s}.live-podium-item.third{animation-delay:.16s}
+
+
+/* MUDARRIS JOIN teacher dashboard: stronger school identity. */
+body.mj-dashboard .mj-topbar{height:82px;min-height:82px;padding-left:30px;padding-right:30px;gap:24px}
+body.mj-dashboard .mj-brand{min-width:260px;gap:14px}
+body.mj-dashboard .mj-logo{width:56px;height:56px;padding:4px;border-radius:15px;box-shadow:0 5px 18px #11051f38}
+body.mj-dashboard .mj-wordmark{font-size:24px;letter-spacing:-.045em}
+body.mj-dashboard .mj-sidebar-footer img{width:34px;height:34px;object-fit:contain}
+@media(max-width:900px){
+ body.mj-dashboard .mj-topbar{padding-left:18px;padding-right:18px;gap:13px}
+ body.mj-dashboard .mj-brand{min-width:220px}
+}
+@media(max-width:760px){
+ body.mj-dashboard .mj-topbar{height:auto;min-height:70px;padding:9px 13px;gap:8px}
+ body.mj-dashboard .mj-brand{min-width:0;gap:10px}
+ body.mj-dashboard .mj-logo{width:49px;height:49px;border-radius:13px}
+ body.mj-dashboard .mj-wordmark{font-size:21px}
+}
+
+/* Quiz creator polish: preserve the current fast three-panel workflow. */
+.qb-topbar{min-height:74px}
+.qb-brand-mark{width:42px;height:42px;border-radius:12px}
+.qb-back{width:38px;height:38px;border-radius:11px}
+.qb-question-card{border:1px solid #e5eaf3;background:linear-gradient(160deg,#fff 0%,#fbfcff 100%)}
+.qb-prompt-area textarea{transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+.qb-prompt-area textarea:focus{border-color:#6b8fe8;background:#fff;box-shadow:0 0 0 4px #6b8fe81c;outline:none}
+.qb-answer-row{transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.qb-answer-row:hover{transform:translateY(-1px);box-shadow:0 6px 16px #263f6810}
+.qb-question-item:focus-visible,.qb-answer-mark:focus-visible,.qb-icon-action:focus-visible{outline:3px solid #7ca4f5;outline-offset:2px}
+@media(max-width:760px){.qb-topbar{min-height:62px}.qb-brand-mark{width:35px;height:35px}.qb-back{width:33px;height:33px}}
