@@ -44,13 +44,12 @@
       <div class="mj-sidebar-section-label">ISH MAYDONI</div>
       <button class="mj-side-link active" data-view="overview"><span class="mj-side-icon">⌂</span><span>Bosh sahifa</span></button>
       <button class="mj-side-link" data-view="games"><span class="mj-side-icon">▤</span><span>Viktorinalarim</span><span class="mj-nav-count" id="nav-game-count">0</span></button>
-      <button class="mj-side-link" data-view="classes"><span class="mj-side-icon">♧</span><span>Sinflarim</span></button>
-      <button class="mj-side-link" data-view="reports"><span class="mj-side-icon">▥</span><span>Hisobotlar</span></button>
+            <button class="mj-side-link" data-view="reports"><span class="mj-side-icon">▥</span><span>Hisobotlar</span></button>
       <button class="mj-side-link" data-view="discover"><span class="mj-side-icon">✧</span><span>O‘yin rejimlari</span></button>
       <div class="mj-sidebar-bottom">
         <div class="mj-sidebar-promo">
           <span>✦</span><strong>Darsni jonlantiring</strong>
-          <p>O‘quvchilaringiz bilan jonli bilim bellashuvini boshlang.</p>
+          <p>Yangi viktorina yarating va jonli bilim bellashuvini boshlang.</p>
           <button data-action="create">Viktorina yaratish <b>→</b></button>
         </div>
         <div class="mj-sidebar-footer">
@@ -63,7 +62,7 @@
     <main class="mj-dashboard-main">
       <section id="view-overview" class="mj-view">
         <div class="mj-dashboard-intro">
-          <div><span class="mj-eyebrow">O‘QITUVCHI MARKAZI</span><h1><span id="greeting-text">Xayrli kun</span>, <span id="welcome-name">O‘qituvchi</span>!</h1><p>Bugungi darslaringiz va sinfingiz faolligi bir joyda.</p></div>
+          <div><span class="mj-eyebrow">O‘QITUVCHI MARKAZI</span><h1><span id="greeting-text">Xayrli kun</span>, <span id="welcome-name">O‘qituvchi</span>!</h1><p>Bugungi viktorinalaringiz va o‘yinlar faolligi bir joyda.</p></div>
           <div class="mj-date-chip"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span id="dashboard-date">Bugun</span></div>
         </div>
 
@@ -71,10 +70,10 @@
           <div class="mj-welcome-copy">
             <span class="mj-banner-kicker"><i></i> MUDARRIS SINF O‘YINLARI</span>
             <h2>Bilimni qiziqarli bellashuvga aylantiring.</h2>
-            <p>Viktorina yarating, sinfingizni ulang va natijalarni jonli kuzating.</p>
+            <p>Viktorina yarating, o‘yin rejimini tanlang va natijalarni jonli kuzating.</p>
             <div class="mj-banner-actions">
               <button class="mj-banner-primary" data-action="create">＋ Yangi viktorina yaratish</button>
-              <button class="mj-banner-secondary" data-view="classes">Sinflarim <span>→</span></button>
+              <button class="mj-banner-secondary" data-view="reports">Hisobotlar <span>→</span></button>
             </div>
           </div>
           <div class="mj-banner-art" aria-hidden="true">
@@ -87,7 +86,7 @@
 
         <section class="mj-stats-grid" aria-label="Faoliyat ko‘rsatkichlari">
           <article class="mj-stat-card"><span class="mj-stat-icon stat-purple"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8m-8 4h8m-8 4h5"/></svg></span><div><small>Viktorinalar</small><strong id="stat-games">0</strong><span class="mj-stat-hint">Saqlangan viktorinalar</span></div><b>↗</b></article>
-          <article class="mj-stat-card"><span class="mj-stat-icon stat-blue"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c.4-3.2 2.4-5 6-5s5.6 1.8 6 5m2-11a3 3 0 0 1 0 6"/></svg></span><div><small>Sinflar</small><strong id="stat-classes">0</strong><span class="mj-stat-hint">Yaratilgan guruhlar</span></div><b>↗</b></article>
+          <article class="mj-stat-card"><span class="mj-stat-icon stat-blue"><svg viewBox="0 0 24 24"><path d="M4 20V5m0 15h17"/><rect x="7" y="12" width="3" height="5" rx="1"/><rect x="13" y="8" width="3" height="9" rx="1"/><rect x="19" y="3" width="2" height="14" rx="1"/></svg></span><div><small>O‘tkazilgan o‘yinlar</small><strong id="stat-sessions">0</strong><span class="mj-stat-hint">Barcha sessiyalar</span></div><b>↗</b></article>
           <article class="mj-stat-card"><span class="mj-stat-icon stat-orange"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="18" cy="9" r="2.5"/><path d="M3 20c.4-3.2 2.4-5 6-5s5.6 1.8 6 5m1-4c2.5 0 4 1.3 4.5 4"/></svg></span><div><small>O‘yin ishtiroklari</small><strong id="stat-players">0</strong><span class="mj-stat-hint">Jami qatnashuvlar</span></div><b>↗</b></article>
           <article class="mj-stat-card"><span class="mj-stat-icon stat-green"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><div><small>To‘g‘ri javoblar</small><strong id="stat-accuracy">—</strong><span class="mj-stat-hint">O‘rtacha aniqlik</span></div><b>↗</b></article>
         </section>
@@ -108,11 +107,6 @@
               <div class="mj-panel-heading compact"><div><span class="mj-panel-kicker">JONLI SESSIYALAR</span><h2>Hozirgi o‘yinlar</h2></div><span class="mj-live-pill"><i></i> LIVE</span></div>
               <div id="live-activity" class="mj-live-list"><div class="mj-aside-empty">Faol o‘yinlar tekshirilmoqda…</div></div>
             </section>
-            <section class="mj-dashboard-panel mj-class-panel">
-              <div class="mj-panel-heading compact"><div><span class="mj-panel-kicker">GURUHLAR</span><h2>Sinflaringiz</h2></div><button class="mj-icon-link" data-view="classes" aria-label="Sinflarni ko‘rish">→</button></div>
-              <div id="overview-classes" class="mj-class-summary">Sinflar yuklanmoqda…</div>
-              <button class="mj-add-class-link" data-view="classes">＋ Yangi sinf qo‘shish</button>
-            </section>
             <section class="mj-teacher-tip"><span>✦</span><div><strong>Tezkor maslahat</strong><p>O‘yin PIN-kodini doskaga chiqaring. O‘quvchilar akkauntsiz qo‘shila oladi.</p></div></section>
           </aside>
         </div>
@@ -120,7 +114,6 @@
         <section class="mj-quick-actions">
           <div><span class="mj-panel-kicker">TEZKOR AMALLAR</span><h2>Keyingi qadamingiz</h2></div>
           <button class="mj-quick-action" data-action="create"><span class="mj-quick-icon">＋</span><span><strong>Viktorina yaratish</strong><small>Savollarni tayyorlang</small></span><b>→</b></button>
-          <button class="mj-quick-action" data-view="classes"><span class="mj-quick-icon blue">♧</span><span><strong>Sinf qo‘shish</strong><small>O‘quvchilarni boshqaring</small></span><b>→</b></button>
           <button class="mj-quick-action" data-view="discover"><span class="mj-quick-icon orange">✦</span><span><strong>Rejim tanlash</strong><small>Bellashuv usulini tanlang</small></span><b>→</b></button>
         </section>
       </section>
@@ -130,13 +123,6 @@
         <div class="mj-library-toolbar"><label class="mj-library-search"><span>⌕</span><input id="games-search" type="search" placeholder="Nomi yoki fan bo‘yicha qidirish..." aria-label="Viktorinalarni qidirish"></label><div class="mj-filter-chips"><button class="active" data-game-filter="all">Barchasi</button><button data-game-filter="recent">So‘nggi yaratilgan</button></div></div>
         <div id="games-count" class="mj-results-count">Viktorinalar yuklanmoqda…</div>
         <div id="all-games" class="mj-library-grid"></div>
-      </section>
-
-      <section id="view-classes" class="mj-view" hidden>
-        <div class="mj-page-heading"><div><span class="mj-eyebrow">SINF VA GURUHLAR</span><h1>Sinflarim</h1><p>Guruhlar yarating, qo‘shilish kodlarini ulashing va o‘quvchilar ro‘yxatini yuriting.</p></div></div>
-        <form id="class-form" class="mj-inline-form"><div class="mj-form-copy"><strong>Yangi sinf yaratish</strong><small>Sinf nomi va fanini kiriting.</small></div><label><span>Sinf nomi</span><input class="mj-input" id="class-name" placeholder="Masalan, 6A" required maxlength="70"></label><label><span>Fan yoki izoh</span><input class="mj-input" id="class-grade" placeholder="Masalan, Matematika" maxlength="50"></label><button class="mj-primary-button">＋ Sinf qo‘shish</button></form>
-        <div class="mj-subsection-heading"><div><h2>Barcha sinflar</h2><p>Har bir sinf uchun alohida qo‘shilish kodi mavjud.</p></div><span id="classes-count" class="mj-count-pill">0 ta sinf</span></div>
-        <div id="classes-list" class="mj-class-grid"></div>
       </section>
 
       <section id="view-reports" class="mj-view" hidden>

@@ -55,6 +55,10 @@ assert.ok(files.backend.includes('DELETE FROM live_sessions WHERE game_id=? AND 
 assert.ok(files.backend.includes("await env.DB.batch(["),"related game deletion must be atomic");
 assert.ok(files.teacher.includes("mj-card-delete"),"quiz delete control must be visible");
 assert.ok(files.teacher.includes("F1 poygasi")&&files.teacher.includes("Shooter Arena"),"dashboard must show only requested modes");
+assert.ok(!files.dashboard.includes('data-view="classes"')&&!files.dashboard.includes('id="view-classes"'),"teacher dashboard must not include class management");
+assert.ok(!files.teacher.includes('api("classes"')&&!files.teacher.includes("openRoster"),"teacher dashboard must not call class management APIs");
+assert.ok(files.dashboard.includes('id="stat-sessions"'),"teacher dashboard must show quiz sessions instead of class count");
+assert.ok(!files.backend.includes('path==="classes"'),"class management API must be retired");
 assert.ok(files.teacher.includes("/mode-classic.svg")&&files.teacher.includes("/mode-racing.svg")&&files.teacher.includes("/mode-shooter.svg"),"dashboard mode art missing");
 assert.ok(files.student.includes("function waitingForReveal()"),"answer lock-in motivation screen missing");
 assert.ok(files.student.includes("data.player_answer?.submitted"),"student must wait after submitting until reveal");
