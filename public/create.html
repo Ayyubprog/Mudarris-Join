@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900;1000&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/theme.css?v=kahoot-editor-layout-20261102">
+  <link rel="stylesheet" href="/theme.css?v=quiz-inputs-fix-20261102">
 </head>
 <body class="mj-editor-page qb-page qb-theme-room">
   <header class="qb-topbar">
@@ -105,7 +105,7 @@
         </div>
         <div class="qb-prompt-area">
           <div class="qb-prompt-label"><label for="question-prompt">Savol</label><span id="prompt-counter">0 / 120</span></div>
-          <textarea id="question-prompt" maxlength="120" rows="1" placeholder="Savolingizni shu yerga yozing..."></textarea>
+          <input id="question-prompt" type="text" maxlength="120" autocomplete="off" spellcheck="true" aria-label="Savol matni" placeholder="Savolingizni shu yerga yozing..." />
         </div>
         <div class="qb-media-area" id="media-area">
           <div class="qb-media-toolbar">
@@ -119,9 +119,10 @@
           <div id="media-preview" class="qb-media-preview" hidden></div>
         </div>
         <div class="qb-answers-heading">
-          <div><strong id="answers-title">Javob variantlari</strong><small id="answers-help">To‘g‘ri javobni belgilang</small></div>
+          <div><strong id="answers-title">Javob variantlari</strong><small id="answers-help">Javob matnini yozing</small></div>
           <span class="qb-answer-count" id="answer-count">0 / 6</span>
         </div>
+        <p id="answer-guidance" class="qb-answer-guidance">Javob matnini kartaga yozing. To‘g‘ri javobni tanlash uchun chapdagi rangli shaklni bosing.</p>
         <div id="answer-editor" class="qb-answer-grid"></div>
         <button type="button" id="add-answer" class="qb-add-answer">＋ Javob variantini qo‘shish</button>
         <div id="special-editor" class="qb-special-editor" hidden></div>
@@ -211,6 +212,6 @@
 
 
   <div id="toast-root" aria-live="polite"></div>
-  <script src="/create.js?v=kahoot-editor-layout-20261102" defer></script>
+  <script src="/create.js?v=quiz-inputs-fix-20261102" defer></script>
 </body>
 </html>

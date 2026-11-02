@@ -293,7 +293,8 @@ function currentTypeInfo(){
   $("#add-answer").hidden=!["quiz","poll","puzzle"].includes(question.type)||question.type==="true_false"||question.answers.length>=MAX_ANSWERS;
   $("#answer-count").textContent=question.answers.filter(answer=>answer.trim()).length+" / "+(question.type==="puzzle"?MAX_ANSWERS:MAX_ANSWERS);
   $("#answers-title").textContent=question.type==="puzzle"?"To‘g‘ri ketma-ketlik":question.type==="poll"?"Javob variantlari":question.type==="true_false"?"Javobni tanlang":"Javob variantlari";
-  $("#answers-help").textContent=question.type==="poll"?"Ishtirokchilar bittasini tanlaydi":question.type==="puzzle"?"Javoblarni to‘g‘ri tartibda joylashtiring":noPoints.has(question.type)?"Erkin javoblar qabul qilinadi":question.multiple?"Barcha to‘g‘ri javoblarni belgilang":"To‘g‘ri javobni belgilang";
+  $("#answers-help").textContent=question.type==="poll"?"Ishtirokchilar bittasini tanlaydi":question.type==="puzzle"?"Javoblarni to‘g‘ri tartibda joylashtiring":noPoints.has(question.type)?"Erkin javoblar qabul qilinadi":question.multiple?"Bir nechta to‘g‘ri javobni tanlang":"Bitta to‘g‘ri javobni tanlang";
+  $("#answer-guidance").textContent=question.type==="poll"?"Javob variantlarini yozing. So‘rovnomada to‘g‘ri javob belgilanmaydi.":question.type==="puzzle"?"Javoblarni yozing va ularni to‘g‘ri tartibda joylashtiring.":question.type==="true_false"?"To‘g‘ri yoki noto‘g‘ri variantini tanlash uchun rangli shaklni bosing.":question.type==="quiz"?(question.multiple?"Javoblarni yozing. Har bir to‘g‘ri variantning rangli shaklini bosing.":"Javoblarni yozing. To‘g‘ri javobning chapidagi rangli shaklni bosing."):"Javob matnini shu yerga kiriting.";
   renderAnswerEditor(question);
   updateQuestionStatus();
 }
@@ -307,10 +308,11 @@ function renderAnswerEditor(question){
       const selected=question.correct.includes(index);
       const locked=question.type==="true_false";
       return '<div class="qb-answer-row answer-'+index%4+' '+(selected?"is-correct":"")+'" data-answer-index="'+index+'">'+
-        '<button type="button" class="qb-answer-mark" data-mark-answer="'+index+'" '+(question.type==="poll"?"disabled":"")+' aria-label="'+(selected?"To‘g‘ri javob":"To‘g‘ri deb belgilash")+'" title="'+(question.type==="poll"?"So‘rovnoma javoblari baholanmaydi":"To‘g‘ri javobni belgilash")+'">'+
-          (question.type==="poll"?'<span class="qb-answer-letter">'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>':selected?'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>':'<span class="qb-answer-letter">'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>')+
+        '<button type="button" class="qb-answer-mark" data-mark-answer="'+index+'" '+(question.type==="poll"?"disabled":"")+' aria-pressed="'+String(selected)+'" aria-label="'+(selected?"To‘g‘ri javob tanlandi":"Ushbu javobni to‘g‘ri deb belgilash")+'" title="'+(question.type==="poll"?"So‘rovnoma javoblari baholanmaydi":"Bosib, to‘g‘ri javobni tanlang")+'">'+
+          '<span class="qb-answer-letter">'+(["▲","◆","●","■","⬟","⬢"][index]||String.fromCharCode(65+index))+'</span>'+
         '</button>'+
-        '<input type="text" class="qb-answer-input" data-answer-input="'+index+'" maxlength="75" value="'+escapeHtml(answer)+'" placeholder="Javob varianti '+(index+1)+'" '+(locked?"disabled":"")+'>'+
+        '<input type="text" class="qb-answer-input" data-answer-input="'+index+'" maxlength="75" value="'+escapeHtml(answer)+'" placeholder="Javob varianti '+(index+1)+'" aria-label="'+(index+1)+'-javob matni" '+(locked?"disabled":"")+'>'+
+        (selected&&question.type!=="poll"?'<span class="qb-answer-correct-label">✓ To‘g‘ri javob</span>':'')+
         (question.type!=="true_false"&&question.answers.length>2?'<button type="button" class="qb-answer-remove" data-remove-answer="'+index+'" aria-label="Javobni olib tashlash">×</button>':'')+
       '</div>';
     }).join("");
@@ -629,11 +631,15 @@ async function importCsv(file){
   finally{$("#import-file").value=""}
 }
 function bindEvents(){
-  $("#question-prompt").addEventListener("input",event=>{
+  const promptInput=$("#question-prompt");
+  promptInput.addEventListener("input",event=>{
     const question=current();question.prompt=event.target.value;
     $("#prompt-counter").textContent=question.prompt.length+" / 120";
     $("#question-heading").textContent=question.prompt.trim()?"Savolingizni tahrirlang":"Savolni yarating";
     markDirty();
+  });
+  promptInput.addEventListener("keydown",event=>{
+    if(event.key==="Enter"){event.preventDefault();const firstAnswer=$('[data-answer-input="0"]');if(firstAnswer)firstAnswer.focus();}
   });
   for(const id of ["quiz-title","quiz-subject","quiz-grade","quiz-description"]){
     $("#"+id).addEventListener("input",()=>{updateTitle();markDirty()});
