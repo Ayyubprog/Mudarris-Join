@@ -154,7 +154,7 @@ function validationError(question){
   if(["quiz","poll"].includes(question.type)){
     const answers=activeAnswers(question);
     if(answers.length<2)return question.type==="poll"?"So‘rovnomada kamida 2 ta javob bo‘lishi kerak.":"Viktorinada kamida 2 ta javob bo‘lishi kerak.";
-    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 4 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
+    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 6 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
@@ -162,7 +162,7 @@ function validationError(question){
   if(question.type==="true_false"&&question.correct.length!==1)return "To‘g‘ri yoki noto‘g‘ri javobni belgilang.";
   if(question.type==="type_answer"&&!question.correctText.trim())return "To‘g‘ri javobni kiriting.";if(question.type==="type_answer"&&question.correctText.trim().length>20)return "Qisqa javob 20 belgidan oshmasligi kerak.";
   if(question.type==="puzzle"){
-    if(question.answers.length<2||question.answers.length>6||question.answers.some(answer=>!answer.trim()))return "Boshqotirma uchun 2–6 ta to‘liq javob kiriting.";
+    if(question.answers.length<3||question.answers.length>MAX_PUZZLE_ANSWERS||question.answers.some(answer=>!answer.trim()))return "Ketma-ketlik uchun 3–4 ta to‘liq javob kiriting.";
     if(question.answers.some(answer=>answer.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.correctText.trim())return "Eski boshqotirma javobini yangi tartib bilan almashtiring.";
   }
@@ -279,7 +279,7 @@ function currentTypeInfo(){
 }
 function renderAnswerEditor(question){
   const editor=$("#answer-editor"),special=$("#special-editor"),addAnswer=$("#add-answer");
-  if(addAnswer)addAnswer.hidden=!(["quiz","poll","puzzle"].includes(question.type));
+  if(addAnswer)addAnswer.hidden=!(["quiz","poll","puzzle"].includes(question.type))||question.answers.length>=(question.type==="puzzle"?MAX_PUZZLE_ANSWERS:MAX_ANSWERS);
   special.hidden=true;special.innerHTML="";
   if(["quiz","true_false","poll"].includes(question.type)){
     editor.hidden=false;
@@ -702,7 +702,7 @@ function bindEvents(){
   $("#import-questions").addEventListener("click",()=>$("#import-file").click());
   $("#download-quiz-template")?.addEventListener("click",()=>{
     const rows=[["Savol","Variant A","Variant B","Variant C","Variant D","To‘g‘ri javob","Vaqt (soniya)","Ball"],["O‘zbekiston poytaxti qaysi shahar?","Toshkent","Samarqand","Buxoro","Xiva","1","20","1000"]];
-    const csv="\\ufeff"+rows.map(row=>row.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(",")).join("\\r\\n");
+    const csv="\uFEFF"+rows.map(row=>row.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(",")).join("\r\n");
     const link=document.createElement("a"),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
     link.href=url;link.download="mudarris-quiz-namuna.csv";document.body.append(link);link.click();link.remove();URL.revokeObjectURL(url);
   });

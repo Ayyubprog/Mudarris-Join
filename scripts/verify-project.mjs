@@ -17,6 +17,9 @@ assert.ok(race.includes("obstacle.position.z+=delta*trafficSpeed"),"moving racin
 assert.ok(race.includes("controls.nitro"),"racing boost control missing");
 assert.ok(login.includes("data-password-toggle"),"password visibility control missing");
 assert.ok(backend.includes("await env.DB.batch(statements)"),"answer updates must be atomic");
+assert.ok(backend.includes("const ungraded=[\"poll\",\"word_cloud\",\"open_ended\",\"brainstorm\",\"slide\"]"),"presentation slides must be ungraded");
+assert.ok(backend.includes("options.length<3||options.length>4"),"puzzle bounds are missing");
+assert.ok(backend.includes("correct=safe(rawCorrect).slice(0,20)"),"short-answer cap is missing");
 assert.ok(backend.includes("SELECT 1 AS ready"),"health endpoint must probe D1");
 assert.ok(!workflow.includes("wrangler deploy --config cloudflare-worker"),"legacy Worker deploy must not block Pages");
 console.log("MUDARRIS JOIN smoke checks passed.");

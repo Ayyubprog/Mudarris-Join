@@ -17,7 +17,7 @@ const parseArrayValue=value=>{try{const parsed=JSON.parse(String(value||""));ret
 const publicQuestion=q=>{const options=JSON.parse(q.options||"[]"),multiple=parseArrayValue(q.correct_answer);return {id:q.id,type:q.question_type,prompt:q.prompt,options,correct:q.correct_answer,time:q.time_limit,points:q.points,media:q.media_url||"",multi_select:q.question_type==="quiz"&&Array.isArray(multiple)&&multiple.length>1}};
 const normalizeQuestionSet=input=>{
  if(!Array.isArray(input)||input.length<1||input.length>200)return {error:"Viktorinada 1–200 ta savol bo‘lishi kerak."};
- const allowed=new Set(["quiz","true_false","type_answer","puzzle","slider","poll","word_cloud","open_ended","brainstorm"]);
+ const allowed=new Set(["quiz","true_false","type_answer","puzzle","slider","poll","word_cloud","open_ended","brainstorm","slide"]);
  const questions=[];
  for(let index=0;index<input.length;index++){
   const raw=input[index]||{},type=String(raw.type||"quiz"),prompt=safe(raw.prompt).slice(0,120),time=Math.round(Number(raw.time)||20);
@@ -49,11 +49,11 @@ const normalizeQuestionSet=input=>{
    if(options.length<2)return {error:(index+1)+"-so‘rovnomada kamida 2 ta javob varianti kerak."};
    points=0;correct="";
   }else if(type==="type_answer"){
-   correct=safe(rawCorrect).slice(0,75);
+   correct=safe(rawCorrect).slice(0,20);
    if(!correct)return {error:(index+1)+"-savol uchun qabul qilinadigan javobni kiriting."};
   }else if(type==="puzzle"){
    const ordered=parseArrayValue(rawCorrect);
-   if(options.length<2||!ordered||ordered.length!==options.length||ordered.some((value,i)=>safe(value)!==options[i]))return {error:(index+1)+"-boshqotirmada javoblar ketma-ketligini tekshiring."};
+   if(options.length<3||options.length>4||!ordered||ordered.length!==options.length||ordered.some((value,i)=>safe(value)!==options[i]))return {error:(index+1)+"-boshqotirmada 3–4 ta javobning ketma-ketligini tekshiring."};
    correct=JSON.stringify(ordered.map(value=>safe(value).slice(0,75)));
   }else if(type==="slider"){
    const min=Number(raw.options?.[0]),max=Number(raw.options?.[1]),step=Number(raw.options?.[2]),tolerance=Number(raw.options?.[3]||0),target=Number(rawCorrect);
@@ -81,7 +81,11 @@ async function main(req,env){
  const url=new URL(req.url),path=url.pathname.replace(/^\/api\/?/,"").replace(/\/$/,""),method=req.method;
  if(!url.pathname.startsWith("/api/"))return env.ASSETS?env.ASSETS.fetch(req):new Response("Not found",{status:404});
  try{
- if(path==="health"&&method==="GET")return json({ok:true,service:"MUDARRIS JOIN API",database:!!env.DB});
+ if(path==="health"&&method==="GET"){
+  if(!env.DB)return json({ok:false,service:"MUDARRIS JOIN API",database:false},503);
+  const ready=await env.DB.prepare("SELECT 1 AS ready").first();
+  return json({ok:!!ready?.ready,service:"MUDARRIS JOIN API",database:!!ready?.ready},ready?.ready?200:503);
+ }
  if(path==="auth/status"&&method==="GET")return json({googleEnabled:!!(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET),teacherRegistrationOpen:true,studentsNeedLogin:false})
  if(path==="auth/me"&&method==="GET"){const user=await auth(req,env);return user?json({teacher:user}):json({error:"Tizimga kirish talab etiladi."},401)}
  if(path==="auth/logout"&&method==="POST"){const token=readCookie(req,"mj_session");if(token)await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(await hash(token)).run();return json({ok:true},200,{"set-cookie":cookie("mj_session","",0)})}
@@ -189,7 +193,7 @@ const gm=path.match(/^games\/(\d+)$/);
    const timeLimit=Math.max(5,Math.min(600,Number(q.time)||20))*1000;if(s.question_started_at&&Date.now()>Number(s.question_started_at)+timeLimit+1200)return json({error:"Bu savol uchun vaqt tugadi."},409);const answer=typeof b.answer==="string"?safe(b.answer).slice(0,1000):JSON.stringify(b.answer??"").slice(0,1000);
    const normalize=value=>String(value??"").trim().replace(/\s+/g," ").toLocaleLowerCase("uz");
    let correct=false;
-   const ungraded=["poll","word_cloud","open_ended","brainstorm"].includes(q.type);
+   const ungraded=["poll","word_cloud","open_ended","brainstorm","slide"].includes(q.type);
    if(ungraded)correct=null;
    else if(q.type==="quiz"){
     const expected=parseArrayValue(q.correct);
@@ -211,15 +215,21 @@ const gm=path.match(/^games\/(\d+)$/);
    }
    const elapsed=Math.max(0,Date.now()-(s.question_started_at||Date.now())),limit=q.time||20,earned=correct===true?points(true,elapsed,limit,q.points||1000,player.streak||0):0;
    const nextStreak=correct===null?Number(player.streak||0):correct?Number(player.streak||0)+1:0;
-   await env.DB.prepare("INSERT INTO answers(session_id,player_id,question_position,answer,correct,points,response_ms) VALUES(?,?,?,?,?,?,?)").bind(s.id,player.id,s.current_question,answer,correct===true?1:0,earned,elapsed).run();
-   await env.DB.prepare("UPDATE players SET score=score+?,streak=?,last_answered_question=? WHERE id=?").bind(earned,nextStreak,s.current_question,player.id).run();
+   const statements=[
+    env.DB.prepare("INSERT INTO answers(session_id,player_id,question_position,answer,correct,points,response_ms) VALUES(?,?,?,?,?,?,?)").bind(s.id,player.id,s.current_question,answer,correct===true?1:0,earned,elapsed),
+    env.DB.prepare("UPDATE players SET score=score+?,streak=?,last_answered_question=? WHERE id=? AND session_id=?").bind(earned,nextStreak,s.current_question,player.id,s.id)
+   ];
    let health=null,enemiesDefeated=null;
    if(s.mode==="shooter"){
     const resultFlag=correct===null?null:correct===true?1:0;
-    await env.DB.prepare("UPDATE player_loadouts SET health=CASE WHEN ? IS NULL THEN health WHEN ?=1 THEN MIN(100,health+8) ELSE MAX(0,health-22) END,enemies_defeated=enemies_defeated+CASE WHEN ?=1 THEN 1 ELSE 0 END WHERE player_id=? AND session_id=? AND mode='shooter'").bind(resultFlag,resultFlag,resultFlag,player.id,s.id).run();
-    const progress=await env.DB.prepare("SELECT health,enemies_defeated FROM player_loadouts WHERE player_id=? AND session_id=?").bind(player.id,s.id).first();health=progress?.health??100;enemiesDefeated=progress?.enemies_defeated??0;
+    statements.push(env.DB.prepare("UPDATE player_loadouts SET health=CASE WHEN ? IS NULL THEN health WHEN ?=1 THEN MIN(100,health+8) ELSE MAX(0,health-22) END,enemies_defeated=enemies_defeated+CASE WHEN ?=1 THEN 1 ELSE 0 END WHERE player_id=? AND session_id=? AND mode='shooter'").bind(resultFlag,resultFlag,resultFlag,player.id,s.id));
    }
-   const updated=await env.DB.prepare("SELECT score FROM players WHERE id=?").bind(player.id).first();
+   await env.DB.batch(statements);
+   if(s.mode==="shooter"){
+    const progress=await env.DB.prepare("SELECT health,enemies_defeated FROM player_loadouts WHERE player_id=? AND session_id=?").bind(player.id,s.id).first();
+    health=progress?.health??100;enemiesDefeated=progress?.enemies_defeated??0;
+   }
+   const updated=await env.DB.prepare("SELECT score FROM players WHERE id=? AND session_id=?").bind(player.id,s.id).first();
    return json({correct,points:earned,total:updated.score,health,enemies_defeated:enemiesDefeated,recorded:true});
   }
  if(path==="host"&&method==="POST"){const user=await teacherRequired(req,env);if(!user)return json({error:"Tizimga kirish talab etiladi."},401);const b=await parseBody(req),game=await loadGame(env,Number(b.game_id),user.id);if(!game)return json({error:"Viktorina topilmadi."},404);if(!game.questions.length)return json({error:"Bu viktorinada savollar yo‘q."},400);let pin;for(let i=0;i<8;i++){pin=String(Math.floor(100000+Math.random()*900000));if(!await env.DB.prepare("SELECT id FROM live_sessions WHERE pin=? AND status!='finished'").bind(pin).first())break}const mode=safe(b.mode||"classic");const r=await env.DB.prepare("INSERT INTO live_sessions(pin,game_id,teacher_id,mode) VALUES(?,?,?,?)").bind(pin,game.id,user.id,mode).run();const specialDrops=["phoenix","shadowdragon"].filter(()=>Math.random()<0.15);if(specialDrops.length)await env.DB.batch(specialDrops.map(id=>env.DB.prepare("INSERT INTO session_specials(session_id,special_id) VALUES(?,?)").bind(r.meta.last_row_id,id)));return json({session:{id:r.meta.last_row_id,pin},special_drops:specialDrops.map(id=>"special_"+id)} ,201)}
