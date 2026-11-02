@@ -2523,3 +2523,5 @@ body.mj-dashboard-rebuild .mj-toast{background:#332044;border-radius:8px;padding
 @media(prefers-reduced-motion:reduce){
  body.qb-page *,body.qb-page *::before,body.qb-page *::after,body.mj-dashboard-rebuild *,body.mj-dashboard-rebuild *::before,body.mj-dashboard-rebuild *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+body.qb-page .qb-autosave-label{display:block;padding:5px 3px;color:#92899a;font-size:9px;line-height:1.4;text-align:center}

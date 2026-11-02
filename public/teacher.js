@@ -90,5 +90,5 @@ $("#games-search").addEventListener("input",renderGames);$("#report-search").add
 document.addEventListener("click",event=>{const filter=event.target.closest("[data-game-filter]");if(filter){state.gameFilter=filter.dataset.gameFilter;renderGames()}});
 $("#global-search").addEventListener("input",event=>{const value=event.target.value;if(value.trim()){show("games");$("#games-search").value=value;renderGames()}});
 document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#global-search").focus()}if(event.key==="Escape"){$("#modal-root").innerHTML="";$("#profile-popover").hidden=true;$("#profile-button").setAttribute("aria-expanded","false")}if(!event.ctrlKey&&!event.metaKey&&!event.altKey&&event.key.toLowerCase()==="n"&&!/input|textarea|select/i.test(document.activeElement.tagName))location.href="/create.html"});
-(async()=>{try{const initialView=location.hash.slice(1);await refresh();show(["games","classes","reports","discover"].includes(initialView)?initialView:"overview")}catch(error){location.replace("/login.html")}})();
+(async()=>{try{const initialView=location.hash.slice(1);await refresh();show(["games","reports","discover"].includes(initialView)?initialView:"overview")}catch(error){location.replace("/login.html")}})();
 })();
