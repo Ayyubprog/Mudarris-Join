@@ -38,6 +38,7 @@ jobs:
           node --input-type=module --check < public/_worker.js
           node --check cloudflare-worker/worker.js
           node --check "functions/[[path]].js"
+          node scripts/verify-project.mjs
 
       - name: Deploy Pages site and Functions
         run: npx --yes wrangler pages deploy public --project-name mudarris-join --branch main --skip-caching

@@ -2,26 +2,31 @@
 "use strict";
 const $=selector=>document.querySelector(selector);
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-const MAX_QUESTIONS=200,MAX_ANSWERS=4;
-const noPoints=new Set(["poll","word_cloud","open_ended","brainstorm"]);
+const MAX_QUESTIONS=200,MAX_ANSWERS=6,MAX_PUZZLE_ANSWERS=4;
+const noPoints=new Set(["poll","word_cloud","open_ended","brainstorm","slide"]);
 const textTypes=new Set(["type_answer","open_ended","word_cloud","brainstorm"]);
 const labels={
-  quiz:"4 ta javob",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Matn yozish",
-  puzzle:"Boshqotirma",slider:"Siljitgich",poll:"So‘rovnoma",
-  word_cloud:"So‘zlar buluti",open_ended:"Ochiq savol",brainstorm:"G‘oyalar jamlanmasi"
+  quiz:"Viktorina",true_false:"To‘g‘ri yoki noto‘g‘ri",type_answer:"Qisqa javob",
+  puzzle:"Ketma-ketlik",slider:"Sonli siljitgich",poll:"So‘rovnoma",
+  word_cloud:"So‘zlar buluti",open_ended:"Ochiq savol",brainstorm:"G‘oyalar jamlanmasi",slide:"Taqdimot slaydi"
 };
 const descriptions={
-  quiz:"4 ta variantdan to‘g‘ri javobni tanlang",
-  true_false:"Fikr to‘g‘ri yoki noto‘g‘ri ekanini belgilang",
-  type_answer:"O‘quvchi javobni o‘zi yozadi",
-  puzzle:"Javoblarni to‘g‘ri ketma-ketlikka keltiring",
+  quiz:"2–6 ta variantdan bitta yoki bir nechta to‘g‘ri javobni belgilang",
+  true_false:"Ikki tayyor javobdan birini tanlang",
+  type_answer:"O‘quvchi 20 belgigacha qisqa javob yozadi",
+  puzzle:"3–4 ta javobni to‘g‘ri ketma-ketlikka joylang",
   slider:"Sonli qiymatni siljitgich orqali toping",
   poll:"Sinf fikrini to‘plang — ball berilmaydi",
   word_cloud:"Qisqa javoblar bilan so‘zlar bulutini yarating",
   open_ended:"O‘quvchilar erkin fikr bildirsin",
-  brainstorm:"Bir nechta g‘oyani bitta joyga jamlang"
+  brainstorm:"Bir nechta g‘oyani bitta joyga jamlang",
+  slide:"Matn va rasm bilan darsning bir qismini tushuntiring"
 };
-const typeGroups=[{title:"SAVOL TURLARI",items:["quiz","true_false","type_answer"]}];
+const typeGroups=[
+ {title:"BILIMNI SINASH",items:["quiz","true_false","type_answer","puzzle","slider"]},
+ {title:"FIKR VA MULOHAZA",items:["poll","word_cloud","open_ended","brainstorm"]},
+ {title:"TAQDIMOT",items:["slide"]}
+];
 const typeIcons={
   quiz:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7.5 12.5 3 3 6-7"/></svg>',
   true_false:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="5"/><circle cx="17" cy="12" r="5"/><path d="m6 12 1.5 1.5L10 10m5-1 1 1 2-2"/></svg>',
@@ -33,6 +38,7 @@ const typeIcons={
   open_ended:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v13H9l-5 3V4Z"/><path d="M8 9h8m-8 4h5"/></svg>',
   brainstorm:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4m-5.5-5.5a6 6 0 1 1 7 0c-.8.6-1.2 1.2-1.3 2H9.8c-.1-.8-.5-1.4-1.3-2Z"/><path d="M12 5v4m-4-2 2 2m6-2-2 2"/></svg>'
 };
+typeIcons.slide='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8m-4-3v3M7 9h10m-10 4h6"/></svg>';
 const state={gameId:null,questions:[],current:0,busy:false,dirty:false,mediaKind:"image",previewIndex:0,dragIndex:null,gameUpdatedAt:null,typeModalMode:"add"};
 let draftTimer=null;
 const newDraftKey="mudarris-join-quiz-draft-v2";
@@ -128,6 +134,8 @@ function normalizeLoadedQuestion(question){
   }else if(type==="type_answer"){
     item.correctText=String(question.correct||"");
     item.answers=[];
+  }else if(type==="slide"){
+    item.answers=[];item.correct=[];
   }else{
     item.answers=[];
     item.correct=[];
@@ -270,7 +278,8 @@ function currentTypeInfo(){
   updateQuestionStatus();
 }
 function renderAnswerEditor(question){
-  const editor=$("#answer-editor"),special=$("#special-editor");
+  const editor=$("#answer-editor"),special=$("#special-editor"),addAnswer=$("#add-answer");
+  if(addAnswer)addAnswer.hidden=!(["quiz","poll","puzzle"].includes(question.type));
   special.hidden=true;special.innerHTML="";
   if(["quiz","true_false","poll"].includes(question.type)){
     editor.hidden=false;
@@ -295,7 +304,7 @@ function renderAnswerEditor(question){
     special.innerHTML='<div class="qb-special-heading"><strong>To‘g‘ri tartibdagi javoblar</strong><small>O‘quvchi ularni qayta tartiblaydi.</small></div><div class="qb-puzzle-items">'+question.answers.map((answer,index)=>
       '<div class="qb-puzzle-row" draggable="true" data-puzzle-index="'+index+'"><span class="qb-puzzle-grip">⠿</span><b>'+(index+1)+'</b><input type="text" data-puzzle-input="'+index+'" maxlength="75" value="'+escapeHtml(answer)+'" placeholder="Tartib '+(index+1)+'"><div><button type="button" data-puzzle-move="'+index+'" data-direction="-1" '+(index===0?"disabled":"")+' aria-label="Yuqoriga">↑</button><button type="button" data-puzzle-move="'+index+'" data-direction="1" '+(index===question.answers.length-1?"disabled":"")+' aria-label="Pastga">↓</button></div></div>'
     ).join("")+'</div>';
-    $("#add-answer").hidden=question.answers.length>=MAX_ANSWERS;
+    $("#add-answer").hidden=question.answers.length>=MAX_PUZZLE_ANSWERS;
   }else if(question.type==="slider"){
     editor.hidden=true;
     special.hidden=false;
@@ -305,6 +314,7 @@ function renderAnswerEditor(question){
     editor.hidden=true;
     special.hidden=false;
     const settings={
+      slide:["Taqdimot slaydi","O‘quvchi matn va media bilan tanishadi, so‘ng davom etadi."],
       poll:["O‘quvchilar bitta variantni tanlaydi","Javoblar ball bilan baholanmaydi."],
       word_cloud:["Qisqa javoblar yig‘iladi","Har bir o‘quvchi bitta so‘z yoki qisqa ibora yuboradi."],
       open_ended:["Erkin javoblar qabul qilinadi","O‘quvchilar savolga o‘z fikrini yozadi."],
@@ -338,8 +348,8 @@ function toggleCorrect(index){
   renderAnswerEditor(question);markDirty();updateQuestionStatus();
 }
 function removeAnswer(index){
-  const question=current();
-  if(question.answers.length<=2){toast("Kamida 2 ta javob varianti qolishi kerak.");return}
+  const question=current(),minimum=question.type==="puzzle"?3:2;
+  if(question.answers.length<=minimum){toast(question.type==="puzzle"?"Ketma-ketlikda kamida 3 ta javob bo‘lishi kerak.":"Kamida 2 ta javob varianti qolishi kerak.");return}
   question.answers.splice(index,1);
   question.correct=question.correct.filter(value=>value!==index).map(value=>value>index?value-1:value);
   if(question.type==="quiz"&&!question.correct.length)question.correct=[0];
@@ -377,7 +387,7 @@ function changeType(type){
   next.points=noPoints.has(type)?0:old.points;
   if(type==="poll")next.answers=old.answers.length?old.answers.slice(0,MAX_ANSWERS):["",""];
   if(type==="quiz")next.answers=old.answers.length?old.answers.slice(0,MAX_ANSWERS):["","","",""];
-  if(type==="puzzle")next.answers=old.answers.length?old.answers.slice(0,MAX_ANSWERS):["","","",""];
+  if(type==="puzzle")next.answers=old.answers.length?old.answers.slice(0,MAX_PUZZLE_ANSWERS):["","","",""];
   if(type==="type_answer")next.correctText=old.correctText||"";
   if(type==="slider")next.slider={...old.slider};
   state.questions[state.current]=next;
@@ -535,6 +545,8 @@ function renderPreview(){
     answers='<div class="qb-preview-slider"><span>'+question.slider.min+'</span><input type="range" min="'+question.slider.min+'" max="'+question.slider.max+'" step="'+question.slider.step+'" value="'+question.slider.target+'" disabled><span>'+question.slider.max+'</span></div>';
   }else if(question.type==="type_answer"){
     answers='<div class="qb-preview-typed">Javobingizni yozing…</div>';
+  }else if(question.type==="slide"){
+    answers='<div class="qb-preview-typed qb-preview-slide">TAQDIMOT · Davom etish</div>';
   }else{
     answers='<div class="qb-preview-typed">'+escapeHtml(question.type==="word_cloud"?"Bitta so‘z yoki ibora kiriting":question.type==="brainstorm"?"G‘oyalaringizni yozing":"Javobingizni yozing…")+'</div>';
   }
@@ -620,7 +632,8 @@ function bindEvents(){
   });
   $("#add-answer").addEventListener("click",()=>{
     const question=current();
-    if(question.answers.length>=MAX_ANSWERS){toast("Ko‘pi bilan 4 ta javob qo‘shish mumkin.");return}
+    const limit=question.type==="puzzle"?MAX_PUZZLE_ANSWERS:MAX_ANSWERS;
+    if(question.answers.length>=limit){toast(question.type==="puzzle"?"Ketma-ketlikda ko‘pi bilan 4 ta javob bo‘ladi.":"Ko‘pi bilan 6 ta javob qo‘shish mumkin.");return}
     question.answers.push("");
     renderAnswerEditor(question);markDirty();
     const input=$('[data-answer-input="'+(question.answers.length-1)+'"]');if(input)input.focus();
@@ -687,6 +700,12 @@ function bindEvents(){
   });
   $("#editor-signout").addEventListener("click",async()=>{try{await api("auth/logout",{method:"POST"})}finally{location.href="/login.html"}});
   $("#import-questions").addEventListener("click",()=>$("#import-file").click());
+  $("#download-quiz-template")?.addEventListener("click",()=>{
+    const rows=[["Savol","Variant A","Variant B","Variant C","Variant D","To‘g‘ri javob","Vaqt (soniya)","Ball"],["O‘zbekiston poytaxti qaysi shahar?","Toshkent","Samarqand","Buxoro","Xiva","1","20","1000"]];
+    const csv="\\ufeff"+rows.map(row=>row.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(",")).join("\\r\\n");
+    const link=document.createElement("a"),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+    link.href=url;link.download="mudarris-quiz-namuna.csv";document.body.append(link);link.click();link.remove();URL.revokeObjectURL(url);
+  });
   $("#import-file").addEventListener("change",event=>importCsv(event.target.files?.[0]));
   document.addEventListener("click",event=>{
     if(!event.target.closest(".qb-profile-wrap")){$("#editor-profile-popover").hidden=true;$("#editor-profile-button").setAttribute("aria-expanded","false")}
@@ -695,6 +714,7 @@ function bindEvents(){
   document.addEventListener("keydown",event=>{
     if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="s"){event.preventDefault();saveQuiz()}
     if((event.ctrlKey||event.metaKey)&&event.key==="Enter"){event.preventDefault();openPreview()}
+    if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="d"){event.preventDefault();duplicateQuestion()}
     if(event.key==="Escape")closeModal();
   });
   window.addEventListener("beforeunload",event=>{

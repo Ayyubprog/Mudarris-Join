@@ -32,13 +32,36 @@ async function api(path,opts){const r=await fetch("/api/"+path,opts||{}),d=await
 function showJoin(){
  if(lastScreen==="join")return;
  lastScreen="join";
- const joiningAvatar=MJAvatars.randomKey(),mode=data?.session?.mode||"classic",options=loadoutCatalog[mode]||[];
+ let joiningAvatar=MJAvatars.randomKey();
+ const mode=data?.session?.mode||"classic",options=loadoutCatalog[mode]||[];
  let selectedLoadout=options[0]?.id||"";
- const isShooter=mode==="shooter",isRacing=mode==="racing",modeTitle=isShooter?"JANGCHI TANLA":isRacing?"MASHINA TANLA":"TAXALLUS VA QAHRAMON";
- const modeCopy=isShooter?"Bu jangda qaysi qahramon bilan qatnashasan?":isRacing?"Poygaga qaysi mashina bilan chiqasan?":"Senga tasodifiy qahramon berildi. O‘yinga kirgach uni o‘zgartirishing mumkin.";
- root.innerHTML='<section class="student-card mj-onboard-v2"><div class="mj-onboard-top"><span class="mj-onboard-brand"><img src="/mudarris-book-purple.svg" alt=""> MUDARRIS <b>JOIN</b></span><span class="mj-onboard-step">1 <i>/</i> 1</span></div><div class="mj-onboard-content"><div class="mj-onboard-copy"><span class="mj-onboard-kicker">JONLI O‘YINGA QO‘SHILISH</span><h1 class="mj-onboard-title">O‘yinga xush kelibsan!</h1><p class="mj-onboard-subtitle">Ismingni yoz. Sinfdoshlaring seni shu nom bilan ko‘radi.</p><label class="mj-onboard-label" for="nickname">SENING TAXALLUSING</label><input class="mj-onboard-name" id="nickname" maxlength="24" minlength="2" required placeholder="Masalan, Ayyub" autocomplete="nickname"><div class="mj-onboard-name-help">2–24 belgi · Isming yoki o‘zing yoqtirgan taxallus</div><div class="mj-onboard-error" id="join-error" role="alert" aria-live="polite"></div></div><div class="mj-onboard-preview"><div class="mj-onboard-preview-glow"></div><div class="mj-onboard-preview-art">'+(isShooter||isRacing?'<span class="mj-onboard-mode-emoji">'+(isShooter?"🎯":"🏁")+'</span>':MJAvatars.render(joiningAvatar,"mj-onboard-avatar"))+'</div><span class="mj-onboard-preview-tag">'+(isShooter?"JANGCHI TANLOVI":isRacing?"POYGA GARAJI":"TASODIFIY QAHRAMON")+'</span><strong>'+(isShooter?"Jangga tayyorlan!":isRacing?"Start chizig‘ida ko‘rishamiz!":"Sening qahramoning tayyor!")+'</strong><small>'+(isShooter?"O‘zingga mos jangchini tanla.":isRacing?"O‘zingga mos mashinani tanla.":"Kutish xonasida qahramoningni sozlashing mumkin.")+'</small></div></div>'+(options.length?'<section class="mj-loadout-section"><div class="mj-loadout-heading"><div><span>'+modeTitle+'</span><small>'+modeCopy+'</small></div><b>'+options.length+' TA</b></div><div class="mj-loadout-grid">'+options.map(item=>loadoutCard(mode,item,item.id===selectedLoadout)).join("")+'</div></section>':'')+'<form id="join-player" class="mj-onboard-footer"><span class="mj-onboard-secure">✓ Akkaunt ochish shart emas</span><button class="mj-onboard-submit" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button></form></section>';
+ const isShooter=mode==="shooter",isRacing=mode==="racing";
+ const modeTitle=isShooter?"JANGCHI TANLA":isRacing?"MASHINA TANLA":"TAXALLUS VA QAHRAMON";
+ const modeCopy=isShooter?"Jangchingni tanla. To‘g‘ri javoblar bilan raqiblarni yeng!":isRacing?"Mashinangni tanla. Savollarga javob berib, raqiblaringdan o‘zib ket!":"Ismingni va o‘zing yoqtirgan qahramonni tanla.";
+ root.innerHTML='<section class="student-card mj-onboard-v2"><div class="mj-onboard-top"><span class="mj-onboard-brand"><img src="/mudarris-book-purple.svg" alt=""> MUDARRIS <b>JOIN</b></span><span class="mj-onboard-step">1 <i>/</i> 1</span></div>'+
+ '<div class="mj-onboard-content"><div class="mj-onboard-copy"><span class="mj-onboard-kicker">JONLI O‘YINGA QO‘SHILISH</span><h1 class="mj-onboard-title">O‘yinga xush kelibsan!</h1><p class="mj-onboard-subtitle">'+modeCopy+'</p><label class="mj-onboard-label" for="nickname">SENING TAXALLUSING</label><input class="mj-onboard-name" id="nickname" maxlength="24" minlength="2" required placeholder="Masalan, Ayyub" autocomplete="nickname"><div class="mj-onboard-name-help">2–24 belgi · Sinfdoshlaring seni shu nom bilan ko‘radi</div><div class="mj-onboard-error" id="join-error" role="alert" aria-live="polite"></div></div>'+
+ '<div class="mj-onboard-preview"><div class="mj-onboard-preview-glow"></div><div class="mj-onboard-preview-art">'+(isShooter||isRacing?'<span class="mj-onboard-mode-emoji">'+(isShooter?"🎯":"🏁")+'</span>':'<span id="join-avatar-large">'+MJAvatars.render(joiningAvatar,"mj-onboard-avatar")+'</span>')+'</div><span class="mj-onboard-preview-tag">'+(isShooter?"JANG MAYDONI":isRacing?"AVTOMOBIL POYGASI":"SENING QAHRAMONING")+'</span><strong>'+(isShooter?"Jangga tayyorlan!":isRacing?"Start chizig‘iga!":"Qahramoning tayyor!")+'</strong><small>'+(isShooter?"Jangchi va qiyofangni tanla.":isRacing?"Mashina va qiyofangni tanla.":"Qahramon va aksessuaringni sozla.")+'</small></div></div>'+
+ '<div class="mj-onboard-avatar-picker"><span class="mj-onboard-avatar-art" id="join-avatar-art">'+MJAvatars.render(joiningAvatar,"mj-avatar-art")+'</span><span class="mj-onboard-avatar-copy"><strong id="join-avatar-name">'+MJAvatars.parts(joiningAvatar).head.name+'</strong><small id="join-avatar-kind">ODDIY QAHRAMON · AKSESSUAR TANLANG</small></span><button type="button" id="edit-join-avatar">SOZLASH</button><button type="button" id="random-join-avatar" aria-label="Tasodifiy qahramon">🎲</button></div>'+
+ (options.length?'<section class="mj-loadout-section"><div class="mj-loadout-heading"><div><span>'+modeTitle+'</span><small>'+modeCopy+'</small></div><b>'+options.length+' TA</b></div><div class="mj-loadout-grid">'+options.map(item=>loadoutCard(mode,item,item.id===selectedLoadout)).join("")+'</div></section>':'')+
+ '<form id="join-player" class="mj-onboard-footer"><span class="mj-onboard-secure">✓ Akkaunt ochish shart emas</span><button class="mj-onboard-submit" type="submit"><span>O‘YINGA KIRISH</span><b>→</b></button></form></section>';
  const nameInput=$("#nickname");nameInput.focus({preventScroll:true});
- if(options.length)$("#play-root").querySelector(".mj-loadout-grid").addEventListener("click",event=>{const button=event.target.closest("[data-loadout]");if(!button)return;selectedLoadout=button.dataset.loadout;$("#play-root").querySelectorAll("[data-loadout]").forEach(card=>{const active=card===button;card.classList.toggle("is-selected",active);card.setAttribute("aria-pressed",String(active));const mark=card.querySelector("i");if(active&&!mark)card.insertAdjacentHTML("beforeend","<i>✓</i>");else if(!active&&mark)mark.remove()})});
+ const updateAvatar=()=>{
+  const parts=MJAvatars.parts(joiningAvatar),strip=$("#join-avatar-art"),large=$("#join-avatar-large");
+  if(strip)strip.innerHTML=MJAvatars.render(joiningAvatar,"mj-avatar-art");
+  if(large)large.innerHTML=MJAvatars.render(joiningAvatar,"mj-onboard-avatar");
+  const name=$("#join-avatar-name");if(name)name.textContent=parts.head.name;
+  const kind=$("#join-avatar-kind");if(kind)kind.textContent=parts.special?"AFSONAVIY · 1/1":"ODDIY QAHRAMON · "+parts.accessory.name.toLocaleUpperCase("uz");
+ };
+ $("#edit-join-avatar").addEventListener("click",()=>openAvatarStudio({preJoin:true,initialAvatar:joiningAvatar,onSave:key=>{joiningAvatar=key;updateAvatar()}}));
+ $("#random-join-avatar").addEventListener("click",()=>{joiningAvatar=MJAvatars.randomKey();updateAvatar()});
+ if(options.length)root.querySelector(".mj-loadout-grid").addEventListener("click",event=>{
+  const button=event.target.closest("[data-loadout]");if(!button)return;
+  selectedLoadout=button.dataset.loadout;
+  root.querySelectorAll(".mj-loadout-card").forEach(card=>{
+   const active=card===button;card.classList.toggle("is-selected",active);card.setAttribute("aria-pressed",String(active));
+   const mark=card.querySelector("i");if(active&&!mark)card.insertAdjacentHTML("beforeend","<i>✓</i>");else if(!active&&mark)mark.remove();
+  });
+ });
  $("#join-player").onsubmit=async event=>{
   event.preventDefault();
   const nickname=nameInput.value.trim().replace(/\s+/g," "),button=root.querySelector("button[type=submit]"),error=$("#join-error");
@@ -51,15 +74,14 @@ function showJoin(){
   }catch(errorValue){error.textContent=errorValue.message;button.disabled=false;button.querySelector("span").textContent="O‘YINGA KIRISH"}
  };
 }
-function openAvatarStudio(){
+function openAvatarStudio(options={}){
  if($("#avatar-studio"))return;
- const selected=MJAvatars.parts(player.avatar);
- let selectedHead=selected.special?"fox":selected.head.id,selectedAccessory=selected.special?"none":selected.accessory.id,selectedSpecial=selected.special?player.avatar:"",activeTab=selected.special?"specials":"heads",saving=false;
+ const preJoin=!!options.preJoin,initialKey=options.initialAvatar||player?.avatar||MJAvatars.randomKey(),selected=MJAvatars.parts(initialKey);
+ let selectedHead=selected.special?"fox":selected.head.id,selectedAccessory=selected.special?"none":selected.accessory.id,selectedSpecial=selected.special?initialKey:"",activeTab=selected.special?"specials":"heads",saving=false;
  const specialState=id=>(data?.specials||[]).find(item=>item.id===id)||{id,spawned:false,player_id:null};
- root.insertAdjacentHTML("beforeend",'<div class="mj-avatar-backdrop" id="avatar-studio"><section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title"><header class="mj-avatar-modal-head"><div><span class="mj-avatar-modal-kicker">SENING O‘YINCHI QIYOFANG</span><h2 id="avatar-studio-title">Qahramoningni tanla</h2></div><button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button></header><div class="mj-avatar-selected-preview"><span id="avatar-modal-art">'+MJAvatars.render(player.avatar,"mj-avatar-modal-art")+'</span><div><strong id="avatar-character-name">'+selected.head.name+'</strong><small id="avatar-accessory-name">'+(selected.special?"AFSONAVIY · 1/1":selected.accessory.name)+'</small></div><span class="mj-avatar-live-dot"></span></div><div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari"><button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>'+MJAvatars.heads.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>'+MJAvatars.hats.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="specials" role="tab" aria-selected="false">✨ Maxsus <span>2</span></button></div><div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div><div id="avatar-save-error" class="mj-avatar-save-error" role="alert"></div><footer class="mj-avatar-modal-footer"><span>Maxsus qahramonlar har biri 15% ehtimol bilan paydo bo‘ladi · 1/1</span><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></footer></section></div>');
+ root.insertAdjacentHTML("beforeend",'<div class="mj-avatar-backdrop" id="avatar-studio"><section class="mj-avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-studio-title"><header class="mj-avatar-modal-head"><div><span class="mj-avatar-modal-kicker">ODDIY VA MAXSUS QAHRAMONLAR</span><h2 id="avatar-studio-title">Qahramoningni sozla</h2><p>Yuzingni tanla, aksessuar qo‘sh va o‘zingga xos qiyofa yarat.</p></div><button type="button" id="close-avatar-picker" class="mj-avatar-close" aria-label="Yopish">×</button></header><div class="mj-avatar-selected-preview"><span id="avatar-modal-art">'+MJAvatars.render(initialKey,"mj-avatar-modal-art")+'</span><div><strong id="avatar-character-name">'+selected.head.name+'</strong><small id="avatar-accessory-name">'+(selected.special?"AFSONAVIY · 1/1":selected.accessory.name)+'</small></div><span class="mj-avatar-live-dot"></span></div><div class="mj-avatar-tabs" role="tablist" aria-label="Qahramon sozlamalari"><button type="button" class="mj-avatar-tab active" data-avatar-tab="heads" role="tab" aria-selected="true">Qahramonlar <span>'+MJAvatars.heads.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="hats" role="tab" aria-selected="false">Aksessuarlar <span>'+MJAvatars.hats.length+'</span></button><button type="button" class="mj-avatar-tab" data-avatar-tab="specials" role="tab" aria-selected="false">Maxsus <span>2</span></button></div><div class="mj-avatar-gallery-wrap"><div class="mj-avatar-gallery" id="avatar-gallery"></div></div><div id="avatar-save-error" class="mj-avatar-save-error" role="alert"></div><footer class="mj-avatar-modal-footer"><span id="avatar-rarity-note">'+(preJoin?"Maxsus qahramonlar o‘yinga qo‘shilgach ochiladi.":"Har bir maxsus qahramon 15% ehtimol bilan tushadi · 1/1")+'</span><div><button type="button" id="random-avatar-picker" class="mj-avatar-random">🎲 Tasodifiy</button><button type="button" id="done-avatar-picker" class="mj-avatar-done">TAYYOR <b>✓</b></button></div></footer></section></div>');
  document.body.classList.add("mj-avatar-picker-open");
- const studio=$("#avatar-studio");
- const getKey=()=>selectedSpecial||MJAvatars.key(selectedHead,selectedAccessory);
+ const studio=$("#avatar-studio"),getKey=()=>selectedSpecial||MJAvatars.key(selectedHead,selectedAccessory);
  const close=()=>{studio.remove();document.body.classList.remove("mj-avatar-picker-open");document.removeEventListener("keydown",onKey)};
  const onKey=event=>{if(event.key==="Escape")close()};
  const refreshPreview=()=>{
@@ -69,20 +91,22 @@ function openAvatarStudio(){
   $("#avatar-accessory-name").textContent=parts.special?"AFSONAVIY · 1/1":parts.accessory.name;
  };
  const renderGallery=()=>{
-  studio.querySelectorAll("[data-avatar-tab]").forEach(button=>{const active=button.dataset.avatarTab===activeTab;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
+  studio.querySelectorAll("[data-avatar-tab]").forEach(button=>{
+   const active=button.dataset.avatarTab===activeTab;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));
+  });
   if(activeTab==="specials"){
    $("#avatar-gallery").innerHTML=MJAvatars.specials.map(item=>{
-    const state=specialState(item.id),mine=Number(state.player_id)===Number(player.id),claimable=state.spawned&&(!state.player_id||mine),chosen=selectedSpecial===item.key;
-    const status=!state.spawned?"BU O‘YINDA CHIQMADI":mine?"SENIKI · 1/1":state.player_id?"OLINGAN · 1/1":"TOPILDI · 1/1";
+    const state=specialState(item.id),mine=!preJoin&&Number(state.player_id)===Number(player?.id),claimable=!preJoin&&state.spawned&&(!state.player_id||mine),chosen=selectedSpecial===item.key;
+    const status=preJoin?"O‘YINGA QO‘SHILGACH OCHILADI":!state.spawned?"BU O‘YINDA CHIQMADI":mine?"SENIKI · 1/1":state.player_id?"OLINGAN · 1/1":"TOPILDI · 1/1";
     return '<button type="button" class="mj-avatar-choice mj-special-choice '+(chosen?"selected ":"")+(claimable?"":"mj-special-locked")+'" data-avatar-choice="'+item.key+'" aria-pressed="'+chosen+'" '+(claimable?"":"disabled")+'><span class="mj-avatar-choice-art">'+MJAvatars.render(item.key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span><small class="mj-special-rarity">✦ '+item.rarity+' · 15%</small><em class="mj-special-state">'+status+'</em>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
    }).join("");
-   if(!MJAvatars.specials.some(item=>specialState(item.id).spawned))$("#avatar-gallery").insertAdjacentHTML("beforeend",'<p class="mj-special-empty">Bu o‘yinda maxsus qahramonlar chiqmagan. Keyingi o‘yinda yana omadni sinab ko‘r! 🍀</p>');
+   if(preJoin||!MJAvatars.specials.some(item=>specialState(item.id).spawned))$("#avatar-gallery").insertAdjacentHTML("beforeend",'<p class="mj-special-empty">'+(preJoin?"Avval PIN orqali o‘yinga qo‘shil. Feniks yoki Soya Ajdari shu o‘yinda 15% ehtimol bilan paydo bo‘lishi mumkin.":"Bu o‘yinda maxsus qahramonlar chiqmagan. Keyingi o‘yinda yana omadni sinab ko‘r!")+'</p>');
    return;
   }
   const isHeads=activeTab==="heads",items=isHeads?MJAvatars.heads:MJAvatars.hats;
   $("#avatar-gallery").innerHTML=items.map(item=>{
    const key=MJAvatars.key(isHeads?item.id:selectedHead,isHeads?selectedAccessory:item.id),chosen=isHeads?item.id===selectedHead:item.id===selectedAccessory;
-   return '<button type="button" class="mj-avatar-choice '+(chosen?"selected":"")+'" data-avatar-choice="'+item.id+'" aria-pressed="'+chosen+'"><span class="mj-avatar-choice-art">'+MJAvatars.render(key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
+   return '<button type="button" class="mj-avatar-choice '+(chosen?"selected":"")+'" data-avatar-choice="'+item.id+'" aria-pressed="'+chosen+'"><span class="mj-avatar-choice-art">'+MJAvatars.render(key,"mj-avatar-choice-svg")+'</span><span class="mj-avatar-choice-name">'+item.name+'</span><small class="mj-avatar-common-tag">'+(isHeads?"ODDIY QAHRAMON":item.id==="none"?"AKSSESUARSIZ":"AKSESSUAR")+'</small>'+(chosen?'<span class="mj-avatar-choice-check">✓</span>':"")+'</button>';
   }).join("");
  };
  const setTab=tab=>{activeTab=tab;renderGallery()};
@@ -94,18 +118,25 @@ function openAvatarStudio(){
   else{selectedSpecial="";if(activeTab==="heads")selectedHead=choice.dataset.avatarChoice;else selectedAccessory=choice.dataset.avatarChoice}
   refreshPreview();renderGallery();
  });
+ $("#random-avatar-picker").addEventListener("click",()=>{
+  const random=MJAvatars.parts(MJAvatars.randomKey());selectedHead=random.head.id;selectedAccessory=random.accessory.id;selectedSpecial="";activeTab="heads";refreshPreview();renderGallery();
+ });
  $("#close-avatar-picker").addEventListener("click",close);
  studio.addEventListener("click",event=>{if(event.target===studio)close()});
  document.addEventListener("keydown",onKey);
  $("#done-avatar-picker").addEventListener("click",async()=>{
   if(saving)return;
-  saving=true;const button=$("#done-avatar-picker");button.disabled=true;button.textContent="SAQLANMOQDA...";
+  const button=$("#done-avatar-picker");saving=true;button.disabled=true;button.textContent="SAQLANMOQDA...";
   try{
+   if(preJoin){options.onSave?.(getKey());close();return}
    const response=await api("player/avatar",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({pin,player_id:player.id,avatar:getKey()})});
    player.avatar=response.avatar||getKey();sessionStorage.setItem("mj-player-"+pin,JSON.stringify(player));
    const preview=$("#waiting-avatar-art");if(preview)preview.innerHTML=MJAvatars.render(player.avatar,"mj-avatar-art");
    close();
-  }catch(error){const message=$("#avatar-save-error");if(message)message.textContent=error.message;button.disabled=false;button.innerHTML='TAYYOR <b>✓</b>';saving=false}
+  }catch(error){
+   const message=$("#avatar-save-error");if(message)message.textContent=error.message;
+   button.disabled=false;button.innerHTML='TAYYOR <b>✓</b>';saving=false;
+  }
  });
 }
 function waiting(){
@@ -164,20 +195,63 @@ function studentLeaderboard(){
  return '<section class="mj-student-leaderboard"><div class="mj-student-leaderboard-head"><span>🏆 SINFDAGI REYTING</span><small>TOP '+list.length+'</small></div><div class="mj-student-leaderboard-list">'+list.map((item,index)=>'<div class="mj-student-rank '+(Number(item.id)===Number(player.id)?"is-me":"")+' rank-'+(index+1)+'"><b class="mj-rank-position">'+(index===0?"👑":index+1)+'</b><span class="mj-rank-avatar">'+avatarIcon(item.avatar)+'</span><span class="mj-rank-name">'+(loadoutFor(data.session.mode,item.loadout)?.icon?loadoutFor(data.session.mode,item.loadout).icon+" ":"")+esc(item.nickname)+(Number(item.id)===Number(player.id)?' <small>SEN</small>':"")+'</span><strong>'+Number(item.score||0).toLocaleString()+'</strong></div>').join("")+'</div></section>';
 }
 function setupShooterAim(){
- const scene=document.querySelector(".mj-shooter-scene");
- const reticle=scene?.querySelector(".mj-shooter-crosshair");
- if(!scene||!reticle)return;
+ const scene=document.querySelector(".mj-shooter-scene"),reticle=scene?.querySelector(".mj-shooter-crosshair"),enemy=scene?.querySelector(".mj-shooter-enemy"),hero=scene?.querySelector(".mj-shooter-hero");
+ if(!scene||!reticle||!enemy||!hero)return;
+ scene.tabIndex=0;
+ const storageKey="mj-shooter-arcade-"+pin+"-"+player.id;
+ let progress={ammo:24,kills:0,score:0,hp:100,enemyIndex:0};
+ try{progress={...progress,...JSON.parse(sessionStorage.getItem(storageKey)||"{}")}}catch{}
+ const enemies=["Qaroqchi","Cho‘l banditi","Temir niqob","Soya boshliq","So‘nggi raqib"];
+ const hud=document.createElement("div");hud.className="mj-shooter-arcade-hud";
+ hud.innerHTML='<div><span>NISHONLAR</span><strong data-shot-kills>0</strong></div><div><span>ANIQ ZARBALAR</span><strong data-shot-score>0</strong></div><div><span>O‘Q</span><strong data-shot-ammo>24</strong></div><small data-shot-help>Raqibni nishonga ol va bosib ot</small>';
+ scene.append(hud);
+ const hpBar=enemy.querySelector(".mj-enemy-health i"),enemyName=enemy.querySelector("small"),help=hud.querySelector("[data-shot-help]");
+ const updateHud=()=>{
+  hud.querySelector("[data-shot-kills]").textContent=progress.kills;hud.querySelector("[data-shot-score]").textContent=progress.score;hud.querySelector("[data-shot-ammo]").textContent=progress.ammo;
+  if(hpBar)hpBar.style.width=progress.hp+"%";if(enemyName)enemyName.textContent=enemies[progress.enemyIndex%enemies.length];
+  try{sessionStorage.setItem(storageKey,JSON.stringify(progress))}catch{}
+ };
  const aim=event=>{
   const bounds=scene.getBoundingClientRect();
   reticle.style.left=Math.max(18,Math.min(bounds.width-18,event.clientX-bounds.left))+"px";
-  reticle.style.top=Math.max(18,Math.min(bounds.height-18,event.clientY-bounds.top))+"px";
-  scene.classList.add("is-aiming");
+  reticle.style.top=Math.max(18,Math.min(bounds.height-18,event.clientY-bounds.top))+"px";scene.classList.add("is-aiming");
+ };
+ const fire=event=>{
+  if(event.target.closest(".mj-shooter-arcade-hud"))return;
+  aim(event);
+  if(progress.ammo<=0){help.textContent="O‘Q TUGADI · QAYTA O‘QLANMOQDA";return}
+  progress.ammo--;
+  const bounds=scene.getBoundingClientRect(),target=enemy.getBoundingClientRect(),heroBounds=hero.getBoundingClientRect(),x=event.clientX,y=event.clientY;
+  const inside=x>=target.left-8&&x<=target.right+8&&y>=target.top-8&&y<=target.bottom+8;
+  const near=Math.hypot(x-(target.left+target.width/2),y-(target.top+target.height/2))<Math.max(30,target.width*.38);
+  const startX=heroBounds.left-bounds.left+heroBounds.width*.7,startY=heroBounds.top-bounds.top+heroBounds.height*.35;
+  const shot=document.createElement("i");shot.className="mj-shooter-live-shot";shot.style.left=startX+"px";shot.style.top=startY+"px";
+  shot.style.setProperty("--shot-x",(x-bounds.left-startX)+"px");shot.style.setProperty("--shot-y",(y-bounds.top-startY)+"px");
+  scene.append(shot);shot.addEventListener("animationend",()=>shot.remove(),{once:true});
+  reticle.classList.remove("is-fired");void reticle.offsetWidth;reticle.classList.add("is-fired");
+  if(inside||near){
+   progress.hp=Math.max(0,progress.hp-34);progress.score+=25;help.textContent="ANIQ ZARBA! +25";
+   enemy.classList.remove("is-target-hit");void enemy.offsetWidth;enemy.classList.add("is-target-hit");
+   if(progress.hp===0){
+    progress.kills++;progress.score+=75;progress.hp=100;progress.enemyIndex++;
+    help.textContent="RAQIB YENGILDI! KEYINGI NISHON";
+    const label=scene.querySelector(".mj-shooter-battle-label span");if(label)label.textContent="RAQIB "+(progress.kills+Number(player.enemies_defeated||0)+1);
+   }
+  }else help.textContent="NISHONNI ANIQLA · QAYTA URIN";
+  if(progress.ammo===0)setTimeout(()=>{progress.ammo=24;help.textContent="YANGI O‘QLAR TAYYOR";updateHud()},850);
+  updateHud();
  };
  scene.addEventListener("pointermove",aim,{passive:true});
- scene.addEventListener("pointerdown",event=>{
-  aim(event);reticle.classList.remove("is-fired");void reticle.offsetWidth;reticle.classList.add("is-fired");
- },{passive:true});
+ scene.addEventListener("pointerdown",event=>{scene.focus({preventScroll:true});fire(event)});
  scene.addEventListener("pointerleave",()=>scene.classList.remove("is-aiming"),{passive:true});
+ scene.addEventListener("keydown",event=>{
+  if(["ArrowLeft","KeyA","ArrowRight","KeyD"].includes(event.code)){
+   event.preventDefault();const direction=event.code==="ArrowLeft"||event.code==="KeyA"?-1:1;
+   const current=Number(scene.dataset.heroLane||0),next=Math.max(-24,Math.min(24,current+direction*8));
+   scene.dataset.heroLane=String(next);hero.style.transform="translateX("+next+"px)";
+  }
+ });
+ updateHud();
 }
 function question(q){
  lastScreen="question";
@@ -186,6 +260,7 @@ function question(q){
  if(type==="slider"){const min=Number(q.options?.[0]?.text??0),max=Number(q.options?.[1]?.text??100),step=Number(q.options?.[2]?.text??1),lo=Number.isFinite(min)?min:0,hi=Number.isFinite(max)&&max>lo?max:100,st=Number.isFinite(step)&&step>0?step:1,mid=lo+(hi-lo)/2;answerHtml='<form id="slider-answer-form" class="student-slider-answer"><div class="student-slider-value" id="slider-value">'+mid+'</div><input id="slider-input" type="range" min="'+lo+'" max="'+hi+'" step="'+st+'" value="'+mid+'"><div class="student-slider-limits"><span>'+lo+'</span><span>'+hi+'</span></div><button class="student-primary-button" type="submit">JAVOBNI YUBORISH →</button></form>'}
  else if(type==="puzzle"){puzzleOrder=(q.options||[]).map(o=>String(o.text||o));for(let i=puzzleOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[puzzleOrder[i],puzzleOrder[j]]=[puzzleOrder[j],puzzleOrder[i]]}answerHtml='<div class="student-puzzle-answer"><p>Javoblarni to‘g‘ri tartibga keltiring:</p><div id="puzzle-items">'+puzzleOrder.map((v,i)=>'<div class="student-puzzle-row"><span>'+(i+1)+'</span><strong>'+esc(v)+'</strong><div><button type="button" data-puzzle-move="'+i+'" data-direction="-1" '+(i===0?'disabled':'')+'>↑</button><button type="button" data-puzzle-move="'+i+'" data-direction="1" '+(i===puzzleOrder.length-1?'disabled':'')+'>↓</button></div></div>').join('')+'</div><button type="button" id="submit-puzzle" class="student-primary-button">TARTIBNI YUBORISH →</button></div>'}
  else if(type==="quiz"&&q.multi_select){answerHtml='<div class="student-multi-hint">Bir nechta to‘g‘ri javob bor. Barcha mos javoblarni belgilang.</div><div class="student-multi-grid">'+(q.options||[]).map((o,i)=>'<button type="button" class="student-multi-option '+["red","blue","yellow","green"][i%4]+'" data-multi-answer="'+esc(o.text||o)+'"><span class="student-multi-check"></span><span>'+esc(o.text||o)+'</span></button>').join('')+'</div><button type="button" id="submit-multi" class="student-primary-button" disabled>JAVOBLARNI YUBORISH →</button>'}
+ else if(type==="slide"){answerHtml='<div class="student-slide-answer"><span>TAQDIMOT SLAYDI</span><p>Ma’lumotni ko‘rib chiqing va davom eting.</p><button type="button" class="student-primary-button" id="submit-slide">DAVOM ETISH →</button></div>'}
  else if(["type_answer","open_ended","word_cloud","brainstorm"].includes(type)){const word=type==="word_cloud",open=type==="open_ended",brain=type==="brainstorm",max=word?20:open?250:brain?400:type==="type_answer"?20:75,field=open||brain?'<textarea class="field" id="typed-answer" maxlength="'+max+'" rows="'+(brain?4:3)+'" placeholder="'+(brain?"Har bir g‘oyani yangi qatordan yozing…":open?"Fikringizni yozing…":"Javobingizni yozing…")+'"></textarea>':'<input class="field" id="typed-answer" maxlength="'+max+'" placeholder="'+(word?"Bitta so‘z yoki qisqa ibora…":type==="type_answer"?"Qisqa javob (20 belgigacha)…":"Javobingizni yozing…")+'" autocomplete="off">';answerHtml='<form id="answer-form" class="typed-answer student-typed-answer">'+field+'<button class="student-primary-button" type="submit"><span>JAVOBNI YUBORISH</span><b>→</b></button></form>'}
  else{answerHtml=(q.options||[]).map((o,i)=>'<button class="answer-tile student-answer-tile '+["red","blue","yellow","green"][i%4]+'" data-answer="'+esc(o.text||o)+'"><span class="answer-symbol">'+["▲","◆","●","■"][i%4]+'</span><span>'+esc(o.text||o)+'</span><b class="student-answer-arrow">→</b></button>').join('')}
  root.innerHTML='<section class="question-wrap student-question-stage mj-question-v2"><div class="question-top student-game-toolbar"><div class="student-game-title"><span class="student-mini-logo">✦</span><span>'+esc(data.session.title)+'</span></div><span class="pill student-mode-pill">'+esc(modeLabel)+'</span><span class="student-pin-badge">PIN '+pin+'</span><div class="student-player-chip"><span>'+avatarIcon(player.avatar)+'</span><b>'+esc(player.nickname)+'</b><i>★ '+Number(player.score||0).toLocaleString()+'</i></div></div><div class="mj-question-v2-card"><div class="mj-question-v2-meta"><span>SAVOL '+(data.session.current_question+1)+' / '+(data.questions?.length||"?")+'</span><span>'+esc(modeLabel)+'</span></div><h1 class="display student-question-title">'+esc(q.prompt)+'</h1>'+(mediaHtml?'<div class="mj-question-v2-media">'+mediaHtml+'</div>':'<div class="mj-question-v2-media mj-question-media-empty"><span>✦</span><small>SAVOLGA DIQQAT QILING</small></div>')+gameScene(mode,"playing")+'<div class="mj-question-v2-timer"><span>QOLGAN VAQT</span><div><i id="timer-fill"></i></div><strong id="timer-number">'+q.time+'</strong></div><div id="answer-area" class="answer-grid student-answer-grid">'+answerHtml+'</div><div id="answer-status" class="answer-status student-answer-status" aria-live="polite"></div></div><div class="student-game-footer"><span>✦ MUDARRIS JOIN</span><span>Javobni tanla — ballarni yut!</span></div></section>';
@@ -195,6 +270,7 @@ function question(q){
  else if(type==="slider"){const slider=$("#slider-input");slider.addEventListener("input",()=>$("#slider-value").textContent=slider.value);$("#slider-answer-form").onsubmit=e=>{e.preventDefault();submit(slider.value)}}
  else if(type==="puzzle"){$("#puzzle-items").addEventListener("click",e=>{const b=e.target.closest("[data-puzzle-move]");if(!b)return;const i=Number(b.dataset.puzzleMove),j=i+Number(b.dataset.direction);if(j<0||j>=puzzleOrder.length)return;[puzzleOrder[i],puzzleOrder[j]]=[puzzleOrder[j],puzzleOrder[i]];$("#puzzle-items").innerHTML=puzzleOrder.map((v,k)=>'<div class="student-puzzle-row"><span>'+(k+1)+'</span><strong>'+esc(v)+'</strong><div><button type="button" data-puzzle-move="'+k+'" data-direction="-1" '+(k===0?'disabled':'')+'>↑</button><button type="button" data-puzzle-move="'+k+'" data-direction="1" '+(k===puzzleOrder.length-1?'disabled':'')+'>↓</button></div></div>').join('')});$("#submit-puzzle").addEventListener("click",()=>submit(JSON.stringify(puzzleOrder)))}
  else if(["type_answer","open_ended","word_cloud","brainstorm"].includes(type))$("#answer-form").onsubmit=e=>{e.preventDefault();submit($("#typed-answer").value)};
+ else if(type==="slide")$("#submit-slide").addEventListener("click",()=>submit("DAVOM ETISH"));
  else area.onclick=e=>{const b=e.target.closest("[data-answer]");if(b)submit(b.dataset.answer)};
  startTimer(Number(q.time)||20);
 }

@@ -51,10 +51,17 @@
     if (link.getAttribute("aria-disabled") === "true") event.preventDefault();
   }));
 
+  document.querySelectorAll("[data-password-toggle]").forEach(button=>button.addEventListener("click",()=>{
+    const input=document.getElementById(button.dataset.passwordToggle);
+    if(!input)return;
+    const visible=input.type==="password";input.type=visible?"text":"password";
+    button.textContent=visible?"Yashirish":"Ko‘rsatish";
+    button.setAttribute("aria-label",visible?"Parolni yashirish":"Parolni ko‘rsatish");
+  }));
+
   loginTab.addEventListener("click", () => setMode("login"));
   registerTab.addEventListener("click", () => setMode("register"));
   setMode("login");
-  setGoogleEnabled(false);
 
   async function submitAuth(form, path, payload, successText) {
     const button = form.querySelector('button[type="submit"]');

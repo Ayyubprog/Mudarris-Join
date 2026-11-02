@@ -8,15 +8,16 @@ function mountDriveControls(root){
  root.dataset.driveControls="ready";root.tabIndex=0;
  root.setAttribute("role","group");
  root.setAttribute("aria-label","3D poyga boshqaruvi. Chap va o‘ng strelkalar bilan buriling, Space bilan turbo, pastga strelka bilan tormoz.");
- const controls={left:false,right:false,boost:false,brake:false,lane:0,hits:0,lastHit:0};
+ const controls={left:false,right:false,boost:false,brake:false,lane:0,hits:0,lastHit:0,nitro:100,speed:0};
  root._mjDriveControls=controls;
  const ui=document.createElement("div");ui.className="mj-race-drive-ui";
- ui.innerHTML='<span class="mj-race-drive-tip">A / D yoki ← / → · PROBEL = TEZLASHISH</span><span class="mj-race-drive-feedback" aria-live="polite">TAYYOR</span>';root.append(ui);
+ ui.innerHTML='<span class="mj-race-drive-tip">A / D yoki ← / → · PROBEL = TEZLASHISH</span><span class="mj-race-drive-feedback" aria-live="polite">TAYYOR</span><div class="mj-race-telemetry"><strong data-race-speed>0</strong><small>KM/SOAT</small><div><span>NITRO</span><i><b data-race-nitro style="width:100%"></b></i></div></div>';root.append(ui);
  const touch=document.createElement("div");touch.className="mj-race-touch-controls";
  touch.innerHTML='<div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="left" aria-label="Chapga burilish">◀</button><button type="button" class="mj-race-touch-button" data-drive="right" aria-label="O‘ngga burilish">▶</button></div><div class="mj-race-touch-group"><button type="button" class="mj-race-touch-button" data-drive="brake" aria-label="Tormoz">TORMOZ</button><button type="button" class="mj-race-touch-button" data-drive="boost" aria-label="Turbo">TEZLA</button></div>';
  root.append(touch);
  const feedback=ui.querySelector(".mj-race-drive-feedback");
  controls.setFeedback=value=>{feedback.textContent=value};
+ controls.setTelemetry=(speed,nitro)=>{const speedNode=ui.querySelector("[data-race-speed]"),nitroNode=ui.querySelector("[data-race-nitro]");if(speedNode)speedNode.textContent=Math.round(speed);if(nitroNode)nitroNode.style.width=nitro+"%"};
  const syncFallback=()=>controls.updateFallback?.();
  const keys={ArrowLeft:"left",KeyA:"left",ArrowRight:"right",KeyD:"right",Space:"boost",ArrowDown:"brake",KeyS:"brake",ShiftLeft:"boost",ShiftRight:"boost"};
  const onKeyDown=event=>{
@@ -109,8 +110,9 @@ async function start(){
    const rail=new THREE.Mesh(new THREE.BoxGeometry(.24,.65,220),railMat);rail.position.set(side*6.65,.35,-70);world.add(rail);
   }
   const laneMat=new THREE.MeshStandardMaterial({color:0xf9f6dc,emissive:0x333322});
+  const roadMarks=[];
   for(const x of [-2.15,2.15])for(let i=0;i<34;i++){
-   const dash=new THREE.Mesh(new THREE.BoxGeometry(.1,.025,2.1),laneMat);dash.position.set(x,.025,-i*6-3);world.add(dash);
+   const dash=new THREE.Mesh(new THREE.BoxGeometry(.1,.025,2.1),laneMat);dash.position.set(x,.025,-i*6-3);world.add(dash);roadMarks.push(dash);
   }
   const hillMat=[0x5c9a79,0x78ad85,0x4d8c70];
   for(let i=0;i<14;i++){
@@ -140,13 +142,18 @@ async function start(){
   const size=()=>{const w=Math.max(1,root.clientWidth),h=Math.max(1,root.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};
   size();const observer=new ResizeObserver(size);
   observer.observe(root);
-  const state={renderer,world,camera,playerCar,rivalCars,observer,frame:0,root,controls,obstacles,lastFrame:0};
+  const state={renderer,world,camera,playerCar,rivalCars,observer,frame:0,root,controls,obstacles,roadMarks,lastFrame:0};
   active.set(root,state);root.classList.add("has-webgl");
   const animate=()=>{
    if(!root.isConnected){observer.disconnect();renderer.dispose();active.delete(root);controls.cleanup?.();return}
-   const boost=controls.boost||root.classList.contains("is-boost"),slow=controls.brake||root.classList.contains("is-slow");
+   const slow=controls.brake||root.classList.contains("is-slow");
    const target=clamp(Number(root.dataset.progress)||12,0,100),now=performance.now()*.001;
    const delta=Math.min(.04,state.lastFrame?now-state.lastFrame:.016);state.lastFrame=now;
+   const requestedBoost=controls.boost&&controls.nitro>0;
+   if(requestedBoost)controls.nitro=Math.max(0,controls.nitro-delta*27);else controls.nitro=Math.min(100,controls.nitro+delta*9);
+   const boost=requestedBoost||root.classList.contains("is-boost");
+   const targetSpeed=slow?54:boost?245:145;controls.speed+=(targetSpeed-controls.speed)*Math.min(1,delta*3.5);
+   controls.setTelemetry?.(controls.speed,controls.nitro);
    const steering=(controls.right?1:0)-(controls.left?1:0);
    controls.lane=clamp(controls.lane+steering*delta*2.9,-.92,.92);
    if(!steering)controls.lane*=Math.pow(.12,delta);
@@ -163,10 +170,13 @@ async function start(){
     car.position.x=lanePositions[i%lanePositions.length]+Math.sin(now*.5+i)*.12;
     car.rotation.y=Math.sin(now*.6+i)*.025;
    });
+   const trafficSpeed=boost?13:slow?4.5:8.5;
+   roadMarks.forEach(mark=>{mark.position.z+=delta*trafficSpeed;if(mark.position.z>playerCar.position.z+5)mark.position.z-=205});
    let collision=false;
    obstacles.forEach((obstacle,i)=>{
-    obstacle.rotation.y=now*.6+i;
-    if(Math.abs(obstacle.position.z-playerCar.position.z)<1.35&&Math.abs(obstacle.position.x-playerCar.position.x)<1.18){collision=true;obstacle.position.z=-1000}
+    obstacle.rotation.y=now*.6+i;obstacle.position.z+=delta*trafficSpeed;
+    if(obstacle.position.z>playerCar.position.z+2){obstacle.position.z=playerCar.position.z-62-i*2;obstacle.position.x=lanePositions[(i+controls.hits)%lanePositions.length]}
+    if(Math.abs(obstacle.position.z-playerCar.position.z)<1.45&&Math.abs(obstacle.position.x-playerCar.position.x)<1.18){collision=true;obstacle.position.z=playerCar.position.z-70-i*2}
    });
    if(collision&&now-controls.lastHit>.7){
     controls.lastHit=now;controls.hits++;controls.setFeedback("TO‘SIQ! ×"+controls.hits);

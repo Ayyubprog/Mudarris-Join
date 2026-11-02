@@ -1891,3 +1891,18 @@ body.mj-dashboard .mj-sidebar-footer img{width:34px;height:34px;object-fit:conta
 .qb-answer-row:hover{transform:translateY(-1px);box-shadow:0 6px 16px #263f6810}
 .qb-question-item:focus-visible,.qb-answer-mark:focus-visible,.qb-icon-action:focus-visible{outline:3px solid #7ca4f5;outline-offset:2px}
 @media(max-width:760px){.qb-topbar{min-height:62px}.qb-brand-mark{width:35px;height:35px}.qb-back{width:33px;height:33px}}
+
+
+/* Quiz creator: clearer categories, compact import action, and tactile answer controls. */
+.qb-type-group{margin:0 0 18px}
+.qb-type-group h3{margin:0 0 8px;color:#7c8ba5;font-size:8px;font-weight:1000;letter-spacing:.14em}
+.qb-type-group>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qb-type-option{min-height:75px;padding:10px 12px;border:1px solid #e6eaf4;border-radius:13px;background:#fff;transition:border-color .15s,transform .15s,box-shadow .15s}
+.qb-type-option:hover{transform:translateY(-2px);border-color:#9eb4ec;box-shadow:0 8px 18px #263f6810}
+.qb-type-option-icon{width:34px;height:34px;border-radius:10px;background:#eff3ff;color:#496bc4}
+.qb-type-option strong{font-size:10px}.qb-type-option small{font-size:8px;line-height:1.4}
+.qb-template-download{width:100%;min-height:34px;margin-top:6px;border:1px dashed #c6d3e9;border-radius:9px;background:#f8faff;color:#506ca8;font-size:9px;font-weight:900;cursor:pointer}
+.qb-template-download:hover{border-color:#708fe0;background:#eff4ff}
+.qb-question-card{box-shadow:0 14px 42px #1d23400d}
+.qb-answer-row:focus-within{border-color:#6889d8;box-shadow:0 0 0 3px #6889d81a}
+@media(max-width:760px){.qb-type-group>div{grid-template-columns:1fr}.qb-type-option{min-height:63px}}
