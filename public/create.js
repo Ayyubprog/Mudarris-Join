@@ -225,11 +225,31 @@ function updateQuestionStatus(){
   if(errorNode&&errorNode.textContent&&!error)errorNode.textContent="";
 }
 function icon(type){return typeIcons[type]||typeIcons.quiz}
+function typePreview(type){
+  const previews={
+    quiz:'<div class="qtp-prompt"></div><div class="qtp-answer-grid"><i class="red"></i><i class="blue"></i><i class="yellow"></i><i class="green"></i></div>',
+    true_false:'<div class="qtp-truefalse"><span class="yes">✓ To‘g‘ri</span><span class="no">✕ Noto‘g‘ri</span></div>',
+    type_answer:'<div class="qtp-text-answer"><span>Javobingizni yozing...</span><b>↵</b></div>',
+    puzzle:'<div class="qtp-puzzle"><span>1</span><i>→</i><span>2</span><i>→</i><span>3</span><i>→</i><span>4</span></div>',
+    slider:'<div class="qtp-slider"><i></i><b></b><i></i></div><div class="qtp-slider-labels"><span>0</span><span>100</span></div>',
+    poll:'<div class="qtp-poll"><i style="height:26%"></i><i style="height:52%"></i><i style="height:82%"></i><i style="height:42%"></i></div>',
+    word_cloud:'<div class="qtp-cloud"><b>IDEA</b><strong>AJIB!</strong><span>QIZIQ</span><i>ZO‘R</i></div>',
+    open_ended:'<div class="qtp-open"><b>Fikringizni yozing</b><i></i><i></i><i></i></div>',
+    brainstorm:'<div class="qtp-brainstorm"><i>✦</i><i>💡</i><i>★</i><i>✧</i></div>',
+    slide:'<div class="qtp-slide"><i></i><span><b></b><b></b><b></b></span></div>'
+  };
+  return '<span class="qb-type-preview qb-type-preview-'+type+'" aria-hidden="true">'+(previews[type]||previews.quiz)+'</span>';
+}
 function renderTypeModal(){
   $("#type-grid").innerHTML=typeGroups.map(group=>
     '<section class="qb-type-group"><h3>'+group.title+'</h3><div>'+
     group.items.map(type=>
-      '<button type="button" class="qb-type-option" data-new-type="'+type+'"><span class="qb-type-option-icon">'+icon(type)+'</span><span><strong>'+labels[type]+'</strong><small>'+descriptions[type]+'</small></span><b>＋</b></button>'
+      '<button type="button" class="qb-type-option" data-new-type="'+type+'">'+
+        typePreview(type)+
+        '<span class="qb-type-option-main"><span class="qb-type-option-icon">'+icon(type)+'</span>'+
+        '<span class="qb-type-option-copy"><strong>'+labels[type]+'</strong><small>'+descriptions[type]+'</small></span>'+
+        '<b aria-hidden="true">→</b></span>'+
+      '</button>'
     ).join("")+'</div></section>'
   ).join("");
 }
