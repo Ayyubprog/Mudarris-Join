@@ -3,125 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#321064">
+  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="MUDARRIS JOIN — jonli sinf viktorinalarini yaratish">
   <title>Viktorina yaratish — MUDARRIS JOIN</title>
-  <link rel="icon" href="/mudarris-book-purple.svg" type="image/svg+xml">
+  <link rel="icon" href="/mudarris-book-purple.svg?v=purple-brand-20261102" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900;1000&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/theme.css?v=quiz-creator-plus-20261102">
+  <link rel="stylesheet" href="/theme.css?v=kahoot-editor-layout-20261102">
 </head>
-<body class="mj-editor-page qb-page">
+<body class="mj-editor-page qb-page qb-theme-room">
   <header class="qb-topbar">
     <div class="qb-topbar-left">
-      <a class="qb-back" href="/teacher.html" aria-label="O‘qituvchi kabinetiga qaytish" title="Kabinetga qaytish">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <a class="qb-brand" href="/teacher.html" aria-label="MUDARRIS JOIN bosh sahifasi">
+        <span class="qb-brand-mark"><img src="/mudarris-book-purple.svg?v=purple-brand-20261102" alt=""></span>
+        <span class="qb-brand-name">MUDARRIS <b>JOIN</b></span>
       </a>
-      <a class="qb-brand" href="/teacher.html" aria-label="MUDARRIS JOIN">
-        <span class="qb-brand-mark"><img src="/mudarris-book-purple.svg" alt=""></span>
-        <span>MUDARRIS <b>JOIN</b></span>
-      </a>
-      <span class="qb-top-divider"></span>
-      <label class="qb-title-wrap" for="quiz-title">
-        <span>VIKTORINA NOMI</span>
-        <input id="quiz-title" value="Yangi viktorina" maxlength="90" placeholder="Viktorina nomini kiriting" autocomplete="off">
-      </label>
+      <div class="qb-title-group">
+        <label class="qb-title-wrap" for="quiz-title">
+          <input id="quiz-title" value="Yangi viktorina" maxlength="90" placeholder="Viktorina nomini kiriting" autocomplete="off" aria-label="Viktorina nomi">
+        </label>
+        <button type="button" class="qb-top-settings" id="editor-settings">Sozlamalar</button>
+      </div>
+      <span class="qb-save-state" id="save-state"><i></i><span id="autosave-label">Qoralama saqlanmoqda</span></span>
     </div>
     <div class="qb-topbar-right">
-      <span class="qb-save-state" id="save-state"><i></i><span>Qoralama</span></span>
-      <button class="qb-button qb-button-quiet" id="preview-quiz-top" type="button">
+      <button type="button" class="qb-top-upgrade" title="MUDARRIS JOIN">✦ <span>Imkoniyatlar</span></button>
+      <button type="button" class="qb-top-theme" id="theme-toggle"><span>◉</span> Mavzular</button>
+      <button type="button" class="qb-button qb-button-quiet" id="preview-quiz-top">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12s3.2-6 9.2-6 9.2 6 9.2 6-3.2 6-9.2 6-9.2-6-9.2-6Z"/><circle cx="12" cy="12" r="2.7"/></svg>
         Ko‘rib chiqish
       </button>
-      <button class="qb-button qb-button-primary" id="save-quiz-top" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12l3 3v13H4V4h1Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></svg>
-        Saqlash
-      </button>
-      <button class="qb-button qb-button-gold" id="save-and-play" type="button">Saqlash va o‘ynash <span>→</span></button>
-      <div class="qb-profile-wrap">
+      <span class="qb-top-separator"></span>
+      <button type="button" class="qb-button qb-button-exit" id="exit-editor">Chiqish</button>
+      <button type="button" class="qb-button qb-button-primary" id="save-quiz-top">Saqlash</button>
+      <div class="qb-profile-wrap" hidden>
         <button class="qb-profile-button" id="editor-profile-button" type="button" aria-expanded="false">
           <span class="qb-profile-avatar" id="teacher-initial">T</span><span id="editor-teacher-name">O‘qituvchi</span><span>⌄</span>
         </button>
-        <div class="qb-profile-popover" id="editor-profile-popover" hidden>
-          <button type="button" id="editor-signout">Tizimdan chiqish</button>
-        </div>
+        <div class="qb-profile-popover" id="editor-profile-popover" hidden><button type="button" id="editor-signout">Tizimdan chiqish</button></div>
       </div>
     </div>
   </header>
 
+  <section class="qb-quiz-details" id="quiz-details" hidden aria-label="Viktorina sozlamalari">
+    <div class="qb-details-heading">
+      <div><span class="qb-kicker">VIKTORINA SOZLAMALARI</span><strong>Viktorina haqida</strong></div>
+      <button type="button" id="close-editor-settings" aria-label="Yopish">×</button>
+    </div>
+    <div class="qb-details-fields">
+      <label>Fan<input id="quiz-subject" maxlength="60" placeholder="Masalan, Matematika"></label>
+      <label>Sinf<input id="quiz-grade" maxlength="30" placeholder="Masalan, 6A"></label>
+      <label class="qb-description-field">Qisqacha izoh<input id="quiz-description" maxlength="240" placeholder="Viktorina haqida qisqa ma’lumot (ixtiyoriy)"></label>
+    </div>
+  </section>
+
   <div class="qb-layout">
     <aside class="qb-sidebar">
       <div class="qb-sidebar-heading">
-        <div><span class="qb-kicker">VIKTORINA TUZILMASI</span><h2>Savollar</h2></div>
+        <div><span class="qb-kicker">VIKTORINA</span><h2>Savollar</h2></div>
         <span class="qb-question-counter" id="question-count">1 / 200</span>
       </div>
       <div class="qb-progress-track"><i id="question-progress"></i></div>
       <div class="qb-question-list" id="question-list" aria-label="Savollar ro‘yxati"></div>
-      <button class="qb-add-question" id="open-question-types" type="button">
-        <span class="qb-add-question-icon">＋</span><span><strong>Savol qo‘shish</strong><small>Turini tanlang</small></span><b>⌄</b>
-      </button>
-      <div class="qb-sidebar-tools">
-        <button type="button" id="import-questions">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M4 14v6h16v-6"/></svg>
-          Jadvaldan import
+      <div class="qb-sidebar-actions">
+        <button class="qb-add-question" id="open-question-types" type="button">
+          <span class="qb-add-question-icon">＋</span><span><strong>Savol qo‘shish</strong></span>
         </button>
+        <button class="qb-add-slide" id="add-slide" type="button"><span>▤</span> Slayd qo‘shish</button>
+      </div>
+      <div class="qb-sidebar-bottom">
+        <button type="button" id="import-questions" class="qb-import-button"><span>↥</span> Jadvaldan import</button>
         <input id="import-file" type="file" accept=".csv,.tsv,text/csv,text/tab-separated-values" hidden>
+        <button type="button" id="save-and-play" class="qb-side-play">Saqlash va o‘ynash <b>→</b></button>
+        <a class="qb-sidebar-footer" href="/teacher.html">
+          <img src="/mudarris-book-purple.svg?v=purple-brand-20261102" alt="">
+          <span><strong>MUDARRIS JOIN</strong><small>O‘qituvchi kabineti</small></span>
+          <b>⌂</b>
+        </a>
       </div>
-      <div class="qb-sidebar-tip">
-        <span class="qb-tip-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4m-5.5-5.5a6 6 0 1 1 7 0c-.8.6-1.2 1.2-1.3 2H9.8c-.1-.8-.5-1.4-1.3-2Z"/><path d="M12 5v4"/></svg></span>
-        <div><strong>Maslahat</strong><p>Savollarni sudrab olib, kerakli tartibda joylashtiring.</p></div>
-      </div>
-      <a class="qb-sidebar-footer" href="/teacher.html">
-        <img src="/mudarris-book-purple.svg" alt=""><span><strong>MUDARRIS JOIN</strong><small>O‘qituvchi kabineti</small></span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-      </a>
     </aside>
 
     <main class="qb-main">
-      <section class="qb-quiz-details">
-        <div class="qb-details-heading">
-          <div><span class="qb-kicker">VIKTORINA MA’LUMOTLARI</span><strong>O‘yin haqida</strong></div>
-          <span class="qb-details-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5Z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8m-8 4h6"/></svg></span>
-        </div>
-        <div class="qb-details-fields">
-          <label>Fan<input id="quiz-subject" maxlength="60" placeholder="Masalan, Matematika"></label>
-          <label>Sinf<input id="quiz-grade" maxlength="30" placeholder="Masalan, 6A"></label>
-          <label class="qb-description-field">Qisqacha izoh<input id="quiz-description" maxlength="240" placeholder="Viktorina haqida qisqa ma’lumot (ixtiyoriy)"></label>
-        </div>
-      </section>
-
+      <div class="qb-room-decor" aria-hidden="true">
+        <span class="qb-room-window"></span><span class="qb-room-frame"></span>
+        <span class="qb-room-lamp"></span><span class="qb-room-plant"></span>
+        <span class="qb-room-shelf"></span><span class="qb-room-rug"></span>
+      </div>
       <div class="qb-editor-heading">
         <div><span class="qb-kicker" id="question-eyebrow">1-SAVOL · VIKTORINA</span><h1 id="question-heading">Savolni yarating</h1></div>
         <div class="qb-question-actions">
-          <button type="button" id="duplicate-question" class="qb-icon-action" title="Savolni nusxalash" aria-label="Savolni nusxalash">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
-          </button>
-          <button type="button" id="delete-question" class="qb-icon-action qb-danger-action" title="Savolni o‘chirish" aria-label="Savolni o‘chirish">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
-          </button>
+          <button type="button" id="duplicate-question" class="qb-icon-action" title="Savolni nusxalash" aria-label="Savolni nusxalash">▢</button>
+          <button type="button" id="delete-question" class="qb-icon-action qb-danger-action" title="Savolni o‘chirish" aria-label="Savolni o‘chirish">⌫</button>
         </div>
       </div>
-
       <section class="qb-question-card">
         <div class="qb-question-card-top">
-          <div class="qb-type-label"><span class="qb-type-icon" id="current-type-icon"></span><span><strong id="current-type-name">Viktorina</strong><small id="current-type-description">Bir nechta variantdan to‘g‘ri javobni tanlang</small></span></div>
+          <div class="qb-type-label"><span class="qb-type-icon" id="current-type-icon"></span><span><strong id="current-type-name">Viktorina</strong><small id="current-type-description">To‘g‘ri javobni belgilang</small></span></div>
           <span class="qb-question-status" id="question-status"><i></i> To‘ldirilmoqda</span>
         </div>
-
         <div class="qb-prompt-area">
-          <div class="qb-prompt-label"><label for="question-prompt">Savol matni</label><span id="prompt-counter">0 / 120</span></div>
-          <textarea id="question-prompt" maxlength="120" rows="2" placeholder="Savolingizni shu yerga yozing..."></textarea>
+          <div class="qb-prompt-label"><label for="question-prompt">Savol</label><span id="prompt-counter">0 / 120</span></div>
+          <textarea id="question-prompt" maxlength="120" rows="1" placeholder="Savolingizni shu yerga yozing..."></textarea>
         </div>
-
         <div class="qb-media-area" id="media-area">
           <div class="qb-media-toolbar">
-            <div><span class="qb-media-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg></span><span><strong>Savolga media qo‘shing</strong><small>Rasm, GIF yoki video havolasi</small></span></div>
-            <button type="button" id="open-media-modal" class="qb-media-add">＋ Media qo‘shish</button>
+            <div class="qb-media-callout">
+              <span class="qb-media-illustration"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.5 9 12l3.5 3.5L16 12l4 5.5M5 4h14a1 1 0 0 1 1 1v14H4V5a1 1 0 0 1 1-1Z"/><circle cx="9" cy="8" r="1.5"/></svg></span>
+              <strong>Media toping va joylashtiring</strong>
+              <small>Rasm, GIF yoki video qo‘shing</small>
+              <div class="qb-media-actions"><button type="button" id="open-media-modal" class="qb-media-add">＋ Media tanlash</button><button type="button" id="quick-upload-media" class="qb-upload-link">Fayl yuklash</button></div>
+            </div>
           </div>
           <div id="media-preview" class="qb-media-preview" hidden></div>
         </div>
-
         <div class="qb-answers-heading">
           <div><strong id="answers-title">Javob variantlari</strong><small id="answers-help">To‘g‘ri javobni belgilang</small></div>
           <span class="qb-answer-count" id="answer-count">0 / 6</span>
@@ -129,47 +124,49 @@
         <div id="answer-editor" class="qb-answer-grid"></div>
         <button type="button" id="add-answer" class="qb-add-answer">＋ Javob variantini qo‘shish</button>
         <div id="special-editor" class="qb-special-editor" hidden></div>
-
         <div class="qb-question-footer">
           <button type="button" id="footer-add-question" class="qb-footer-add"><span>＋</span> Keyingi savol</button>
-          <div class="qb-footer-hint"><span>⌘</span> <span>Ctrl + S — saqlash</span></div>
           <span id="question-error" class="qb-question-error" role="status"></span>
         </div>
       </section>
-
-      <div class="qb-main-footer">
-        <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg> Har bir savolda vaqt, ball va javob turini alohida sozlashingiz mumkin.</span>
-        <span id="autosave-label">O‘zgarishlar shu brauzerda vaqtincha saqlanadi.</span>
-      </div>
     </main>
 
     <aside class="qb-settings">
-      <div class="qb-settings-heading"><span class="qb-settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1a1.8 1.8 0 0 1-2.5 2.5l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.8 1.8 0 0 1-3.6 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1A1.8 1.8 0 1 1 5 15l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a1.8 1.8 0 0 1 0-3.6h.2a1.7 1.7 0 0 0 1.2-2.9L5 5.4A1.8 1.8 0 0 1 7.5 2.9l.1.1a1.7 1.7 0 0 0 2.9-1.2v-.2a1.8 1.8 0 0 1 3.6 0v.2A1.7 1.7 0 0 0 17 3l.1-.1a1.8 1.8 0 1 1 2.5 2.5l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.8 1.8 0 0 1 0 3.6h-.2a1.7 1.7 0 0 0-1.3 3Z"/></svg></span><div><span class="qb-kicker">SOZLAMALAR</span><h2>Savol sozlamalari</h2></div></div>
-
-      <div class="qb-setting-block">
-        <label for="setting-time">Javob berish vaqti</label>
-        <div class="qb-setting-control"><select id="setting-time"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">1 daqiqa</option><option value="90">1 daqiqa 30 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select><span>◷</span></div>
-        <button type="button" id="apply-time-all" class="qb-apply-all">Bu vaqtni barcha savollarga qo‘llash</button>
-      </div>
-      <div class="qb-setting-block" id="points-setting">
-        <span class="qb-setting-label">Ball miqdori</span>
-        <div class="qb-points-options" id="points-options">
-          <button type="button" data-points="0">0</button><button type="button" data-points="1000" class="active">1 000</button><button type="button" data-points="2000">2 000</button>
-        </div>
-        <small class="qb-setting-note">Tez va to‘g‘ri javob uchun qo‘shimcha ball beriladi.</small>
-      </div>
-      <div class="qb-setting-block qb-multiple-setting" id="multiple-setting">
-        <label class="qb-checkbox-setting"><input type="checkbox" id="multiple-answers"><span class="qb-custom-check"></span><span><strong>Bir nechta to‘g‘ri javob</strong><small>O‘quvchilar barcha mos javoblarni belgilaydi.</small></span></label>
-      </div>
-      <div class="qb-setting-divider"></div>
+      <div class="qb-settings-heading"><span class="qb-settings-icon">⚙</span><div><span class="qb-kicker">SAVOL</span><h2>Savol sozlamalari</h2></div></div>
       <div class="qb-setting-block qb-question-type-setting">
-        <span class="qb-setting-label">Savol turi</span>
-        <button type="button" id="change-question-type" class="qb-change-type"><span id="settings-type-icon"></span><span><strong id="settings-type-name">Viktorina</strong><small>Turini o‘zgartirish</small></span><b>→</b></button>
+        <label>Savol turi</label>
+        <button type="button" id="change-question-type" class="qb-change-type">
+          <span id="settings-type-icon"></span><span class="qb-setting-choice"><strong id="settings-type-name">Viktorina</strong><small>Turini o‘zgartirish</small></span><b>⌄</b>
+        </button>
       </div>
-      <div class="qb-settings-tip"><span>✦</span><div><strong>Yodda tuting</strong><p>Kamida 2 ta variant kiriting. Bo‘sh javoblar o‘yin vaqtida ko‘rinmaydi.</p></div></div>
-      <div class="qb-settings-actions">
-        <button type="button" id="preview-quiz" class="qb-button qb-button-quiet">Ko‘rib chiqish</button>
-        <button type="button" id="save-quiz" class="qb-button qb-button-primary">✓ Saqlash</button>
+      <div class="qb-settings-divider"></div>
+      <div class="qb-setting-block">
+        <label for="setting-time">Vaqt chegarasi</label>
+        <div class="qb-setting-control"><select id="setting-time"><option value="5">5 soniya</option><option value="10">10 soniya</option><option value="20" selected>20 soniya</option><option value="30">30 soniya</option><option value="60">60 soniya</option><option value="90">90 soniya</option><option value="120">2 daqiqa</option><option value="180">3 daqiqa</option><option value="240">4 daqiqa</option></select><span>◷</span></div>
+        <button type="button" id="apply-time-all" class="qb-apply-all">Barcha savollarga qo‘llash</button>
+      </div>
+      <div class="qb-settings-divider"></div>
+      <div class="qb-setting-block" id="points-setting">
+        <label class="qb-setting-label">Ball</label>
+        <div class="qb-points-options" id="points-options">
+          <button type="button" data-points="0">Yo‘q</button><button type="button" data-points="1000" class="active">Oddiy</button><button type="button" data-points="2000">Ikki karra</button>
+        </div>
+        <small class="qb-setting-note">To‘g‘ri va tez javob uchun ball beriladi.</small>
+      </div>
+      <div class="qb-settings-divider"></div>
+      <div class="qb-setting-block" id="multiple-setting">
+        <label class="qb-setting-label">Javob variantlari</label>
+        <label class="qb-checkbox-setting"><input type="checkbox" id="multiple-answers"><span class="qb-custom-check"></span><span><strong>Bitta javob</strong><small>Kerak bo‘lsa, bir nechta javobni yoqing.</small></span></label>
+      </div>
+      <div class="qb-settings-bottom">
+        <div class="qb-settings-tip"><span>✦</span><div><strong>Yordam</strong><p>Javob yonidagi rangli shaklni bosib, to‘g‘ri javobni belgilang.</p></div></div>
+        <div class="qb-question-management">
+          <button type="button" id="delete-question-bottom" class="qb-manage-delete">O‘chirish</button>
+          <button type="button" id="duplicate-question-bottom" class="qb-manage-duplicate">Nusxalash</button>
+        </div>
+        <div class="qb-legacy-controls" hidden>
+          <button type="button" id="preview-quiz">Preview</button><button type="button" id="save-quiz">Save</button>
+        </div>
       </div>
     </aside>
   </div>
@@ -211,7 +208,8 @@
     </section>
   </div>
 
+
   <div id="toast-root" aria-live="polite"></div>
-  <script src="/create.js?v=quiz-creator-plus-20261102" defer></script>
+  <script src="/create.js?v=kahoot-editor-layout-20261102" defer></script>
 </body>
 </html>

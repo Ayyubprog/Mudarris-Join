@@ -699,6 +699,23 @@ function bindEvents(){
     popover.hidden=!opening;$("#editor-profile-button").setAttribute("aria-expanded",String(opening));
   });
   $("#editor-signout").addEventListener("click",async()=>{try{await api("auth/logout",{method:"POST"})}finally{location.href="/login.html"}});
+  $("#add-slide")?.addEventListener("click",()=>addQuestion("slide"));
+  $("#quick-upload-media")?.addEventListener("click",()=>$("#media-file").click());
+  $("#editor-settings")?.addEventListener("click",()=>{$("#quiz-details").hidden=!$("#quiz-details").hidden});
+  $("#close-editor-settings")?.addEventListener("click",()=>{$("#quiz-details").hidden=true});
+  $("#theme-toggle")?.addEventListener("click",()=>{
+    const themes=["qb-theme-room","qb-theme-purple","qb-theme-blue"],currentTheme=themes.find(theme=>document.body.classList.contains(theme))||themes[0];
+    const nextTheme=themes[(themes.indexOf(currentTheme)+1)%themes.length];
+    document.body.classList.remove(...themes);document.body.classList.add(nextTheme);
+    $("#theme-toggle").innerHTML=nextTheme==="qb-theme-room"?"◉ Mavzular":nextTheme==="qb-theme-purple"?"◈ Binafsha":"◉ Moviy";
+  });
+  $("#exit-editor")?.addEventListener("click",()=>{
+    if(state.dirty&&!confirm("Saqlanmagan o‘zgarishlar bor. Sahifadan chiqmoqchimisiz?"))return;
+    state.dirty=false;location.href="/teacher.html";
+  });
+  $("#duplicate-question-bottom")?.addEventListener("click",duplicateQuestion);
+  $("#delete-question-bottom")?.addEventListener("click",deleteQuestion);
+
   $("#import-questions").addEventListener("click",()=>$("#import-file").click());
   $("#download-quiz-template")?.addEventListener("click",()=>{
     const rows=[["Savol","Variant A","Variant B","Variant C","Variant D","To‘g‘ri javob","Vaqt (soniya)","Ball"],["O‘zbekiston poytaxti qaysi shahar?","Toshkent","Samarqand","Buxoro","Xiva","1","20","1000"]];
