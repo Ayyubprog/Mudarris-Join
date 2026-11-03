@@ -2,7 +2,7 @@
 "use strict";
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const state={games:[],reports:[],teacher:null,gameFilter:"all"};
+const state={games:[],reports:[],teacher:null,gameFilter:"all",refreshing:false};
 const statusNames={waiting:"Kutilmoqda",playing:"Davom etmoqda",revealed:"Natijalar",paused:"To‘xtatilgan",finished:"Yakunlangan"};
 const modeNames={classic:"Klassik",racing:"F1 poygasi",shooter:"Shooter Arena"};
 const icons={
@@ -66,6 +66,8 @@ function renderModes(){
  $("#discover-modes").innerHTML='<div class="mj-mode-feature-intro"><span>UCHTA TAJRIBA</span><h2>Bir viktorina. Uch xil o‘yin.</h2><p>Viktorinangizni tanlang, rejimni belgilang va butun sinfni jonli o‘yinga qo‘shing.</p></div><div class="mj-mode-feature-grid">'+modes.map(mode=>'<article class="mj-mode-feature-card"><div class="mj-mode-feature-art"><img src="'+mode.image+'" alt="'+mode.title+' rejimi tasviri"></div><div class="mj-mode-feature-copy"><strong>'+mode.title+'</strong><p>'+mode.text+'</p><div class="mj-mode-feature-tags">'+mode.tags.map(tag=>'<span>'+tag+'</span>').join("")+'</div></div></article>').join("")+'</div>';
 }
 async function refresh(){
+ if(state.refreshing)return;
+ state.refreshing=true;
  const button=$('[data-action="refresh"]');
  if(button){button.classList.add("is-loading");button.disabled=true}
  try{
@@ -82,13 +84,43 @@ async function refresh(){
   $("#greeting-text").textContent=greeting();
   $("#dashboard-date").textContent=new Intl.DateTimeFormat("uz-UZ",{weekday:"long",day:"numeric",month:"long"}).format(new Date());
   renderGames();renderReports();renderLive();renderModes();
- }finally{if(button){button.classList.remove("is-loading");button.disabled=false}}
+ }finally{
+  state.refreshing=false;
+  if(button){button.classList.remove("is-loading");button.disabled=false}
+ }
+}
+function exportReports(){
+ const rows=[["Sana","Viktorina","Rejim","Holat","PIN","O‘yinchilar","Javoblar","Baholangan javoblar","To‘g‘ri javoblar","Aniqlik"]];
+ const csvCell=value=>{
+  let text=String(value??"");
+  if(/^[=+\-@]/.test(text))text="'"+text;
+  return '"'+text.replace(/"/g,'""')+'"';
+ };
+ for(const report of state.reports){
+  const graded=Number(report.graded_answers??report.answers??0);
+  const accuracy=graded?Math.round(Number(report.correct_answers||0)/graded*100):0;
+  rows.push([dateText(report.created_at,true),report.title,modeNames[report.mode]||"Klassik",statusNames[report.status]||report.status,report.pin,Number(report.players||0),Number(report.answers||0),graded,Number(report.correct_answers||0),accuracy+"%"]);
+ }
+ const csv=String.fromCharCode(65279)+rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const anchor=document.createElement("a");
+ anchor.href=url;
+ anchor.download="mudarris-join-hisobotlar-"+new Date().toISOString().slice(0,10)+".csv";
+ document.body.appendChild(anchor);
+ anchor.click();
+ anchor.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ toast(rows.length>1?"Hisobotlar CSV formatida yuklandi.":"Eksport qilish uchun hisobot hali yo‘q.");
 }
 async function togglePopover(){const pop=$("#profile-popover"),button=$("#profile-button");const opening=pop.hidden;pop.hidden=!opening;button.setAttribute("aria-expanded",String(opening))}
 document.addEventListener("click",async event=>{const create=event.target.closest('[data-action="create"]');if(create){location.href="/create.html";return}const refreshButton=event.target.closest('[data-action="refresh"]');if(refreshButton){try{await refresh();toast("Ma’lumotlar yangilandi.")}catch(error){toast(error.message);if(/kirish|tizimga/i.test(error.message))location.href="/login.html"}return}const viewButton=event.target.closest("[data-view]");if(viewButton){event.preventDefault();show(viewButton.dataset.view);return}const edit=event.target.closest("[data-edit]");if(edit){location.href="/create.html?id="+encodeURIComponent(edit.dataset.edit);return}const play=event.target.closest("[data-play]");if(play){location.href="/modes.html?game_id="+encodeURIComponent(play.dataset.play);return}const remove=event.target.closest("[data-delete]");if(remove){if(!confirm("“"+(state.games.find(game=>String(game.id)===remove.dataset.delete)?.title||"Viktorina")+"” butunlay o‘chiriladi. Savollar, shu viktorinadan yaratilgan jonli o‘yinlar, o‘yinchilar va javoblar ham o‘chadi. Davom etasizmi?"))return;try{await api("games/"+remove.dataset.delete,{method:"DELETE"});await refresh();toast("Viktorina o‘chirildi.")}catch(error){toast(error.message)}return}if(event.target.closest("#profile-button")){togglePopover();return}if(event.target.closest("#signout")){try{await api("auth/logout",{method:"POST"})}finally{location.href="/login.html"}return}if(event.target.closest("[data-close-modal]")){$("#modal-root").innerHTML="";return}if(event.target.classList.contains("mj-modal-backdrop")){$("#modal-root").innerHTML="";return}if(!event.target.closest(".mj-pop-wrap")){$("#profile-popover").hidden=true;$("#profile-button").setAttribute("aria-expanded","false")}});
+$("#export-reports")?.addEventListener("click",exportReports);
 $("#games-search").addEventListener("input",renderGames);$("#report-search").addEventListener("input",renderReports);$("#report-status").addEventListener("change",renderReports);
 document.addEventListener("click",event=>{const filter=event.target.closest("[data-game-filter]");if(filter){state.gameFilter=filter.dataset.gameFilter;renderGames()}});
 $("#global-search").addEventListener("input",event=>{const value=event.target.value;if(value.trim()){show("games");$("#games-search").value=value;renderGames()}});
 document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#global-search").focus()}if(event.key==="Escape"){$("#modal-root").innerHTML="";$("#profile-popover").hidden=true;$("#profile-button").setAttribute("aria-expanded","false")}if(!event.ctrlKey&&!event.metaKey&&!event.altKey&&event.key.toLowerCase()==="n"&&!/input|textarea|select/i.test(document.activeElement.tagName))location.href="/create.html"});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh().catch(()=>{})});
+setInterval(()=>{if(!document.hidden)refresh().catch(()=>{})},45000);
 (async()=>{try{const initialView=location.hash.slice(1);await refresh();show(["games","reports","discover"].includes(initialView)?initialView:"overview")}catch(error){location.replace("/login.html")}})();
 })();
