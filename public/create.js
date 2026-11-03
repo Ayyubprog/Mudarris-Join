@@ -154,7 +154,7 @@ function validationError(question){
     const answers=activeAnswers(question);
     if(question.type==="quiz"&&answers.length!==4)return "Quiz uchun A, B, C va D — to‘rtta javobning barchasini to‘ldiring.";
     if(answers.length<2)return question.type==="poll"?"So‘rovnomada kamida 2 ta javob bo‘lishi kerak.":"Viktorinada kamida 2 ta javob bo‘lishi kerak.";
-    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 4 ta javob kiritish mumkin." if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
+    if(answers.length>MAX_ANSWERS)return "Ko‘pi bilan 4 ta javob kiritish mumkin."; if(new Set(answers.map(item=>item.text.trim().toLocaleLowerCase("uz"))).size!==answers.length)return "Javob variantlari bir-biridan farq qilishi kerak.";
     if(answers.some(item=>item.text.length>75))return "Javoblar 75 belgidan oshmasligi kerak.";
     if(question.type==="quiz"&&!question.correct.some(index=>answers.some(item=>item.index===index)))return "Kamida bitta to‘g‘ri javobni belgilang.";
     if(question.type==="quiz"&&question.multiple&&question.correct.length<2)return "Bir nechta to‘g‘ri javob rejimida kamida 2 ta javobni belgilang.";if(question.type==="quiz"&&!question.multiple&&question.correct.length>1)return "Bir nechta to‘g‘ri javob uchun mos sozlamani yoqing.";
