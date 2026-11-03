@@ -454,6 +454,85 @@ function mediaMarkup(value,withRemove=false){
   }
   return '<div class="qb-media-preview-inner">'+content+(withRemove?'<button type="button" id="remove-media" class="qb-remove-media">Media olib tashlash</button>':'')+'</div>';
 }
+function setMediaUploadStatus(message,kind="info"){
+  document.querySelectorAll(".qb-media-upload-status").forEach(node=>{
+    node.textContent=message;
+    node.dataset.state=kind;
+  });
+}
+function processMediaFile(file){
+  if(!file)return;
+  const targetQuestion=current();
+  const input=$("#media-file");
+  const allowedMime=/^image\/(png|jpeg|gif|webp)$/i;
+  const allowedName=/\.(png|jpe?g|gif|webp)$/i.test(file.name||"");
+  if(!allowedMime.test(file.type||"")&&!allowedName){
+    setMediaUploadStatus("Fayl turi mos emas. PNG, JPG, GIF yoki WEBP tanlang.","error");
+    toast("PNG, JPG, GIF yoki WEBP rasm tanlang.");
+    if(input)input.value="";
+    return;
+  }
+  const maxBytes=1.5*1024*1024;
+  if(file.size>maxBytes){
+    setMediaUploadStatus("Rasm 1.5 MB dan kichik bo‘lishi kerak.","error");
+    toast("Rasm 1.5 MB dan kichik bo‘lishi kerak.");
+    if(input)input.value="";
+    return;
+  }
+  const reader=new FileReader();
+  setMediaUploadStatus("Rasm yuklanmoqda… 0%","loading");
+  reader.onprogress=event=>{
+    if(event.lengthComputable)setMediaUploadStatus("Rasm yuklanmoqda… "+Math.round(event.loaded/event.total*100)+"%","loading");
+  };
+  reader.onload=()=>{
+    const value=String(reader.result||"");
+    if(!/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value)||value.length>2800000){
+      setMediaUploadStatus("Rasmni tayyorlab bo‘lmadi. Boshqa faylni sinab ko‘ring.","error");
+      toast("Rasmni tayyorlab bo‘lmadi.");
+      if(input)input.value="";
+      return;
+    }
+    targetQuestion.media=value;
+    $("#media-modal").hidden=true;
+    $("#media-url").value="";
+    if(input)input.value="";
+    setMediaUploadStatus("Rasm yuklandi ✓","success");
+    if(current()===targetQuestion)render();
+    markDirty("Rasm yuklandi");
+    toast("Rasm savolga qo‘shildi.");
+  };
+  reader.onerror=()=>{
+    setMediaUploadStatus("Rasmni o‘qib bo‘lmadi. Qayta urinib ko‘ring.","error");
+    toast("Rasmni o‘qib bo‘lmadi.");
+    if(input)input.value="";
+  };
+  reader.onabort=()=>{
+    setMediaUploadStatus("Yuklash bekor qilindi.","error");
+    if(input)input.value="";
+  };
+  reader.readAsDataURL(file);
+}
+function enableMediaDrop(target){
+  if(!target)return;
+  target.addEventListener("dragenter",event=>{
+    if(Array.from(event.dataTransfer?.types||[]).includes("Files")){
+      event.preventDefault();target.classList.add("is-drag-over");
+    }
+  });
+  target.addEventListener("dragover",event=>{
+    if(Array.from(event.dataTransfer?.types||[]).includes("Files")){
+      event.preventDefault();event.dataTransfer.dropEffect="copy";target.classList.add("is-drag-over");
+    }
+  });
+  target.addEventListener("dragleave",event=>{
+    if(!target.contains(event.relatedTarget))target.classList.remove("is-drag-over");
+  });
+  target.addEventListener("drop",event=>{
+    event.preventDefault();target.classList.remove("is-drag-over");
+    const file=event.dataTransfer?.files?.[0];
+    if(file)processMediaFile(file);
+  });
+}
 function applyMedia(){
   const value=$("#media-url").value.trim();
   if(!value){toast("Avval media havolasini kiriting.");return}
@@ -694,13 +773,25 @@ function bindEvents(){
     if(Number.isInteger(from))reorderQuestions(from,to);
   });
   $("#open-media-modal").addEventListener("click",()=>{$("#media-url").value=current().media||"";$("#media-modal").hidden=false});
-  $("#media-file")?.addEventListener("change",event=>{
-    const file=event.target.files?.[0];if(!file)return;
-    if(!/^image\/(png|jpeg|gif|webp)$/i.test(file.type)){toast("PNG, JPG, GIF yoki WEBP rasm tanlang.");event.target.value="";return}
-    if(file.size>1.5*1024*1024){toast("Rasm 1.5 MB dan kichik bo‘lishi kerak.");event.target.value="";return}
-    const reader=new FileReader();
-    reader.onload=()=>{const value=String(reader.result||"");if(!/^data:image\/(png|jpeg|gif|webp);base64,/.test(value)){toast("Rasmni o‘qib bo‘lmadi.");return}current().media=value;$("#media-modal").hidden=true;$("#media-url").value="";event.target.value="";render();markDirty("Rasm yuklandi");toast("Rasm savolga qo‘shildi.")};
-    reader.onerror=()=>toast("Rasmni o‘qib bo‘lmadi.");reader.readAsDataURL(file);
+  $("#media-area")?.addEventListener("click",event=>{
+    if(event.target.closest("button,input,a"))return;
+    $("#media-area").focus();
+  });
+  $("#media-file")?.addEventListener("change",event=>processMediaFile(event.target.files?.[0]));
+  $("#choose-media-file")?.addEventListener("click",()=>$("#media-file")?.click());
+  enableMediaDrop($("#media-area"));
+  enableMediaDrop($("#media-upload-dropzone"));
+  $("#media-area")?.addEventListener("paste",event=>{
+    const items=Array.from(event.clipboardData?.items||[]);
+    const imageItem=items.find(item=>/^image\/(png|jpeg|gif|webp)$/i.test(item.type));
+    const file=imageItem?.getAsFile();
+    if(file){event.preventDefault();processMediaFile(file)}
+  });
+  $("#media-upload-dropzone")?.addEventListener("paste",event=>{
+    const items=Array.from(event.clipboardData?.items||[]);
+    const imageItem=items.find(item=>/^image\/(png|jpeg|gif|webp)$/i.test(item.type));
+    const file=imageItem?.getAsFile();
+    if(file){event.preventDefault();processMediaFile(file)}
   });
   $("#apply-media").addEventListener("click",applyMedia);
   $("#media-url").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();applyMedia()}});
