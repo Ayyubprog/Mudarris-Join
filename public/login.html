@@ -230,6 +230,73 @@
     @media(max-width:390px){.hero{padding:16px 17px 13px}.auth-panel{padding:19px 17px 16px}}
     @media(prefers-reduced-motion:reduce){.auth,.hero-preview,.auth-submit,.google-auth-button{animation:none!important;transition:none!important}}
 
+
+/* Final mobile auth layout: keep the hero and form in a single readable column. */
+@media(max-width:760px){
+  body.teacher-auth-page{padding:14px;place-items:center}
+  .auth{
+    width:min(520px,100%);
+    min-height:0;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto;
+    border-radius:22px;
+  }
+  .hero{
+    min-width:0;
+    min-height:0;
+    display:block;
+    padding:23px 25px 18px;
+  }
+  .hero-main{
+    max-width:none;
+    margin:22px 0 0;
+    padding:0;
+  }
+  .hero h1{
+    max-width:470px;
+    margin:9px 0 7px;
+    font-size:clamp(27px,5vw,34px);
+    line-height:1.04;
+  }
+  .hero p{max-width:460px;font-size:11px;line-height:1.55}
+  .hero-preview{display:none}
+  .hero-foot{margin-top:17px;font-size:8px}
+  .auth-panel{min-width:0;padding:26px 27px 22px}
+  .auth-panel h2{font-size:24px}
+  .auth-panel .field{height:46px;min-height:46px}
+  .auth-submit,.google-auth-button{height:46px;min-height:46px}
+}
+@media(max-width:520px){
+  body.teacher-auth-page{padding:11px}
+  .auth{width:min(460px,100%);border-radius:20px}
+  .hero{padding:19px 20px 16px}
+  .auth-brand-mark{width:37px;height:37px}
+  .auth-brand-name{font-size:17px}
+  .hero-main{margin-top:18px}
+  .hero-kicker{font-size:8px}
+  .hero h1{font-size:27px}
+  .hero p{font-size:10px}
+  .hero-foot{margin-top:14px}
+  .auth-panel{padding:22px 20px 19px}
+  .auth-panel h2{font-size:22px}
+  .auth-panel-head>p.muted{font-size:10px}
+  .tabs{margin:15px 0 12px}
+}
+@media(max-width:390px){
+  body.teacher-auth-page{padding:8px}
+  .auth{width:100%;border-radius:17px}
+  .hero{padding:16px 17px 13px}
+  .hero-main{margin-top:15px}
+  .hero h1{font-size:24px}
+  .hero p{font-size:9px;line-height:1.5}
+  .hero-foot{font-size:7px;gap:6px}
+  .auth-panel{padding:18px 17px 15px}
+  .auth-panel h2{font-size:20px}
+  .auth-panel label{font-size:8px}
+  .auth-panel .field{height:43px;min-height:43px;font-size:11px}
+  .auth-submit,.google-auth-button{height:44px;min-height:44px;font-size:10px}
+}
+
 </style>
 </head>
 <body class="teacher-auth-page">
