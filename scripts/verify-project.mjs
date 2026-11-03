@@ -108,7 +108,7 @@ assert.ok(files.theme.includes("resize:both;overflow:auto"),"media frame must be
 assert.ok(files.teacher.includes("function exportReports()"),"teacher report CSV export function missing");
 assert.ok(files.dashboard.includes('id="export-reports"'),"teacher report CSV action missing");
 assert.ok(files.teacher.includes("state.refreshing=false")&&files.teacher.includes("},45000)"),"teacher dashboard should refresh quietly without overlapping requests");
-assert.ok(files.modes.includes('aria-busy="true"')&&files.modes.includes('$("#mode-error")'),"mode selection must show loading and inline error states");
+assert.ok(files.modes.includes('setAttribute("aria-busy","true")')&&files.modes.includes('$("#mode-error")'),"mode selection must show loading and inline error states");
 assert.ok(!files.modes.includes("alert("),"mode selection should use inline errors rather than blocking browser alerts");
 assert.ok(files.modePage.includes('id="mode-error"')&&files.modePage.includes('aria-live="polite"'),"mode error feedback region missing");
 assert.ok(files.theme.includes("body.mj-dashboard-rebuild .mj-stat-card:hover"),"teacher dashboard cards need responsive interactive polish");
