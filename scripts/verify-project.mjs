@@ -90,7 +90,7 @@ assert.ok(files.theme.includes("body.qb-page .qb-answer-row{\n  position:relativ
 assert.ok(files.theme.includes("pointer-events:auto"),"quiz text fields must accept pointer input");
 assert.ok(files.dashboard.includes("mudarris-book-purple.svg"),"dashboard must use Mudarris book mark");
 assert.ok(files.studentPage.includes("grand-prix-circuit-20261102"),"3D race cache key missing");
-assert.ok(files.hostPage.includes("grand-prix-host-20261102"),"host visual cache key missing");
+assert.ok(files.hostPage.includes("host.js?v=live-host-premium-20261103"),"live host script cache key missing");
 const questionTypeBlock=files.create.slice(files.create.indexOf("const typeGroups=["),files.create.indexOf("const typeIcons={"));
 assert.match(questionTypeBlock,/items:\["quiz","true_false","type_answer"\]/,"only Quiz, True/False and Typing may be created");
 assert.equal((questionTypeBlock.match(/"quiz"|"true_false"|"type_answer"/g)||[]).length,3,"question picker must show exactly three formats");
