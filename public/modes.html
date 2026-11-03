@@ -10,4 +10,61 @@
 .mode-copy{display:flex;flex-direction:column;flex:1;padding:23px 24px 21px}.mode-copy strong{font-size:clamp(22px,2vw,28px);font-weight:1000;letter-spacing:-.04em;color:#27143d}.mode-copy small{margin-top:8px;color:#766985;font-size:14px;line-height:1.55}.mode-features{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.mode-features span{padding:8px 10px;border-radius:999px;background:#f4eff9;color:#62448a;font-size:11px;font-weight:900}
 .mode-action{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:19px 24px 23px;padding-top:17px;border-top:1px solid #eee8f4;color:#58328c;font-size:14px;font-weight:1000}.mode-action b{display:grid;place-items:center;width:35px;height:35px;border-radius:11px;background:#f2eaff;font-size:20px}.mode-empty{grid-column:1/-1;padding:40px;border:1px solid #e9e1f1;border-radius:18px;background:#fff;color:#6a5b7c}
 @media(max-width:1000px){.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mode-art{height:220px}}@media(max-width:650px){.mode-top{padding-bottom:32px}.mode-brand img{width:39px;height:39px}.mode-head{margin-top:29px}.mode-grid{grid-template-columns:1fr;gap:16px}.mode-art{height:200px}.mode-copy{padding:19px}.mode-action{margin:16px 19px 19px}.mode-toolbar{align-items:flex-start}.mode-toolbar h2{font-size:22px}.mode-back{padding:10px 12px}}@media(prefers-reduced-motion:reduce){.mode-card,.mode-art img{transition:none}}
-</style></head><body><header class="mode-top"><a class="mode-brand" href="/teacher.html"><img src="/mudarris-book-purple.svg?v=purple-brand-20261102" alt="MUDARRIS ochiq kitob logotipi"><span>MUDARRIS <b>JOIN</b></span></a><div class="mode-head"><div class="mode-eyebrow">JONLI SINF BELLASHUVI</div><h1>Qanday o‘ynashni<br>tanlaysiz?</h1><p>Bir viktorina, uch xil tajriba. Barcha rejimlarda tez va to‘g‘ri javob ballaringizni oshiradi, har savoldan keyin reyting yangilanadi.</p><div id="quiz-title">Viktorinangiz yuklanmoqda…</div></div></header><main class="mode-main"><div class="mode-toolbar"><div><h2>O‘yin rejimini tanlang</h2><p>Sinfingizga mos tajribani tanlang va PIN-kod yarating.</p></div><a href="/teacher.html#games" class="mode-back">← Viktorinalarimga qaytish</a></div><div id="mode-grid" class="mode-grid" aria-live="polite"><div class="mode-empty">O‘yinlar yuklanmoqda…</div></div></main><script src="/modes.js?v=gp-three-modes-20261102" defer></script></body></html>
+
+.mode-top{
+  padding-top:23px;padding-bottom:58px;
+  background:
+    radial-gradient(circle at 82% 18%,rgba(195,154,246,.32),transparent 28%),
+    radial-gradient(circle at 12% 0%,rgba(117,76,169,.22),transparent 30%),
+    linear-gradient(118deg,#1c1030,#3d1769 56%,#5a2b88);
+}
+.mode-brand img{width:49px;height:49px;border-radius:14px;box-shadow:0 8px 22px #13072155}
+.mode-brand{font-size:15px;letter-spacing:-.02em}
+.mode-head{margin-top:42px}
+.mode-head h1{font-size:clamp(42px,5.4vw,70px);letter-spacing:-.065em;line-height:.99}
+.mode-head p{font-size:15px;line-height:1.7}
+#quiz-title{padding:10px 15px;border-radius:10px;background:#ffffff13}
+.mode-main{max-width:1440px;padding-bottom:72px}
+.mode-toolbar{margin-bottom:26px}
+.mode-toolbar h2{font-size:clamp(23px,2.2vw,30px);letter-spacing:-.035em}
+.mode-toolbar p{font-size:13px}
+.mode-back{min-height:43px;padding:0 15px;border-radius:10px;box-shadow:0 5px 15px #29113c0a}
+.mode-grid{gap:22px}
+.mode-card{border-radius:20px;box-shadow:0 12px 36px #25143b0c}
+.mode-card:hover{transform:translateY(-5px);box-shadow:0 22px 48px #25143b18}
+.mode-card:focus-visible{outline:4px solid #a98bc9;outline-offset:4px}
+.mode-card:disabled{opacity:.74}
+.mode-art{height:clamp(205px,19vw,275px)}
+.mode-art img{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.mode-tag{left:18px;top:18px;padding:8px 12px;font-size:9px}
+.mode-copy{padding:22px 23px 18px}
+.mode-copy strong{font-size:clamp(23px,2.1vw,29px)}
+.mode-copy small{font-size:13px;line-height:1.65}
+.mode-features{gap:7px;margin-top:18px}
+.mode-features span{padding:7px 10px;border:1px solid #eee7f5;border-radius:9px;background:#faf7fd;font-size:10px}
+.mode-action{margin:16px 23px 21px;padding-top:15px;font-size:12px}
+.mode-action b{width:37px;height:37px;border-radius:10px;transition:transform .16s,background .16s}
+.mode-card:hover .mode-action b{transform:translateX(3px);background:#e9ddf5}
+.mode-error{margin:15px 0 0;padding:13px 15px;border:1px solid #f0cbd3;border-radius:11px;background:#fff4f5;color:#a33e55;font-size:12px;font-weight:800}
+@media(max-width:1000px){.mode-grid{gap:16px}.mode-art{height:210px}}
+@media(max-width:650px){
+  .mode-top{padding:17px 17px 36px}
+  .mode-brand img{width:41px;height:41px}
+  .mode-head{margin-top:28px}
+  .mode-head h1{font-size:clamp(38px,10vw,51px)}
+  .mode-head p{font-size:12px;line-height:1.6}
+  .mode-main{padding:0 15px 42px}
+  .mode-toolbar{gap:12px;margin-bottom:17px}
+  .mode-toolbar h2{font-size:21px}
+  .mode-toolbar p{font-size:11px;line-height:1.5}
+  .mode-back{min-height:39px;font-size:10px}
+  .mode-grid{gap:14px}
+  .mode-art{height:190px}
+  .mode-copy{padding:17px}
+  .mode-copy strong{font-size:22px}
+  .mode-copy small{font-size:12px}
+  .mode-action{margin:14px 17px 17px;padding-top:13px;font-size:11px}
+}
+
+</style></head><body><header class="mode-top"><a class="mode-brand" href="/teacher.html"><img src="/mudarris-book-purple.svg?v=purple-brand-20261102" alt="MUDARRIS ochiq kitob logotipi"><span>MUDARRIS <b>JOIN</b></span></a><div class="mode-head"><div class="mode-eyebrow">JONLI SINF BELLASHUVI</div><h1>Qanday o‘ynashni<br>tanlaysiz?</h1><p>Bir viktorina, uch xil tajriba. Barcha rejimlarda tez va to‘g‘ri javob ballaringizni oshiradi, har savoldan keyin reyting yangilanadi.</p><div id="quiz-title">Viktorinangiz yuklanmoqda…</div></div></header><main class="mode-main"><div class="mode-toolbar"><div><h2>O‘yin rejimini tanlang</h2><p>Sinfingizga mos tajribani tanlang va PIN-kod yarating.</p></div><a href="/teacher.html#games" class="mode-back">← Viktorinalarimga qaytish</a></div><div id="mode-grid" class="mode-grid" aria-live="polite"><div class="mode-empty">O‘yinlar yuklanmoqda…</div></div>
+<p id="mode-error" class="mode-error" role="alert" aria-live="polite" hidden></p></main><script src="/modes.js?v=gp-three-modes-20261102" defer></script></body></html>
