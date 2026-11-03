@@ -3675,3 +3675,11 @@ body.qb-page .qb-side-play{min-height:43px;border-radius:9px;font-size:10px}
     transition-duration:.01ms!important;scroll-behavior:auto!important;
   }
 }
+
+
+/* Keep the mobile dashboard navigation below the sticky header, never behind it. */
+@media(max-width:760px){
+  body.mj-dashboard-rebuild .mj-sidebar{
+    position:relative;top:auto;z-index:5;
+  }
+}
