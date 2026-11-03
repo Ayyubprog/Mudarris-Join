@@ -144,6 +144,146 @@ body.live-host{margin:0;min-height:100vh;background:radial-gradient(ellipse at 1
 @media(max-width:800px){.mj-host-game-scene{grid-template-columns:1fr}.mj-host-race-art,.mj-host-arena-art{height:190px}.mj-host-race-standings{padding:12px 15px}.mj-host-race-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.live-main{padding:10px 8px 22px}.live-question-card{padding:16px 11px;min-height:unset}.live-question-prompt{font-size:28px}.live-answer-tile{min-height:90px;padding:11px 8px}.live-answer-tile strong{font-size:13px}.mj-host-race-art,.mj-host-arena-art{height:145px}.mj-host-race-grid>div{padding:6px}.live-question-shell{gap:10px}}
 
+
+
+/* MUDARRIS JOIN · live host presentation polish */
+.live-host{
+  font-family:"DM Sans",Nunito,system-ui,sans-serif;
+  background:
+    radial-gradient(ellipse at 8% -12%,rgba(139,91,195,.34),transparent 38%),
+    radial-gradient(ellipse at 94% 5%,rgba(81,45,125,.2),transparent 31%),
+    #1c1030;
+  -webkit-font-smoothing:antialiased;
+}
+.live-header{
+  min-height:70px;padding:10px clamp(15px,3vw,42px);
+  border-bottom:1px solid rgba(255,255,255,.12);
+  background:rgba(24,12,43,.9);
+  box-shadow:0 8px 25px rgba(8,3,17,.13);
+}
+.live-brand{font-size:15px;gap:11px}
+.live-brand-mark{width:40px;height:40px;border-radius:11px;padding:4px}
+.live-title{font-size:14px}
+.live-mode{font-size:9px;letter-spacing:.15em}
+.live-pin-pill{padding:7px 12px;border-radius:10px}
+.live-pin-number{font-size:23px}
+.live-header-button{min-height:39px;padding:0 13px;border-radius:10px;font-size:10px;transition:background .16s,transform .16s}
+.live-header-button:hover{transform:translateY(-1px)}
+.live-main{padding:clamp(18px,2.8vw,42px) clamp(13px,3vw,44px) 34px}
+.live-stage{gap:19px}
+.live-panel{border:1px solid #ffffffa6;border-radius:22px;box-shadow:0 20px 60px #10071e4a}
+.live-invite-panel{padding:clamp(27px,4.6vw,66px)}
+.live-lobby-title{font-size:clamp(32px,4.4vw,58px)}
+.live-lobby-copy{font-size:clamp(13px,1.15vw,16px)}
+.live-pin-block{border-radius:18px;box-shadow:inset 0 1px #fff,0 8px 22px #37204b09}
+.live-big-pin{font-variant-numeric:tabular-nums;letter-spacing:.15em}
+.live-pin-copy{min-height:32px;border-radius:8px;transition:background .16s,transform .16s}
+.live-pin-copy:hover{background:#e4d5f3;transform:translateY(-1px)}
+.live-players-panel{padding:clamp(21px,2.5vw,36px)}
+.live-players-head h2{font-size:21px}
+.live-count{padding:8px 12px;font-size:10px}
+.live-player-wall{gap:10px;max-height:510px}
+.live-player-chip{
+  min-height:58px;padding:10px 12px;border-radius:12px;
+  box-shadow:0 3px 10px #25153d06;
+}
+.live-player-chip strong{font-size:12px}
+.live-stage-footer{
+  padding:17px 20px;border:1px solid #ffffff25;
+  border-radius:17px;background:rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+}
+.live-stage-hint{font-size:11px}
+.live-control-button{
+  min-height:47px;padding:0 19px;border-radius:11px;font-size:12px;
+}
+.live-primary{box-shadow:0 4px 0 #168456,0 8px 18px #0b714b2b}
+.live-secondary{box-shadow:0 3px 0 #d9c9e8}
+.live-question-top{margin-bottom:2px}
+.live-progress-copy{font-size:10px}
+.live-timer{min-width:230px}
+.live-timer-number{width:50px;font-size:26px}
+.live-timer-track{height:10px}
+.live-question-card{
+  min-height:calc(100vh - 290px);
+  padding:clamp(25px,3.4vw,50px);
+  border:1px solid #ffffffbd;border-radius:22px;
+  box-shadow:0 22px 62px #10071e5c;
+}
+.live-question-prompt{font-size:clamp(30px,4vw,58px);line-height:1.08}
+.live-question-media img,.live-question-media video{max-height:310px}
+.live-answer-grid{gap:14px}
+.live-answer-tile{
+  min-height:clamp(108px,13vh,152px);
+  padding:18px 22px;border-radius:15px;
+  box-shadow:0 5px 0 #180d24a8,0 9px 19px #20113b15;
+  transition:transform .15s,filter .15s,box-shadow .15s,border-color .15s;
+}
+.live-answer-tile:hover{transform:translateY(-2px);filter:brightness(1.045);box-shadow:0 7px 0 #180d24a0,0 14px 24px #20113b20}
+.live-answer-tile:active{transform:translateY(1px)}
+.live-answer-tile strong{font-size:clamp(16px,1.9vw,24px);line-height:1.25}
+.live-answer-tile .shape{width:41px;font-size:29px}
+.live-reveal-banner{padding:10px 16px;font-size:10px}
+.live-question-stats{gap:10px;margin-top:13px}
+.live-stat-pill{padding:9px 12px;font-size:10px}
+.live-free-responses{gap:10px}
+.live-free-response{border-radius:12px;padding:13px}
+.live-round-leaderboard{
+  margin:20px 0 8px;padding:20px;
+  border:1px solid #e7ddec;border-radius:16px;
+  background:linear-gradient(145deg,#fcfaff,#f6f0fa);
+}
+.live-round-rank{min-height:56px}
+.live-finish-card{border-radius:22px;box-shadow:0 20px 58px #10071e4b}
+.live-finish-title{font-size:clamp(32px,4.5vw,58px)}
+.live-podium-item{border-radius:14px 14px 7px 7px}
+.live-error{border-radius:15px;background:rgba(255,255,255,.11)}
+.live-header-button:focus-visible,.live-control-button:focus-visible,.live-pin-copy:focus-visible{
+  outline:3px solid #d3b6f2;outline-offset:3px;
+}
+@media(max-width:850px){
+  .live-header{min-height:64px}
+  .live-main{padding:15px 12px 25px}
+  .live-lobby{gap:13px}
+  .live-invite-panel{min-height:390px}
+  .live-question-card{min-height:unset}
+}
+@media(max-width:570px){
+  .live-header{min-height:58px;padding:8px 10px;gap:6px}
+  .live-brand{font-size:10px;gap:6px}
+  .live-brand-mark{width:30px;height:30px;border-radius:8px}
+  .live-header-actions{gap:4px}
+  .live-header-button{height:33px;min-height:33px;padding:0 8px;font-size:8px}
+  .live-pin-pill{padding:5px 7px;gap:5px}
+  .live-pin-label{font-size:6px}
+  .live-pin-number{font-size:15px}
+  .live-main{padding:11px 9px 20px}
+  .live-stage{gap:12px}
+  .live-question-card{min-height:0;padding:18px 12px;border-radius:15px}
+  .live-question-prompt{margin:11px auto 16px;font-size:clamp(25px,7vw,34px)}
+  .live-question-media img,.live-question-media video{max-height:230px}
+  .live-answer-grid{gap:8px}
+  .live-answer-tile{min-height:88px;padding:11px 9px;border-width:2px;border-radius:10px;gap:7px}
+  .live-answer-tile .shape{width:23px;font-size:19px}
+  .live-answer-tile strong{font-size:13px}
+  .live-stage-footer{padding:12px;border-radius:13px}
+  .live-control-button{min-height:43px;padding:0 9px;font-size:10px}
+  .live-timer{min-width:130px}
+  .live-timer-number{width:34px;font-size:19px}
+  .live-timer-track{height:8px}
+  .live-question-stats{gap:6px}
+  .live-stat-pill{padding:7px 9px;font-size:8px}
+  .mj-host-game-scene{border-radius:13px}
+  .mj-host-race-grid>div{grid-template-columns:22px minmax(0,1fr) auto;gap:5px}
+  .mj-host-race-grid span{font-size:9px}
+  .mj-host-race-grid strong{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  .live-host *, .live-host *::before, .live-host *::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
 </style>
 </head>
 <body class="live-host">
