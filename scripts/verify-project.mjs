@@ -118,6 +118,7 @@ assert.ok(files.create.includes('$("#choose-media-file")?.addEventListener("clic
 assert.ok(files.createPage.includes('id="media-upload-dropzone"')&&files.createPage.includes('id="choose-media-file"'),"Kahoot-style file upload dropzone missing");
 assert.ok(files.createPage.includes('accept="image/png,image/jpeg,image/gif,image/webp"'),"file picker must accept supported image formats");
 assert.ok(files.createPage.includes('id="media-file"')&&files.createPage.includes("hidden"),"file input should stay hidden behind its upload button");
+assert.ok(files.createPage.indexOf('id="media-area"')<files.createPage.indexOf('id="media-file"')&&files.createPage.indexOf('id="media-file"')<files.createPage.indexOf('id="media-modal"'),"file input must remain outside the hidden upload dialog so the main shortcut can open it");
 assert.ok(!files.createPage.includes('id="add-slide"'),"question creator should show only the three requested question types");
 assert.ok(files.backend.includes("media=safe(raw.media).slice(0,2800000)"),"backend must persist uploaded image data within the supported limit");
 assert.ok(files.student.includes("function studentMediaMarkup(value)")&&files.student.includes("data:image"),"student screen must render uploaded image data");
