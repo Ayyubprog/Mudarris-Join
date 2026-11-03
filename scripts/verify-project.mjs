@@ -111,8 +111,8 @@ assert.ok(finalMediaStyles.includes("resize:both")&&finalMediaStyles.includes("o
 assert.ok(files.create.includes("function processMediaFile(file)"),"local file upload processor missing");
 assert.ok(files.create.includes("reader.readAsDataURL(file)"),"local image file must be read into the quiz draft");
 assert.ok(files.create.includes("reader.onprogress"),"image upload progress feedback missing");
-assert.ok(files.create.includes("enableMediaDrop($("# + "\"media-area\" + ")"),"main media canvas must accept dropped files");
-assert.ok(files.create.includes("enableMediaDrop($("# + "\"media-upload-dropzone\" + ")"),"media modal dropzone must accept dropped files");
+assert.ok(files.create.includes('enableMediaDrop($("#media-area")'),"main media canvas must accept dropped files");
+assert.ok(files.create.includes('enableMediaDrop($("#media-upload-dropzone")'),"media modal dropzone must accept dropped files");
 assert.ok((files.create.match(/addEventListener\("paste"/g)||[]).length>=2,"media canvas and upload dropzone must accept pasted images");
 assert.ok(files.create.includes('$("#choose-media-file")?.addEventListener("click"'),"file picker button must open the local file selector");
 assert.ok(files.createPage.includes('id="media-upload-dropzone"')&&files.createPage.includes('id="choose-media-file"'),"Kahoot-style file upload dropzone missing");
