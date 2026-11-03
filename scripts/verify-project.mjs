@@ -15,6 +15,7 @@ const files={
  studentPage:read("public/play.html"),
  hostPage:read("public/host.html"),
  dashboard:read("public/teacher.html"),
+ login:read("public/login.html"),
  studentCss:read("public/student.css"),
  theme:read("public/theme.css"),
  logo:read("public/mudarris-book-purple.svg"),
@@ -117,6 +118,7 @@ assert.ok(files.studentCss.includes(".student-answer-tile:hover:not(:disabled)")
 assert.ok(files.studentCss.includes("@media(max-width:390px)"),"student gameplay must include compact-phone layout");
 assert.ok(files.hostPage.includes(".live-control-button:focus-visible"),"host controls need visible keyboard focus");
 assert.ok(files.hostPage.includes("@media(max-width:570px)"),"host presentation must have compact-phone layout");
+assert.ok(files.login.includes("/* Final mobile auth layout")&&files.login.includes("grid-template-columns:minmax(0,1fr)"),"teacher login must switch to one column on mobile after desktop styles");
 assert.ok(files.dashboard.includes('theme.css?v=whole-site-premium-20261103'),"dashboard theme cache version missing");
 assert.ok(files.modePage.includes('theme.css?v=whole-site-premium-20261103'),"mode page theme cache version missing");
 assert.ok(files.studentPage.includes('student.css?v=whole-site-premium-20261103'),"student page style cache version missing");
