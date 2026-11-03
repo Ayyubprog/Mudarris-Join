@@ -115,7 +115,7 @@ assert.ok(files.theme.includes("body.mj-dashboard-rebuild .mj-stat-card:hover"),
 assert.ok(files.theme.includes("@media(max-width:520px)")&&files.theme.includes("grid-template-columns:1fr"),"teacher dashboard small-screen layout overrides missing");
 assert.ok(files.studentCss.includes(".student-answer-tile:hover:not(:disabled)"),"student answer tiles need interactive feedback");
 assert.ok(files.studentCss.includes("@media(max-width:390px)"),"student gameplay must include compact-phone layout");
-assert.ok(files.hostPage.includes("live-answer-tile:focus-visible"),"host controls need visible keyboard focus");
+assert.ok(files.hostPage.includes(".live-control-button:focus-visible"),"host controls need visible keyboard focus");
 assert.ok(files.hostPage.includes("@media(max-width:570px)"),"host presentation must have compact-phone layout");
 assert.ok(files.dashboard.includes('theme.css?v=whole-site-premium-20261103'),"dashboard theme cache version missing");
 assert.ok(files.modePage.includes('theme.css?v=whole-site-premium-20261103'),"mode page theme cache version missing");
