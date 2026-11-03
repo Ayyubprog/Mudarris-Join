@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900;1000&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/theme.css?v=editor-100percent-20261103">
+  <link rel="stylesheet" href="/theme.css?v=media-upload-spacing-20261103">
 </head>
 <body class="mj-editor-page qb-page qb-theme-room">
   <header class="qb-topbar">
@@ -70,7 +70,7 @@
         <button class="qb-add-question" id="open-question-types" type="button">
           <span class="qb-add-question-icon">＋</span><span><strong>Savol qo‘shish</strong></span>
         </button>
-        <button class="qb-add-slide" id="add-slide" type="button"><span>▤</span> Slayd qo‘shish</button>
+        
       </div>
       <div class="qb-sidebar-bottom">
         <small id="autosave-label" class="qb-autosave-label">O‘zgarishlar shu brauzerda vaqtincha saqlanadi.</small>
@@ -107,13 +107,14 @@
           <div class="qb-prompt-label"><label for="question-prompt">Savol</label><span id="prompt-counter">0 / 120</span></div>
           <input id="question-prompt" type="text" maxlength="120" autocomplete="off" spellcheck="true" aria-label="Savol matni" placeholder="Savolingizni shu yerga yozing..." />
         </div>
-        <div class="qb-media-area" id="media-area">
+        <div class="qb-media-area" id="media-area" tabindex="0" role="group" aria-label="Rasmni yuklash, tashlash yoki joylashtirish">
           <div class="qb-media-toolbar">
             <div class="qb-media-callout">
               <span class="qb-media-illustration"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.5 9 12l3.5 3.5L16 12l4 5.5M5 4h14a1 1 0 0 1 1 1v14H4V5a1 1 0 0 1 1-1Z"/><circle cx="9" cy="8" r="1.5"/></svg></span>
               <strong>Media toping va joylashtiring</strong>
-              <small>Rasm, GIF yoki video qo‘shing</small>
+              <small>Rasmni tanlang, shu yerga torting yoki Ctrl + V bilan joylashtiring</small>
               <div class="qb-media-actions"><button type="button" id="open-media-modal" class="qb-media-add">＋ Media tanlash</button><button type="button" id="quick-upload-media" class="qb-upload-link">Fayl yuklash</button></div>
+              <small class="qb-media-upload-status" aria-live="polite">PNG, JPG, GIF yoki WEBP · 1.5 MB gacha</small>
             </div>
           </div>
           <div id="media-preview" class="qb-media-preview" hidden></div>
@@ -187,14 +188,20 @@
     <section class="qb-modal qb-media-modal" role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
       <button type="button" class="qb-modal-close" data-close-modal aria-label="Yopish">×</button>
       <span class="qb-kicker">SAVOLNI BOYITISH</span><h2 id="media-modal-title">Media qo‘shish</h2>
-      <p>Rasm yoki video uchun ochiq havolani kiriting.</p>
+      <p>Rasmni kompyuterdan yuklang, tashlang yoki media havolasini qo‘shing.</p>
       <div class="qb-media-kind-tabs">
         <button type="button" data-media-kind="image" class="active">▧ Rasm / GIF</button>
         <button type="button" data-media-kind="video">▶ Video</button>
         <button type="button" data-media-kind="youtube">▷ YouTube</button>
       </div>
       <label class="qb-modal-field">Media havolasi<input type="url" id="media-url" placeholder="https://..." autocomplete="url"></label>
-      <div class="qb-local-upload"><label for="media-file">YOKI KOMPYUTERDAN RASM YUKLANG</label><input type="file" id="media-file" accept="image/png,image/jpeg,image/gif,image/webp"><small>PNG, JPG, GIF yoki WEBP · 1.5 MB gacha</small></div>
+      <div class="qb-upload-dropzone" id="media-upload-dropzone" tabindex="0">
+        <span class="qb-upload-dropzone-icon">⇧</span>
+        <div><strong>Rasm faylini shu yerga torting</strong><small>PNG, JPG, GIF yoki WEBP · 1.5 MB gacha</small></div>
+        <button type="button" id="choose-media-file" class="qb-file-choose">Fayl tanlash</button>
+        <input type="file" id="media-file" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+        <small class="qb-media-upload-status" aria-live="polite">Yoki “Fayl tanlash” tugmasini bosing.</small>
+      </div>
 
       <div class="qb-modal-actions"><button type="button" class="qb-button qb-button-quiet" data-close-modal>Bekor qilish</button><button type="button" id="apply-media" class="qb-button qb-button-primary">Havolani qo‘llash</button></div>
     </section>
@@ -213,6 +220,6 @@
 
 
   <div id="toast-root" aria-live="polite"></div>
-  <script src="/create.js?v=editor-100percent-20261103" defer></script>
+  <script src="/create.js?v=media-upload-spacing-20261103" defer></script>
 </body>
 </html>
