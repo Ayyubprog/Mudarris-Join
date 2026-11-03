@@ -465,8 +465,10 @@ function processMediaFile(file){
   const targetQuestion=current();
   const input=$("#media-file");
   const allowedMime=/^image\/(png|jpeg|gif|webp)$/i;
-  const allowedName=/\.(png|jpe?g|gif|webp)$/i.test(file.name||"");
-  if(!allowedMime.test(file.type||"")&&!allowedName){
+  const extension=(String(file.name||"").match(/\.(png|jpe?g|gif|webp)$/i)||[])[1]?.toLowerCase();
+  const inferredMime={png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp"}[extension]||"";
+  const outputMime=allowedMime.test(file.type||"")?file.type.toLowerCase():inferredMime;
+  if(!outputMime){
     setMediaUploadStatus("Fayl turi mos emas. PNG, JPG, GIF yoki WEBP tanlang.","error");
     toast("PNG, JPG, GIF yoki WEBP rasm tanlang.");
     if(input)input.value="";
@@ -485,7 +487,10 @@ function processMediaFile(file){
     if(event.lengthComputable)setMediaUploadStatus("Rasm yuklanmoqda… "+Math.round(event.loaded/event.total*100)+"%","loading");
   };
   reader.onload=()=>{
-    const value=String(reader.result||"");
+    let value=String(reader.result||"");
+    if(!/^data:image\/(png|jpeg|gif|webp);base64,/i.test(value)&&outputMime&&/^data:[^,]*;base64,/i.test(value)){
+      value=value.replace(/^data:[^,]*;base64,/i,"data:"+outputMime+";base64,");
+    }
     if(!/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value)||value.length>2800000){
       setMediaUploadStatus("Rasmni tayyorlab bo‘lmadi. Boshqa faylni sinab ko‘ring.","error");
       toast("Rasmni tayyorlab bo‘lmadi.");
