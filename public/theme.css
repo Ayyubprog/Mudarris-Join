@@ -2886,7 +2886,7 @@ body.qb-page .qb-add-answer{min-height:43px;padding:0 18px;font-size:13px}
   body.qb-page .qb-top-separator{height:26px;margin:0 2px}
   body.qb-page .qb-layout{
     height:calc(100dvh - 50px);min-height:0;max-height:calc(100dvh - 50px);
-    grid-template-columns:clamp(148px,13vw,184px) minmax(0,1fr) clamp(220px,19vw,270px);
+    grid-template-columns:clamp(145px,8vw,165px) minmax(0,1fr) clamp(220px,12.2vw,250px);
   }
   body.qb-page .qb-sidebar{padding:13px 9px 8px;gap:8px}
   body.qb-page .qb-sidebar-heading h2{font-size:16px}
@@ -2915,7 +2915,7 @@ body.qb-page .qb-add-answer{min-height:43px;padding:0 18px;font-size:13px}
     min-height:58px;height:58px;padding:8px 14px;font-size:clamp(18px,1.55vw,23px)
   }
   body.qb-page .qb-media-area{
-    position:relative;width:min(960px,98%);height:164px;min-height:145px;max-height:280px;
+    position:relative;width:min(700px,82%);height:164px;min-height:145px;max-height:280px;
     flex:0 0 auto;margin:10px auto 9px;min-width:min(260px,100%);
     resize:both;overflow:auto;
   }

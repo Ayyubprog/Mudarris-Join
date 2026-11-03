@@ -102,7 +102,7 @@ assert.ok(files.create.includes("const inlineImage=/^data:image"),"local image u
 assert.ok(files.create.includes('type_answer:"Typing"'),"Typing option label missing");
 assert.ok(files.student.includes('["type_answer","open_ended","word_cloud","brainstorm"].includes(type)'),"student typing answer UI must remain supported");
 assert.ok(files.backend.includes('type==="quiz"&&options.length!==4'),"backend must require exactly four Quiz options");
-assert.ok(files.theme.includes("grid-template-columns:clamp(148px,13vw,184px) minmax(0,1fr) clamp(220px,19vw,270px)"),"desktop 100 percent layout sizing missing");
+assert.ok(files.theme.includes("grid-template-columns:clamp(145px,8vw,165px) minmax(0,1fr) clamp(220px,12.2vw,250px)"),"desktop 100 percent layout sizing missing");
 assert.ok(files.theme.includes("width:min(960px,98%)")&&files.theme.includes("height:164px"),"media area must widen slightly without increasing default height");
 assert.ok(files.theme.includes("resize:both;overflow:auto"),"media frame must be resizable from its corner");
 console.log("MUDARRIS JOIN · F1 / Shooter / Classic smoke checks passed.");
